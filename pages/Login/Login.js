@@ -34,7 +34,11 @@ export const Login = () => {
          <Link to='/reset'><Text>Forgot Password?</Text></Link>
       </View>
 
-
+      <Box alignItems="center" style={{marginTop: 40}}>
+        <Button style={styles.loginButton}>Log in</Button>
+        <Text>OR</Text>
+      </Box>    
+      
 
     </View>
   )
@@ -53,5 +57,10 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'right',
     fontWeight: 'bold'
+  },
+  loginButton: {
+    backgroundColor: "#e4b1a5",
+    width: "100%"
   }
+
 })
