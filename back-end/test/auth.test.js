@@ -21,18 +21,18 @@ describe('checkAuth', () => {
     test('status 200 and send token when valid register', async () => {
 
         // set up mock req and res
-        var req = httpMocks.createRequest({
-            body: { username: "validName", email: "validemail@test.com", password: "Pwd123456" }
+        const req = httpMocks.createRequest({
+            body: {username: "validName", email: "validemail@test.com", password: "Pwd123456"}
         });
-        var res = httpMocks.createResponse();
+        const res = httpMocks.createResponse();
         await auth.register(req, res);
 
         // assert if the status code is 200
         expect(res.statusCode).toBe(200);
 
         // get data that sent to res
-        data = JSON.parse(res._getData());
-        var emailGet;
+        let data = JSON.parse(res._getData());
+        let emailGet;
 
         // decode the token to get email
         jwt.verify(data.token, process.env.TOKEN_SIGNATURE, (err, user) => {
@@ -46,10 +46,10 @@ describe('checkAuth', () => {
     test('status 409 when account has been registered', async () => {
 
         // set up mock req and res
-        var req = httpMocks.createRequest({
-            body: { username: "validName", email: "validemail@test.com", password: "Pwd123456" }
+        const req = httpMocks.createRequest({
+            body: {username: "validName", email: "validemail@test.com", password: "Pwd123456"}
         });
-        var res = httpMocks.createResponse();
+        const res = httpMocks.createResponse();
 
         await auth.register(req, res);
 
@@ -57,7 +57,7 @@ describe('checkAuth', () => {
         expect(res.statusCode).toBe(409);
 
         // get data that sent to res
-        data = JSON.parse(res._getData());
+        let data = JSON.parse(res._getData());
 
         //assert the error message is correct
         expect(data.msg).toBe("Email has been registered");
@@ -66,10 +66,10 @@ describe('checkAuth', () => {
     test('should return status 200 when login with correct info', async () => {
 
         // set up mock req and res
-        var req = httpMocks.createRequest({
-            body: { email: "validemail@test.com", password: "Pwd123456" }
+        const req = httpMocks.createRequest({
+            body: {email: "validemail@test.com", password: "Pwd123456"}
         });
-        var res = httpMocks.createResponse();
+        const res = httpMocks.createResponse();
 
         await auth.login(req, res);
 
@@ -77,10 +77,10 @@ describe('checkAuth', () => {
         expect(res.statusCode).toBe(200);
 
         // get data that sent to res
-        data = JSON.parse(res._getData());
+        let data = JSON.parse(res._getData());
 
         // decode the token to get email
-        var emailGet;
+        let emailGet;
         jwt.verify(data.token, process.env.TOKEN_SIGNATURE, (err, user) => {
             emailGet = user.email;
         });
@@ -92,10 +92,10 @@ describe('checkAuth', () => {
     test('status 400 when login with incorrect info', async () => {
 
         // set up mock req and res
-        var req = httpMocks.createRequest({
-            body: { email: "validemail@test.com", password: "Pwd12345" }
+        const req = httpMocks.createRequest({
+            body: {email: "validemail@test.com", password: "Pwd12345"}
         });
-        var res = httpMocks.createResponse();
+        const res = httpMocks.createResponse();
 
         await auth.login(req, res);
 

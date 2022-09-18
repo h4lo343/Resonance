@@ -1,20 +1,19 @@
 const express = require('express');
 const authRouter = require('./routes/authRouter');
 const verifyToken = require('./middlewares/verifyToken').verifyToken;
-const cors = require('cors');
+// const cors = require('cors');
 const { default: mongoose } = require('mongoose');
 const connectDB = require('./Config/connectMongo');
-var bodyParser = require('body-parser')
 require('dotenv').config();
-// console.log(process.env)
 
 //connect to database
 connectDB();
 
 const app = express();
 
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 8888;
 

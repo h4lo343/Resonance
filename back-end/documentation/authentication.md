@@ -8,10 +8,10 @@
 
 **Parameter**
 
-| Parameter | explain  | Value type |
-| --------- | -------- | ---------- |
-| email     | email    | String     |
-| password  | password | String     |
+| Parameter | explain       | Value type |
+| --------- |---------------| ---------- |
+| authenticationMethod     | email / phone | String     |
+| password  | password      | String     |
 
 **Response**
 
@@ -32,14 +32,15 @@
 **Parameter**
 
 | Parameter | Value type |
-| --------- | ---------- |
+|-----------| ---------- |
 | username  | String     |
+| phone     | String     |
 | email     | String     |
 | password  | String     |
 
 **Response**
 ```json
 {
-    "token": "token"
+  msg: "register successfully"
 }
 ```

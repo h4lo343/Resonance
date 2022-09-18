@@ -17,6 +17,14 @@ async function register(req, res) {
             )
         }
 
+        // Check if the phone number already exists.
+        let existingPhone = await User.findOne({ email: req.body.phone });
+        if (existingPhone) {
+            return res.status(409).json(
+                { msg: "Phone number has been registered" }
+            )
+        }
+
         console.log(req.body)
 
         // hash the password
@@ -27,6 +35,7 @@ async function register(req, res) {
             {
                 username: req.body.username,
                 email: req.body.email,
+                phone: req.body.phone,
                 password: Hashedpwd,
             });
         await user.save();
@@ -36,7 +45,7 @@ async function register(req, res) {
 
         // Send token.
         res.status(200).json(
-            { token: token }
+            { msg: "register successfully" }
         );
     } catch (error) {
         console.log(error);
@@ -47,8 +56,15 @@ async function register(req, res) {
 
 // User login.
 async function login(req, res) {
-    // Find the user.
-    let user = await User.findOne({ email: req.body.email });
+
+    let user;
+
+    if (validateEmail(req.body.authenticationMethod)) {
+        user = await User.findOne({ email: req.body.email });
+    } else {
+        user = await User.findOne({ phone: req.body.phone });
+    }
+
 
     // If the user isn't found.
     if (!user) {
@@ -82,6 +98,15 @@ function generateToken(req) {
     const token = jwt.sign(tokenData, process.env.TOKEN_SIGNATURE, { expiresIn: '1d' });
     return token
 }
+
+// validate email
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+};
 
 module.exports = {
     register,

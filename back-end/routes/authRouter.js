@@ -4,8 +4,7 @@ const express = require('express');
 const userRouter = express.Router();
 
 // Set router to use urlencoded (so that we can read res.body).
-userRouter.use(express.urlencoded({ extended: true }));
-userRouter.use(express.json());
+// userRouter.use(express.urlencoded({ extended: true }));
 
 // require the user controller
 const userController = require('../controllers/authController');
