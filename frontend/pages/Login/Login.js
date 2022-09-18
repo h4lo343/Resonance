@@ -32,7 +32,7 @@ export const Login = () => {
 
       <View style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
         <Checkbox value="two"><Text style={{ fontSize: 14 }}>Remember Me</Text></Checkbox>
-        <Link to='/reset'><Text>Forgot Password?</Text></Link>
+        <Link to='/reset' underlayColor="#f0f4f7" ><Text>Forgot Password?</Text></Link>
       </View>
 
       <Box alignItems="center" style={{ marginTop: 40 }}>
@@ -50,7 +50,7 @@ export const Login = () => {
 
       <Box alignItems={"center"} style={{ bottom: -100 }} flexDirection="row" justifyContent={"center"}>
         <Text>Don't have an account?</Text>
-        <Link to="/register"><Text style={{color:"black"}}>  Sign in</Text></Link>
+        <Link to="/register" underlayColor="#f0f4f7" ><Text style={{color:"black"}}>  Sign in</Text></Link>
       </Box>
 
     </View>
