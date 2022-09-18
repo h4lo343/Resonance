@@ -1,13 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, CheckBox } from 'react-native';
 import { Link } from 'react-router-native';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 import { ScaledImage } from '../../components';
 
-export const Login = () => {
-  const [show, setShow] = React.useState(false);
-  const handleClick = () => setShow(!show);
 
+
+export const Login = () => {
+  const [show, setShow] = useState(false);
+  const [userCode, setUserCode] = useState('');
+  const [password, setPassword] = useState('');
+  const inputUserCode = (v) => {
+    setUserCode(v)
+  }
+  const inputPassword = (v) => {
+    setPassword(v)
+  }
+  const handleClick = () => setShow(!show);
+  const signIn = async () => {
+    console.log(userCode + " " + password)
+    try {
+      const response = await fetch("http://localhost:8888/auth/register",
+        {
+          method: 'POST',
+          body: JSON.stringify(
+            {
+              authenticationMethod: userCode,
+              password: password
+            }
+          )
+        }
+      )
+      const result = await response.json()
+      console.log(result)  
+    } catch (error) {
+      console.error(error)
+    }
+  }
   return (
     <View>
       <Text style={styles.brand}>Trace</Text>
@@ -17,15 +46,16 @@ export const Login = () => {
 
 
       <Box alignItems="center" style={styles.inputBox}>
-        <Input variant="underlined" placeholder="Username, Email or Phone Number" fontSize={14} />
+        <Input variant="underlined" placeholder="Username, Email or Phone Number" fontSize={14} onChangeText={inputUserCode} />
         <Input variant='underlined'
           placeholder='password'
           type={show ? "text" : "password"}
           fontSize={14}
+          onChangeText={inputPassword}
           InputRightElement={
             <Button size="xs" rounded="none" w="1/6" h="full" onPress={handleClick}>
               {show ? "Hide" : "Show"}
-            </Button > 
+            </Button >
           }
         />
       </Box>
@@ -36,7 +66,7 @@ export const Login = () => {
       </View>
 
       <Box alignItems="center" style={{ marginTop: 40 }}>
-        <Button style={styles.loginButton}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Log in</Text></Button>
+        <Button style={styles.loginButton} onPress={signIn}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Log in</Text></Button>
 
         <Text>OR</Text>
 
@@ -50,7 +80,7 @@ export const Login = () => {
 
       <Box alignItems={"center"} style={{ bottom: -100 }} flexDirection="row" justifyContent={"center"}>
         <Text>Don't have an account?</Text>
-        <Link to="/register" underlayColor="#f0f4f7" ><Text style={{color:"black"}}>  Sign in</Text></Link>
+        <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link>
       </Box>
 
     </View>
