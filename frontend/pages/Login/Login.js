@@ -25,7 +25,7 @@ export const Login = () => {
           InputRightElement={
             <Button size="xs" rounded="none" w="1/6" h="full" onPress={handleClick}>
               {show ? "Hide" : "Show"}
-            </Button>
+            </Button > 
           }
         />
       </Box>
