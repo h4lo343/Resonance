@@ -4,13 +4,13 @@ import { Link } from 'react-router-native';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 import { ScaledImage } from '../../components';
 import { useSelector, useDispatch } from 'react-redux';
-import { authSlice } from '../../redux/auth/slice';
+import { authSlice, getAccessToken} from '../../redux/auth/slice';
 
 
 
 export const Login = () => {
   const dispatch = useDispatch();
-  const num = useSelector((state) => state.auth.number)
+  const accessToken = useSelector((state) => state.auth.accessToken)
   const [show, setShow] = useState(false);
   const [userCode, setUserCode] = useState('');
   const [password, setPassword] = useState('');
@@ -21,12 +21,12 @@ export const Login = () => {
     setPassword(v)
   }
   useEffect(()=> {
-    
   },[])
   const handleClick = () => setShow(!show);
   const signIn =  () => {
-    dispatch(authSlice.actions.plus())
-    console.log(num)
+    dispatch(getAccessToken())
+    
+    
     // console.log(userCode + " " + password)
     // try {
     //   const response = await fetch("http://localhost:8888/auth/register",
@@ -75,11 +75,8 @@ export const Login = () => {
       </View>
 
       <Box alignItems="center" style={{ marginTop: 40 }}>
-        <Button style={styles.loginButton} onPress={signIn}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Log in</Text></Button>
-
-        <Text>OR</Text>
-
-        <Button style={styles.loginSpotify}>
+      
+        <Button style={styles.loginSpotify} onPress={signIn}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={{ fontWeight: 'bold', color: "white", fontSize: 20 }}>Log In With</Text>
             <Image style={{ width: 80, resizeMode: "contain", right: -10 }} source={require('../../assets/imgs/spotify.jpg')} />
