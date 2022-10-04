@@ -1,19 +1,16 @@
 const express = require('express');
 
 // add our router
-const userRouter = express.Router();
-
-// Set router to use urlencoded (so that we can read res.body).
-// userRouter.use(express.urlencoded({ extended: true }));
+const authRouter = express.Router();
 
 // require the user controller
-const userController = require('../controllers/authController');
+const authController = require('../controllers/authController');
 
 // Register a new user
-userRouter.post('/register', userController.register);
+authRouter.post('/register', authController.register);
 
 // Login a new user.
-userRouter.post('/login', userController.login);
+authRouter.post('/login', authController.login);
 
-module.exports = userRouter
+module.exports = authRouter
 
