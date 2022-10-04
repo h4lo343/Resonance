@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {authorize} from 'react-native-app-auth';
 
 const initialState = {
-  number : 1,
+  
   jwtToken: "",
   accessToken: ""
 }
@@ -39,9 +39,6 @@ export const authSlice = createSlice({
     setJwtToken: (state, actions) => {
       state.jwtToken = actions.payload
     },
-    plus: (state) => {
-      state.number+=1
-    }
 
   }
 })
