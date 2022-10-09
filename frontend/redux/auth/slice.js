@@ -23,7 +23,7 @@ export const getAccessToken = createAsyncThunk(
     }
     const result = await authorize(authConfig)
     thunkAPI.dispatch(authSlice.actions.setAccessToken(result.accessToken))
-    console.log(thunkAPI.getState().auth.accessToken)
+    
   }
 )
 
@@ -39,6 +39,5 @@ export const authSlice = createSlice({
     setJwtToken: (state, actions) => {
       state.jwtToken = actions.payload
     },
-
   }
 })

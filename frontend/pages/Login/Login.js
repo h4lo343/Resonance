@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, CheckBox } from 'react-native';
+import { StyleSheet, Text, View, Image, CheckBox, Alert } from 'react-native';
 import { Link } from 'react-router-native';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 import { ScaledImage } from '../../components';
 import { useSelector, useDispatch } from 'react-redux';
 import { authSlice, getAccessToken} from '../../redux/auth/slice';
+import { BACNKEND_LINK } from '@'
  
 
 
 
 export const Login = () => {
   const dispatch = useDispatch();
-  const accessToken = useSelector((state) => state.auth.accessToken)
   const [show, setShow] = useState(false);
+  const jwtToken = useSelector((state) => state.auth.jwtToken)
   const [userCode, setUserCode] = useState('');
   const [password, setPassword] = useState('');
   const inputUserCode = (v) => {
@@ -25,27 +26,33 @@ export const Login = () => {
     // console.log(env.BACNKEND_LINK)
   },[])
   const handleClick = () => setShow(!show);
-  const signIn =  () => {
-    dispatch(getAccessToken())
-    // console.log(userCode + " " + password)
-    // try {
-    //   const response = await fetch("http://localhost:8888/auth/register",
-    //     {
-    //       method: 'POST',
-    //       body: JSON.stringify(
-    //         {
-    //           authenticationMethod: userCode,
-    //           password: password
-    //         }
-    //       )
-    //     }
-    //   )
-    //   const result = await response.json()
-    //   console.log(result)  
-    // } catch (error) {
-    //   console.error(error)
-    // }
+  const signIn = async () => {
+    const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/auth/login/", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: userCode,
+        password: password
+      })
+    })
+    const code = response.status
+    const result = await response.json()
+    if (code!=200) {
+      Alert.alert(
+        "Login Failed",
+         result.msg,
+      );
+    }
+    else {
+      dispatch(authSlice.actions.setJwtToken(result.Authorization))
+      dispatch(getAccessToken())
+    }
   }
+   
+  
+   
   return (
     <View>
       <Text style={styles.brand}>Trace</Text>
