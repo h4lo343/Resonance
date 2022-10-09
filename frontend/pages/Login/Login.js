@@ -5,6 +5,7 @@ import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pres
 import { ScaledImage } from '../../components';
 import { useSelector, useDispatch } from 'react-redux';
 import { authSlice, getAccessToken} from '../../redux/auth/slice';
+ 
 
 
 
@@ -21,12 +22,11 @@ export const Login = () => {
     setPassword(v)
   }
   useEffect(()=> {
+    // console.log(env.BACNKEND_LINK)
   },[])
   const handleClick = () => setShow(!show);
   const signIn =  () => {
     dispatch(getAccessToken())
-    
-    
     // console.log(userCode + " " + password)
     // try {
     //   const response = await fetch("http://localhost:8888/auth/register",
