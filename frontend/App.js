@@ -24,7 +24,7 @@ const App = () => {
               <Route path='/search' element={<Search />}></Route>
               <Route path='/edit-profile' element={<EditProfile />}></Route>
               <Route path='/user-profile' element={<UserProfile />}></Route>
-              <Route path='/' element={<Navigate to='/user-profile'/>}></Route>
+              <Route path='/' element={<Navigate to='/login'/>}></Route>
             </Routes>
           </View>
         </NativeRouter>
