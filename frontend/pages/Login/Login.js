@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, CheckBox, Alert } from 'react-native';
-import { Link } from 'react-router-native';
+import { Link, Navigate } from 'react-router-native';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 import { ScaledImage } from '../../components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -39,15 +39,18 @@ export const Login = () => {
     })
     const code = response.status
     const result = await response.json()
-    if (code!=200) {
+    console.log(response)
+    console.log(result)
+    if (code!=201) {
       Alert.alert(
         "Login Failed",
          result.msg,
       );
     }
-    else {
+    else{
       dispatch(authSlice.actions.setJwtToken(result.Authorization))
       dispatch(getAccessToken())
+       
     }
   }
    
