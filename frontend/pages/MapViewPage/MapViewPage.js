@@ -4,6 +4,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { Marker } from 'react-native-maps';
+import  Search  from '../Search/Search';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 const deviceHeight =Dimensions.get("window").height
 const deviceWidth =Dimensions.get("window").width
@@ -94,6 +95,9 @@ export const MapViewPage = () => {
 
   return (
     <View  style={styles.container}>
+       
+    <Search/>
+       
     <MapView
       provider={PROVIDER_GOOGLE} 
       style={styles.map}
@@ -103,7 +107,7 @@ export const MapViewPage = () => {
     </MapView>
     <TouchableOpacity style={styles.overlay}>
       <Button 
-      style={{position: "absolute", top: 20, width: "100%" ,backgroundColor: '#e4b1a5'}} 
+      style={{position: "absolute", top: 600, width: "100%" ,backgroundColor: '#e4b1a5'}} 
       onPress={leaveTrace} >
         <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
     </TouchableOpacity>
