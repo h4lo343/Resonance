@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, PermissionsAndroid } from 'react-native';
+import { StyleSheet, Text, View, Image, PermissionsAndroid, FormControl } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Box, Input, Button } from 'native-base';
 import { useSelector } from 'react-redux';
 import { Avatar } from 'react-native-paper';
 import RNFetchBlob from "rn-fetch-blob";
 import { Navigate, useNavigate } from 'react-router-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export const EditProfile = () => {
   const currentUsername = useSelector((state) => state.userProfile.username);
@@ -14,9 +15,10 @@ export const EditProfile = () => {
   const avatarType = useSelector((state) => state.userProfile.avatarType);
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const currentFullName = useSelector((state) => state.userProfile.fullName);
-  const [newAvatar, setNewAvatar] = useState({type: '', uri: '' });
+  const [newAvatar, setNewAvatar] = useState({ type: '', uri: '' });
   const [newUsername, setNewUsername] = useState('');
   const [newFullname, setNewFullname] = useState('');
+  const [spinnerEnabled, setSpinnerEnableFlag] = useState(false);
   const Navigate = useNavigate();
 
   const requestCameraPermission = async () => {
@@ -32,9 +34,9 @@ export const EditProfile = () => {
         }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("Camera permission given");
+        console.log("Give permission");
       } else {
-        console.log("Camera permission denied");
+        console.log("Deny permission");
       }
     } catch (err) {
       console.warn(err);
@@ -50,18 +52,16 @@ export const EditProfile = () => {
         {
           "username": currentUsername, "fullName": currentFullName,
           "avatar":
-            { "avatarType": avatarType, "base64image": avatarBase64}
+            { "avatarType": avatarType, "base64image": avatarBase64 }
         },
 
       };
 
       if (newUsername != '' && newUsername != currentUsername) {
-        console.log("update user name " + newUsername);
         requestBody["updates"]["username"] = newUsername;
       }
 
       if (newFullname != '' && newFullname != currentFullName) {
-        console.log("update full name");
         requestBody["updates"]["fullName"] = newFullname;
       }
 
@@ -73,12 +73,8 @@ export const EditProfile = () => {
           requestBody["updates"]["avatar"]["base64image"] = data;
           requestBody["updates"]["avatar"]["avatarType"] = newAvatar.type;
 
-          console.log("updated data");
-
         }).catch((e) => { console.log("error: " + e) })
       }
-
-      console.log("post request body to backend: " + Object.entries(requestBody.updates));
 
       const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/user/updateUserInfo",
         {
@@ -87,7 +83,7 @@ export const EditProfile = () => {
           body: JSON.stringify(requestBody)
         }
       )
-      console.log("post result: " + response);
+
     } catch (error) {
       console.error(error)
     }
@@ -104,7 +100,6 @@ export const EditProfile = () => {
     };
 
     launchCamera(options, (response) => {
-      console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -117,39 +112,57 @@ export const EditProfile = () => {
 
         const imageUri = response.assets[0].uri;
         const imageType = imageUri.split(".").pop();
-        console.log("imageType: " + imageType + " | imageUri: " + imageUri);
+
         setNewAvatar({ type: imageType, uri: imageUri })
       }
     });
   }
 
   const save = () => {
+    setSpinnerEnableFlag(true);
     postToBackend().then(() => {
-      console.log("posted to backend with success");
+      setSpinnerEnableFlag(false);
       Navigate('/user-profile');
     }).catch((error) => {
-      console.log("failed to post to backend " + error);
+      console.log("error: " + error);
     })
   }
 
   return (
     <View>
+      <View style={styles.spinnerView}>
+        <Spinner
+          //visibility of Overlay Loading Spinner
+          visible={spinnerEnabled}
+          //Text with the Spinner
+          textContent={'Saving user profile updates...'}
+          //Text style of the Spinner Text
+          textStyle={styles.spinnerFontStyle}
+        />
+      </View>
+
       <View style={styles.row}>
-        <Avatar.Image source={{ uri: newAvatar.uri === '' ? avatarUri : newAvatar.uri }} size={80} />
+        <Avatar.Image source={{ uri: newAvatar.uri === '' ? avatarUri : newAvatar.uri }} size={150} />
       </View>
 
       <Box alignItems="center" style={{ marginTop: 40 }}>
-        <Button onPress={uploadPhoto} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Launch Camera</Text></Button>
+        <Button onPress={uploadPhoto} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Take Photo</Text></Button>
       </Box>
 
+      <View style={styles.userrow}>
+        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Current Username: {currentUsername}</Text>
+      </View>
+      
       <Box alignItems="center" style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{currentUsername}</Text>
-        <Input variant="underlined" placeholder="Username" fontSize={16} onChangeText={setNewUsername} />
+        <Input variant="outline" placeholder="Username" fontSize={16} onChangeText={setNewUsername} />
       </Box>
 
+      <View style={styles.userrow}>
+        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Current Full Name: {currentFullName}</Text>
+      </View>
+
       <Box alignItems="center" style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
-      <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{currentFullName}</Text>
-        <Input variant="underlined" placeholder="Full Name" fontSize={16} onChangeText={setNewFullname} />
+        <Input variant="outline" placeholder="New Full Name" fontSize={16} onChangeText={setNewFullname} />
       </Box>
 
       <Box alignItems="center" style={{ marginTop: 40 }}>
@@ -164,6 +177,12 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     marginBottom: 10,
+    marginTop: 30,
+    justifyContent: 'center'
+  },
+  userrow: {
+    flexDirection: 'row',
+    marginTop: 30,
     justifyContent: 'center'
   },
   userDataFont: {
@@ -172,5 +191,13 @@ const styles = StyleSheet.create({
   editProfile: {
     backgroundColor: "#e4b1a5",
     width: "50%",
+  },
+  spinnerView: {
+    paddingTop: 20,
+    backgroundColor: '#cad5d8',
+    padding: 8,
+  },
+  spinnerFontStyle: {
+    color: '#fff',
   },
 });

@@ -25,19 +25,15 @@ export const userProfileSlice = createSlice({
     initialState,
     reducers: {
           setUsername: (state, actions) => {
-            console.log("action playload - setUsername: " + actions.payload);
               state.username = actions.payload
           },
           setFullName: (state, actions) => {
-            console.log("action playload - setFullName: " + actions.payload);
               state.fullName = actions.payload
           },
           setAvatarType: (state, actions) => {
-            console.log("action playload - set avatar type: " + actions.payload);
               state.avatarType = actions.payload
           },
           setAvatarUri: (state, actions) => {
-            console.log("action playload - set avatar uri: " + actions.payload);
             state.avatarUri = actions.payload
         },
         setAvatarBase64: (state, actions) => {
