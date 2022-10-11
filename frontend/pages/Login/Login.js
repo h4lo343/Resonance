@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, CheckBox, Alert } from 'react-native';
-import { Link, Navigate } from 'react-router-native';
+import { Link, Navigate, useNavigate } from 'react-router-native';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 import { ScaledImage } from '../../components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,6 +11,7 @@ import { BACNKEND_LINK } from '@'
 
 
 export const Login = () => {
+  const Navigate = useNavigate();
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const jwtToken = useSelector((state) => state.auth.jwtToken)
@@ -39,8 +40,6 @@ export const Login = () => {
     })
     const code = response.status
     const result = await response.json()
-    console.log(response)
-    console.log(result)
     if (code!=201) {
       Alert.alert(
         "Login Failed",
@@ -50,6 +49,7 @@ export const Login = () => {
     else{
       dispatch(authSlice.actions.setJwtToken(result.Authorization))
       dispatch(getAccessToken())
+      Navigate('/search')
        
     }
   }
