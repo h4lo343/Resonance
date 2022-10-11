@@ -1,6 +1,6 @@
-import { FlatList, Input, View, Image } from "native-base";
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import { FlatList, Input, View   } from "native-base";
+import React, { useCallback, useEffect, useState,   } from "react";
+import { StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import { useSelector } from "react-redux";
 
 export const Search = () => {
@@ -23,6 +23,7 @@ export const Search = () => {
       const resultArray = result.tracks.items.map((item, index) => {
         return { tracks: item, artists: result.artists.items[index] }
       })
+      console.log(resultArray)
       setResult(resultArray)
     } catch (e) {
       console.log(e)
@@ -43,10 +44,11 @@ export const Search = () => {
         renderItem={({ item }) => (
           <TouchableOpacity>
             <View style={{ display: "flex", justifyContent: "flex-start", flexWrap: "nowrap", flexDirection: "row", alignItems: "center" }}>
-              <Image style={{ width: 70, height: 70 }} source={{ uri: item.tracks.album.images[0].url }} alt={item.tracks.name} />
+              <Image style={{ width: 70, height: 70 }}  resizeMode="contain"  source={{uri: item.tracks.album.images[0].url}} alt={item.tracks.name} />
               <View>
                 <Text style={{fontWeight: 'bold'}}>{item.tracks.name}</Text>
-                <Text>{item.artists.name}</Text>
+                { item.artists? <Text>{item.artists.name}</Text> : <></> }
+                
               </View>
 
 
