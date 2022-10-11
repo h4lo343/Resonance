@@ -23,7 +23,10 @@
     "react-native-svg": "^12.3.0",
     "react-redux": "^8.0.4",
     "react-router-native": "^6.4.2",
-    "redux": "^4.2.0"
+    "redux": "^4.2.0",
+    "rn-fetch-blob": "0.13.0-beta.2",
+    "react-native-image-picker": "^4.10.0",
+    "react-native-paper": "^4.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

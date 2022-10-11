@@ -2,7 +2,7 @@ import { NativeBaseProvider } from "native-base";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { NativeRouter, Route, Link, Navigate, Routes,   } from "react-router-native";
-import { Login, PasswordReset, Register,  MapViewPage } from "./pages";
+import { Login, PasswordReset, Register,  MapViewPage, UserProfile, EditProfile } from "./pages";
 import Search from "./pages/Search/Search";
 import { Map } from "./pages/Main/Map/Map";
 import { Provider } from "react-redux";
@@ -22,7 +22,9 @@ const App = () => {
               <Route path='/reset' element={<PasswordReset />}></Route>
               <Route path='/map' element={<MapViewPage />}></Route>
               <Route path='/search' element={<Search />}></Route>
-              <Route path='/' element={<Navigate to='/Search'/>}></Route>
+              <Route path='/edit-profile' element={<EditProfile />}></Route>
+              <Route path='/user-profile' element={<UserProfile />}></Route>
+              <Route path='/' element={<Navigate to='/user-profile'/>}></Route>
             </Routes>
           </View>
         </NativeRouter>
