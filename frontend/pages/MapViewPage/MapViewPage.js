@@ -97,7 +97,7 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
       key={history.id}
     >
     <Image source={require('../../assets/imgs/mapMarkerPast.png')} style={{height: 50, width:50 }} />
-    <MarkerCallOut songName={history.info.songName}></MarkerCallOut>
+    <MarkerCallOut songName={history.info.songName} songVisual={history.info.visualUrl}></MarkerCallOut>
   </Marker>
 ))
 

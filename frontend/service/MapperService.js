@@ -8,7 +8,7 @@ export const getHistoryTrace = () => {
                 songName: "song1",
                 author: "abc",
                 url: "https://open.spotify.com/artist/0du5cEVh5yTK9QJze8zA0C",
-                visualUrl: ""
+                visualUrl: "https://i.scdn.co/image/ab67616d00001e02b2c7ecf239a2b98e36e009d6"
             } ,
             id: 2,
             coordinate: {
@@ -21,7 +21,7 @@ export const getHistoryTrace = () => {
                 songName: "song2",
                 author: "abc",
                 url: "https://open.spotify.com/artist/0du5cEVh5yTK9QJze8zA0C",
-                visualUrl: ""
+                visualUrl: "https://i.scdn.co/image/ab67616d00001e02b2c7ecf239a2b98e36e009d6"
             } ,
             id: 3,
             coordinate: {
@@ -34,7 +34,7 @@ export const getHistoryTrace = () => {
                 songName: "song3",
                 author: "abc",
                 url: "https://open.spotify.com/artist/0du5cEVh5yTK9QJze8zA0C",
-                visualUrl: ""
+                visualUrl: "https://i.scdn.co/image/ab67616d00001e02b2c7ecf239a2b98e36e009d6"
             } ,
             id: 4,
             coordinate: {
