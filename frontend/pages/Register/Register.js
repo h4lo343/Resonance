@@ -69,7 +69,7 @@ export const Register = () => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.brand}>Trace</Text>
       <Text style={styles.banner}>Hi!</Text>
       <Text style={styles.banner}>Welcome</Text>
@@ -111,6 +111,9 @@ export const Register = () => {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    margin: 30
+  },
   banner: {
     fontSize: 40,
     fontWeight: 'bold',
