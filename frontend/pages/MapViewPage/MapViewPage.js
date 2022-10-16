@@ -6,6 +6,8 @@ import Geolocation from 'react-native-geolocation-service';
 import { Marker } from 'react-native-maps';
 import  Search  from '../Search/Search';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
+import { getHistoryTrace } from '../../service/MapperService';
+import { MarkerCallOut } from '../../components/MarkerCallOut';
 const deviceHeight =Dimensions.get("window").height
 const deviceWidth =Dimensions.get("window").width
 
@@ -15,21 +17,37 @@ export const MapViewPage = () => {
     latitude: 37.3882733,
     longitude: -122.0867283 // default values
   });
+  const [initialRegion, setInitialRegion] = useState({
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,//initial region
+  }  );
+
   const [showUserLocationDot, setUserLocationDot] = useState(true);
+  const [showSearchBar, setshowSearchBar] = React.useState(false);
   useEffect(() => {
+    console.log("check permission")
      _checkPermission()
+     setInitialRegion({
+      latitude: currentLocation.latitude,
+      longitude: currentLocation.longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+     })
+     loadHistoryMarkers()
   }, [])
-  const [currentCategory, setCurrentCategory] = React.useState('None');
+  const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   const getCurrentLocation = () => {
    
     Geolocation.getCurrentPosition(
       (position) => {
+        console.log("get current location")
         setCurrentLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         })
-        console.log("current: " +  currentLocation.longitude);
       },
       (error) => {
         console.log(error.code, error.message);
@@ -37,18 +55,24 @@ export const MapViewPage = () => {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
   );
   }
-
+  const [historyMarkers, setHistoryMarkers] = React.useState([])
+  const loadHistoryMarkers = () => [
+    getHistoryTrace().then(response => {
+      setHistoryMarkers(response);
+      console.log("length: " + response.length)
+      }).catch(err => console.log(err))
+  ]
   const leaveTrace = async () => {
     getCurrentLocation()
     setCurrentCategory('highLightUserLocation')
-    console.log("update: " +  currentLocation.longitude);
     setUserLocationDot(false)
+    setshowSearchBar(true)
   }
 
   const getMarkers = () => {
     switch (currentCategory) {
-        case 'None': return [];
-        case 'highLightUserLocation': return leaveTraceMarker;
+        case 'Initial': return [ ...attachHistoryMarker];
+        case 'highLightUserLocation': return [leaveTraceMarker];
         // case 'commerce': return afficheCommerce;
         // default: return [...afficheHotel, ...afficheRestaurant, ...afficheCommerce];
     }
@@ -59,17 +83,29 @@ export const MapViewPage = () => {
   coordinate={{ 
     latitude :  currentLocation.latitude,
     longitude : currentLocation.longitude }} 
+    key = {1}
   >
   <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{height: 50, width:50 }} />
 </Marker>
+
+const attachHistoryMarker = historyMarkers.map((history)=>(
+  <Marker
+    coordinate={{ 
+      latitude :  history.coordinate.latitude,
+      longitude : history.coordinate.longitude }} 
+      id= {history.id}
+      key={history.id}
+    >
+    <Image source={require('../../assets/imgs/mapMarkerPast.png')} style={{height: 50, width:50 }} />
+    <MarkerCallOut songName={history.info.songName}></MarkerCallOut>
+  </Marker>
+))
+
 
   const _checkPermission = async () => {
 
     try {
         const result = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-        console.log('result', typeof result)
-        console.log('result', result)
-
         if (result == true) {
           getCurrentLocation()
         }
@@ -95,14 +131,13 @@ export const MapViewPage = () => {
 
   return (
     <View  style={styles.container}>
-       
-    <Search/>
-       
     <MapView
       provider={PROVIDER_GOOGLE} 
       style={styles.map}
       showsUserLocation = {showUserLocationDot}
-      followsUserLocation>
+      followsUserLocation
+      initialRegion = {initialRegion}
+      >
       {getMarkers()}
     </MapView>
     <TouchableOpacity style={styles.overlay}>
@@ -110,6 +145,10 @@ export const MapViewPage = () => {
       style={{position: "absolute", top: 600, width: "100%" ,backgroundColor: '#e4b1a5'}} 
       onPress={leaveTrace} >
         <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
+        {
+          showSearchBar && <Search/>
+        }
+        
     </TouchableOpacity>
     </View>
 )}
@@ -130,10 +169,18 @@ const styles = StyleSheet.create({
   },
   overlay: {
     position: 'absolute',
-    top: 20,
-    backgroundColor: '#e4b1a5',
     display: 'flex',
+    top: 30,
     width: "50%",
     alignItems: 'center'
   },
+
+  searchContainer: {
+    position: 'absolute',
+    bottom: 10,
+    display: 'flex',
+    width: "80%",
+    alignItems: 'center'
+  },
+
  });

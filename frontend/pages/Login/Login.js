@@ -97,6 +97,7 @@ export const Login = () => {
       <Box alignItems={"center"} style={{ bottom: -100 }} flexDirection="row" justifyContent={"center"}>
         <Text>Don't have an account?</Text>
         <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link>
+        <Link to="/MapViewPage" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Map View</Text></Link>
       </Box>
 
     </View>

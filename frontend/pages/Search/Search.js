@@ -69,7 +69,7 @@ const style = StyleSheet.create({
     backgroudColor: "white",
     justifyContent: "space-between",
     alignItems: "center",
-    zIndex: 10,
+    // zIndex: 10,
 
   }
 })
