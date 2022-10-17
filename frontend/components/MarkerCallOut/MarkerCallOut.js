@@ -8,13 +8,21 @@ export const MarkerCallOut = (props) => {
     // const [source, setSource] = useState({uri: props.uri})
     const markerId = props.markerId 
     const songName = props.songName 
+    const songVisual = props.songVisual
     return <Callout tooltip>
         <View>
             <View style = {styles.bubble}>
                 <Text style = {styles.songName}>{songName}</Text>
+                <Image
+                    style = {styles.image}
+                    source={{uri: songVisual}}
+                    alt={songName} 
+                ></Image>
             </View>
             <View style = {styles.arrowBorder}></View> 
             <View style = {styles.arrow}></View> 
+            
+      
         </View>
     </Callout>
   }
@@ -32,28 +40,32 @@ const styles = StyleSheet.create({
     },
     songName: {
         fontSize: 16,
-        marginBottom: 5
+        marginBottom: 2
     },
     arrow: {
         backgroundColor: 'transparent',
-        borderColor: '#e4b1a5',
-        borderTopColor: '#e4b1a5',
+        borderColor: 'transparent',
+        borderTopColor: '#fff',
         borderWidth: 16,
         alignSelf: 'center',
         marginTop: -32
     },
     arrowBorder: {
         backgroundColor: 'transparent',
-        borderColor: '#e4b1a5',
+        borderColor: 'transparent',
         borderTopColor: '#e4b1a5',
         borderWidth: 16,
         alignSelf: 'center',
         marginTop: -0.5
+    },
+    image: {
+        width: 50,
+        height: 50
     }
 })
 
 MarkerCallOut.propTypes = { 
     // markerId: PropTypes.string.isRequired,
     songName: PropTypes.string.isRequired,
-    // songVisual: PropTypes.string.isRequired
+    songVisual: PropTypes.string.isRequired
 }
