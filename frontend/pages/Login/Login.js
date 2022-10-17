@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, CheckBox, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, CheckBox, Alert, TouchableOpacity } from 'react-native';
 import { Link, Navigate, useNavigate } from 'react-router-native';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 import { ScaledImage } from '../../components';
@@ -10,7 +10,7 @@ import { BACNKEND_LINK } from '@'
 
 
 
-export const Login = () => {
+export const Login = ({navigation}) => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
@@ -81,7 +81,10 @@ export const Login = () => {
 
       <View style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
         <Checkbox value="two"><Text style={{ fontSize: 14 }}>Remember Me</Text></Checkbox>
-        <Link to='/reset' underlayColor="#f0f4f7" ><Text>Forgot Password?</Text></Link>
+        {/* <Link to='/reset' underlayColor="#f0f4f7" ><Text>Forgot Password?</Text></Link> */}
+        <TouchableOpacity onPress={() => navigation.navigate('PasswordReset')}>
+          <Text>Forgot Password?</Text>
+        </TouchableOpacity>
       </View>
 
       <Box alignItems="center" style={{ marginTop: 40 }}>
@@ -96,6 +99,9 @@ export const Login = () => {
 
       <Box alignItems={"center"} style={{ bottom: -100 }} flexDirection="row" justifyContent={"center"}>
         <Text>Don't have an account?</Text>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text>Forgot Password?</Text>
+        </TouchableOpacity> */}
         <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link>
         <Link to="/MapViewPage" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Map View</Text></Link>
       </Box>
