@@ -99,10 +99,10 @@ export const MapViewPage = () => {
       id={history.id}
       key={history.id}
     >
-      <Image source={require('../../assets/imgs/mapMarkerPast.png')} style={{ height: 50, width: 50 }} />
-      <MarkerCallOut songName={history.info.songName}></MarkerCallOut>
-    </Marker>
-  ))
+    <Image source={require('../../assets/imgs/mapMarkerPast.png')} style={{height: 50, width:50 }} />
+    <MarkerCallOut songName={history.info.songName} songVisual={history.info.visualUrl}></MarkerCallOut>
+  </Marker>
+))
 
 
   const _checkPermission = async () => {

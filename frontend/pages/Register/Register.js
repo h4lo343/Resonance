@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, Alert, TouchableOpacity } from 'react-native';
 import { Link } from 'react-router-native';
 import { Box, Input, Button } from 'native-base'
 export const Register = () => {
@@ -104,7 +104,7 @@ export const Register = () => {
       </Box>
 
       <Button style={{marginTop:30}} onPress={register}><Text>Register</Text></Button>
-      <Link to="/" underlayColor="#f0f4f7" ><Text>go back</Text></Link>
+      {/* <Link to="/" underlayColor="#f0f4f7" ><Text>go back</Text></Link> */}
 
     </View>
   )
