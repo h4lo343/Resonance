@@ -33,6 +33,12 @@ const App = () => {
           <NavigationContainer>
             <StackNavigator />
           </NavigationContainer>
+          <Routes>
+            <Route path='/MapViewPage' element={<MapViewPage />}></Route>
+            <Route path='/edit-profile' element={<EditProfile />}></Route>
+            <Route path='/user-profile' element={<UserProfile />}></Route>
+          </Routes>
+          
         </NativeRouter>
       </NativeBaseProvider>
     </Provider>

@@ -15,7 +15,6 @@ const StackNavigator = () => {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="PasswordReset" component={PasswordReset} />
-
     </Stack.Navigator>
   );
 };
