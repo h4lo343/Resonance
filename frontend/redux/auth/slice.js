@@ -3,7 +3,7 @@ import {authorize} from 'react-native-app-auth';
 
 const initialState = {
   
-  jwtToken: "",
+  jwtToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzQ0YjQ5ZmViMjAxODgzOGFlNzJhZDgiLCJpYXQiOjE2NjU5MDc2MTAsImV4cCI6MTY2NTk5NDAxMH0.HCeYrDZly-vZHXaXvXq2w9hlVwryF0eqfPUBNXbSq84",
   accessToken: ""
 }
 
