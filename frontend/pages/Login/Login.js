@@ -100,7 +100,7 @@ export const Login = ({navigation}) => {
       <Box alignItems={"center"} style={{ bottom: -100 }} flexDirection="row" justifyContent={"center"}>
         <Text>Don't have an account?</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={{ color: "black" }}>  Sign in</Text>
+          <Text style={{ color: "black" }}>  Sign up</Text>
         </TouchableOpacity>
         {/* <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link> */}
         {/* <TouchableOpacity onPress={() => navigation.navigate('Register')}>

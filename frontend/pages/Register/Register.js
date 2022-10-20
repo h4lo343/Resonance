@@ -105,7 +105,7 @@ export const Register = () => {
 
       <Button style={{marginTop:30}} onPress={register}><Text>Register</Text></Button>
       {/* <Link to="/" underlayColor="#f0f4f7" ><Text>go back</Text></Link> */}
-
+    
     </View>
   )
 }

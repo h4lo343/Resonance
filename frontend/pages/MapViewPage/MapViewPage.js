@@ -8,6 +8,8 @@ import  Search  from '../Search/Search';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
+
+
 const deviceHeight =Dimensions.get("window").height
 const deviceWidth =Dimensions.get("window").width
 
@@ -131,26 +133,27 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
 
   return (
     <View  style={styles.container}>
-    <MapView
-      provider={PROVIDER_GOOGLE} 
-      style={styles.map}
-      showsUserLocation = {showUserLocationDot}
-      followsUserLocation
-      initialRegion = {initialRegion}
-      >
-      {getMarkers()}
-    </MapView>
-    <TouchableOpacity style={styles.overlay}>
-      <Button 
-      style={{position: "absolute", top: 600, width: "100%" ,backgroundColor: '#e4b1a5'}} 
-      onPress={leaveTrace} >
-        <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
-        {
-          showSearchBar && <Search/>
-        }
-        
-    </TouchableOpacity>
+
+      <MapView
+        provider={PROVIDER_GOOGLE} 
+        style={styles.map}
+        showsUserLocation = {showUserLocationDot}
+        followsUserLocation
+        initialRegion = {initialRegion}
+        >
+        {getMarkers()}
+      </MapView>
+      <TouchableOpacity style={styles.overlay}>
+        <Button 
+        style={{position: "absolute", top: 600, width: "100%" ,backgroundColor: '#e4b1a5'}} 
+        onPress={leaveTrace} >
+          <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
+          {
+            showSearchBar && <Search/>
+          }
+      </TouchableOpacity>
     </View>
+
 )}
 
 const styles = StyleSheet.create({

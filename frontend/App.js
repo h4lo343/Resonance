@@ -10,6 +10,7 @@ import Store from "./redux/store";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StackNavigator from "./pages/Navigation/StackNavigator";
 import { NavigationContainer } from '@react-navigation/native';
+import DrawerNavigator from "./pages/Navigation/DrawerNavigator";
 
 
 
@@ -33,6 +34,7 @@ const App = () => {
           <NavigationContainer>
             <StackNavigator />
           </NavigationContainer>
+
           <Routes>
             <Route path='/MapViewPage' element={<MapViewPage />}></Route>
             <Route path='/edit-profile' element={<EditProfile />}></Route>
