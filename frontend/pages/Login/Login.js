@@ -103,10 +103,10 @@ export const Login = ({navigation}) => {
           <Text style={{ color: "black" }}>  Sign up</Text>
         </TouchableOpacity>
         {/* <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link> */}
-        {/* <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity onPress={() => navigation.navigate('DrawerNavigator')}>
           <Text style={{ color: "black" }}>  Map View</Text>
-        </TouchableOpacity> */}
-        <Link to="/MapViewPage" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Map View</Text></Link>
+        </TouchableOpacity>
+        {/* <Link to="/MapViewPage" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Map View</Text></Link> */}
       </Box>
 
     </View>
