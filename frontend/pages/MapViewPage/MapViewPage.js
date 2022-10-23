@@ -81,6 +81,10 @@ export const MapViewPage = () => {
     return leaveTraceMarker
   }
 
+  const setVisibility = (value) => {
+    setShowModal(false);
+  }
+
   const leaveTraceMarker = <Marker
     coordinate={{
       latitude: currentLocation.latitude,
@@ -157,7 +161,7 @@ export const MapViewPage = () => {
 
       </TouchableOpacity>
       {
-        showModal &&   <NearbyMusicDisplay/>
+        showModal &&   <NearbyMusicDisplay setVisibility={(value) => setVisibility(value)}/>
       }
     </View>
   )
