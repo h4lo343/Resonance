@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Modal } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -14,6 +14,7 @@ const deviceWidth = Dimensions.get("window").width
 
 
 export const MapViewPage = () => {
+  const [showModal, setShowModal] = useState(false)
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 37.3882733,
     longitude: -122.0867283 // default values
@@ -89,7 +90,6 @@ export const MapViewPage = () => {
   >
     <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{ height: 50, width: 50 }} />
   </Marker>
-
   const attachHistoryMarker = historyMarkers.map((history) => (
     <Marker
       coordinate={{
@@ -98,14 +98,17 @@ export const MapViewPage = () => {
       }}
       id={history.id}
       key={history.id}
+      onPress={()=> setShowModal(true)}
     >
     <Image source={require('../../assets/imgs/mapMarkerPast.png')} style={{height: 50, width:50 }} />
     <MarkerCallOut songName={history.info.songName} songVisual={history.info.visualUrl}></MarkerCallOut>
+
   </Marker>
 ))
 
 
   const _checkPermission = async () => {
+    
 
     try {
       const result = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
@@ -153,7 +156,9 @@ export const MapViewPage = () => {
         }
 
       </TouchableOpacity>
-      <NearbyMusicDisplay></NearbyMusicDisplay>
+      {
+        showModal &&   <NearbyMusicDisplay/>
+      }
     </View>
   )
 }
