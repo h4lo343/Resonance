@@ -9,13 +9,15 @@ import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pres
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
 import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
 
 const deviceHeight = Dimensions.get("window").height
 const deviceWidth = Dimensions.get("window").width
 
 
 export const MapViewPage = () => {
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false)
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 37.3882733,
@@ -80,7 +82,12 @@ export const MapViewPage = () => {
         }
       )
       const result = await response.json();
-      console.log("result: " + Object.entries(result.traces));
+
+      if ("traces" in result) {
+        console.log("result traces: " + result.traces);
+        var data = result.traces;
+        dispatch(getNearbyMusic({data}));
+      }
       // const resultArray = result.tracks.items.map((item, index) => {
       //   return { tracks: item, artists: result.artists.items[index] }
       // })

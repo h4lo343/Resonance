@@ -1,10 +1,12 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import { authSlice } from "./auth/slice";
 import { userProfileSlice } from "./userProfile/slice";
+import { nearbyMusicSlice } from "./nearbyMusic/slice";
 
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
-  userProfile: userProfileSlice.reducer
+  userProfile: userProfileSlice.reducer,
+  nearbyMusic: nearbyMusicSlice.reducer
 })
 
 const Store = configureStore({
