@@ -9,6 +9,8 @@ import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pres
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
 import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
+import { useSelector } from "react-redux";
+
 const deviceHeight = Dimensions.get("window").height
 const deviceWidth = Dimensions.get("window").width
 
@@ -26,6 +28,12 @@ export const MapViewPage = () => {
     longitudeDelta: 0.0421,//initial region
   });
 
+  const jwtToken = useSelector((state) => state.auth.jwtToken);
+  const [nearbyLocation, setNearbyLocation] = useState({
+    latitude: 37.3882733,
+    longitude: -122.0867283 // default values
+  });
+
   const [showUserLocationDot, setUserLocationDot] = useState(true);
   const [showSearchBar, setshowSearchBar] = React.useState(false);
   useEffect(() => {
@@ -40,6 +48,48 @@ export const MapViewPage = () => {
     loadHistoryMarkers()
   }, [])
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
+
+  const requireNearbyMusic = (latitude, longitude) => {
+    setNearbyLocation({
+      latitude: latitude,
+      longitude: longitude
+    })
+    setShowModal(true);
+    fetchNearbyMusic().then(() => {
+      console.log("received info from backend")
+    })
+    }
+
+  const fetchNearbyMusic = async () => {
+    const url = `https://comp90018-mobile-computing.herokuapp.com/trace/getNearbyTraces`;
+    // console.log(nearbyLocation)
+    var requestBody = {
+      "location": {
+        "latitude": 6.5693754,
+        "longitude":103.2656823
+      }
+    }
+
+    console.log(JSON.stringify(requestBody))
+    try {
+      const response = await fetch(url,
+        {
+          headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + jwtToken },
+          method: 'POST',
+          body: JSON.stringify(requestBody)
+        }
+      )
+      const result = await response.json();
+      console.log("result: " + Object.entries(result.traces));
+      // const resultArray = result.tracks.items.map((item, index) => {
+      //   return { tracks: item, artists: result.artists.items[index] }
+      // })
+      // setResult(resultArray)
+    } catch (e) {
+      console.log(e)
+    }
+
+  }
 
   const getCurrentLocation = () => {
 
@@ -102,7 +152,7 @@ export const MapViewPage = () => {
       }}
       id={history.id}
       key={history.id}
-      onPress={()=> setShowModal(true)}
+      onPress={()=> requireNearbyMusic(history.coordinate.latitude, history.coordinate.longitude)}
     >
     <Image source={require('../../assets/imgs/mapMarkerPast.png')} style={{height: 50, width:50 }} />
     <MarkerCallOut songName={history.info.songName} songVisual={history.info.visualUrl}></MarkerCallOut>

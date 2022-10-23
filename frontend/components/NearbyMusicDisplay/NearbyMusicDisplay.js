@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Modal, Text, View, Image, Alert, TouchableOpacity } from 'react-native';
 import { Link } from 'react-router-native';
-import { Box, Input, Button } from 'native-base'
+import { Box, Input, Button, FlatList } from 'native-base'
+
 export const NearbyMusicDisplay = (setVisibility) => {
 
   return (
@@ -14,13 +15,10 @@ export const NearbyMusicDisplay = (setVisibility) => {
       }}>
       <View
         style={styles.viewStyle}>
-        <View style={styles.footer}>
-          <Text style={styles.headerText}>This is Half Modal</Text>
-        </View>
         <TouchableOpacity
-          style={styles.addButton}
+          style={styles.closeButton}
           onPress={() => {setVisibility.setVisibility(false);}}>
-          <Text style={styles.addButtonText}>Close</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Close</Text>
         </TouchableOpacity>
       </View>
     </Modal>
@@ -29,8 +27,12 @@ export const NearbyMusicDisplay = (setVisibility) => {
 
 const styles = StyleSheet.create({
   viewStyle: {
-    height: '30%',
+    height: '40%',
     marginTop: 'auto',
     backgroundColor: 'white'
+  },
+  closeButton: {
+    backgroundColor: "#e4b1a5",
+    width: "15%",
   },
 })
