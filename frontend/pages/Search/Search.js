@@ -3,7 +3,7 @@ import React, { memo, useCallback, useEffect, useState,   } from "react";
 import { StyleSheet, TouchableOpacity, Text, Image, Alert } from "react-native";
 import { useSelector } from "react-redux";
 
-  const Search = (longitude, latitude) => {
+  const Search = (longitude, latitude, finished) => {
   const AccessToken = useSelector((state) => state.auth.accessToken)
   const [key, setKey] = useState("")
   const [result, setResult] = useState([]);
