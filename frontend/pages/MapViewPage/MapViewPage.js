@@ -8,7 +8,7 @@ import  Search  from '../Search/Search';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
-
+const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
 
 const deviceHeight =Dimensions.get("window").height
 const deviceWidth =Dimensions.get("window").width
@@ -149,7 +149,7 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
         onPress={leaveTrace} >
           <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
         {
-          showSearchBar && <Search/>
+          showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude } finished={setLeaveTraceComplete}/>
         }
       </TouchableOpacity>
     </View>
