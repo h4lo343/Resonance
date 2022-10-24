@@ -3,8 +3,9 @@ import React, { memo, useCallback, useEffect, useState,   } from "react";
 import { StyleSheet, TouchableOpacity, Text, Image, Alert } from "react-native";
 import { useSelector } from "react-redux";
 
-  const Search = (longitude, latitude, finished) => {
+  const Search = ({longitude, latitude, finished}) => {
   const AccessToken = useSelector((state) => state.auth.accessToken)
+  const jwtToken = useSelector( (s) => s.auth.jwtToken)
   const [key, setKey] = useState("")
   const [result, setResult] = useState([]);
 
@@ -15,15 +16,40 @@ import { useSelector } from "react-redux";
       [
         {
           text: "yes",
+          onPress: () => sendTrace(e)
         },
         {
           text: "no"
         }
       ]
     )
-    console.log(e);
+
   }
 
+  const sendTrace = async  (e) => {
+    console.log(latitude+" "+longitude);
+    const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/trace/addTrace", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`
+      },
+      body: JSON.stringify({
+        song : {
+          name: e.tracks.name,
+          songUrl: e.tracks.external_urls.spotify,
+          artist: e.artists.name,
+          songImageUrl: e.tracks.album.images[0].url
+        },
+        location: {
+          latitude,
+          longitude
+        }
+      })
+    })
+    const result = await response.json()
+    console.log(result);
+  }
   const getResult = useCallback(async () => {
 
     const url = `https://api.spotify.com/v1/search?q=${key}&type=track,artist`;

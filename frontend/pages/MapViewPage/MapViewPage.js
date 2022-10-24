@@ -149,7 +149,7 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
         onPress={leaveTrace} >
           <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
         {
-          showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude } finished={setLeaveTraceComplete}/>
+          showSearchBar && <Search longitude={currentLocation.longitude} latitude={currentLocation.latitude } finished={setLeaveTraceComplete}/>
         }
       </TouchableOpacity>
     </View>
