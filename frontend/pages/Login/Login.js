@@ -6,7 +6,7 @@ import { ScaledImage } from '../../components';
 import { useSelector, useDispatch } from 'react-redux';
 import { authSlice, getAccessToken} from '../../redux/auth/slice';
 import { BACNKEND_LINK } from '@'
- 
+
 
 
 
@@ -49,13 +49,13 @@ export const Login = ({navigation}) => {
     else{
       dispatch(authSlice.actions.setJwtToken(result.Authorization))
       dispatch(getAccessToken())
-      Navigate('/search')
-       
+      navigation.navigate('DrawerNavigator')
+
     }
   }
-   
-  
-   
+
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.brand}>Trace</Text>
@@ -88,7 +88,7 @@ export const Login = ({navigation}) => {
       </View>
 
       <Box alignItems="center" style={{ marginTop: 40 }}>
-      
+
         <Button style={styles.loginSpotify} onPress={signIn}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={{ fontWeight: 'bold', color: "white", fontSize: 20 }}>Log In With</Text>
@@ -103,9 +103,7 @@ export const Login = ({navigation}) => {
           <Text style={{ color: "black" }}>  Sign up</Text>
         </TouchableOpacity>
         {/* <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link> */}
-        <TouchableOpacity onPress={() => navigation.navigate('DrawerNavigator')}>
-          <Text style={{ color: "black" }}>  Map View</Text>
-        </TouchableOpacity>
+
         {/* <Link to="/MapViewPage" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Map View</Text></Link> */}
       </Box>
 

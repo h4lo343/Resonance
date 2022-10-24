@@ -1,15 +1,27 @@
 import { FlatList, Input, View   } from "native-base";
 import React, { memo, useCallback, useEffect, useState,   } from "react";
-import { StyleSheet, TouchableOpacity, Text, Image } from "react-native";
+import { StyleSheet, TouchableOpacity, Text, Image, Alert } from "react-native";
 import { useSelector } from "react-redux";
 
-  const Search = () => {
+  const Search = (longitude, latitude) => {
   const AccessToken = useSelector((state) => state.auth.accessToken)
   const [key, setKey] = useState("")
   const [result, setResult] = useState([]);
 
-  const chooseSong = () => {
-    console.log("test")
+  const chooseSong = (e) => {
+    Alert.alert(
+      "Confirm",
+      `Are you sure to leave the song: ${e.tracks.name} here?`,
+      [
+        {
+          text: "yes",
+        },
+        {
+          text: "no"
+        }
+      ]
+    )
+    console.log(e);
   }
 
   const getResult = useCallback(async () => {
@@ -40,19 +52,18 @@ import { useSelector } from "react-redux";
   return (
     <View style={style.header}>
       <Text>Search Your Music Here</Text>
-      <Input onChangeText={(key) => { setKey(key) }}  ></Input>
+      <Input w="150%" onChangeText={(key) => { setKey(key) }}  ></Input>
       <FlatList
         data={key.length > 0 ? result : ""}
         keyExtractor={item => item.tracks.id}
-        style={{backgroundColor:"#f0f0f0", zIndex:10}}
+        style={{backgroundColor:"#f0f0f0", zIndex:10, width:"115%"}}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={chooseSong}>
+          <TouchableOpacity  onPress={()=> chooseSong(item)} >
             <View style={{ display: "flex", justifyContent: "flex-start", flexWrap: "nowrap", flexDirection: "row", alignItems: "center" }}>
               <Image style={{ width: 70, height: 70 }}  resizeMode="contain"  source={{uri: item.tracks.album.images[0].url}} alt={item.tracks.name} />
               <View>
                 <Text style={{fontWeight: 'bold'}}>{item.tracks.name}</Text>
                 { item.artists? <Text>{item.artists.name}</Text> : <></> }
-                
               </View>
             </View>
           </TouchableOpacity>
@@ -69,7 +80,6 @@ const style = StyleSheet.create({
     backgroudColor: "white",
     justifyContent: "space-between",
     alignItems: "center",
-    // zIndex: 10,
+  },
 
-  }
 })

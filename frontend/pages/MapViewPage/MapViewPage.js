@@ -42,7 +42,7 @@ export const MapViewPage = () => {
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   const getCurrentLocation = () => {
-   
+
     Geolocation.getCurrentPosition(
       (position) => {
         console.log("get current location")
@@ -82,9 +82,9 @@ export const MapViewPage = () => {
   }
 
   const leaveTraceMarker =<Marker
-  coordinate={{ 
+  coordinate={{
     latitude :  currentLocation.latitude,
-    longitude : currentLocation.longitude }} 
+    longitude : currentLocation.longitude }}
     key = {1}
   >
   <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{height: 50, width:50 }} />
@@ -92,9 +92,9 @@ export const MapViewPage = () => {
 
 const attachHistoryMarker = historyMarkers.map((history)=>(
   <Marker
-    coordinate={{ 
+    coordinate={{
       latitude :  history.coordinate.latitude,
-      longitude : history.coordinate.longitude }} 
+      longitude : history.coordinate.longitude }}
       id= {history.id}
       key={history.id}
     >
@@ -123,7 +123,7 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
             if (status === PermissionsAndroid.RESULTS.GRANTED) {
               console.log('permission granted')
               getCurrentLocation()
-            } 
+            }
         }
 
     } catch (error) {
@@ -135,7 +135,7 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
     <View  style={styles.container}>
 
       <MapView
-        provider={PROVIDER_GOOGLE} 
+        provider={PROVIDER_GOOGLE}
         style={styles.map}
         showsUserLocation = {showUserLocationDot}
         followsUserLocation
@@ -144,13 +144,13 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
         {getMarkers()}
       </MapView>
       <TouchableOpacity style={styles.overlay}>
-        <Button 
-        style={{position: "absolute", top: 600, width: "100%" ,backgroundColor: '#e4b1a5'}} 
+        <Button
+        style={{position: "absolute", top: 600, width: "100%" ,backgroundColor: '#e4b1a5'}}
         onPress={leaveTrace} >
           <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
-          {
-            showSearchBar && <Search/>
-          }
+        {
+          showSearchBar && <Search/>
+        }
       </TouchableOpacity>
     </View>
 
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent:'center',
     alignItems: 'center'
-    
+
   },
   map: {
     ...StyleSheet.absoluteFillObject
