@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Modal, Text, View, Image, Alert, TouchableOpacity, Dimensions} from 'react-native';
+import { StyleSheet, Modal, Text, View, Image, Alert, TouchableOpacity, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { useSelector } from 'react-redux';
 import Carousel from 'react-native-snap-carousel'
 import { Link } from 'react-router-native';
@@ -11,40 +11,42 @@ export const NearbyMusicDisplay = (setVisibility) => {
   const nearbyMusics = useSelector((state) => state.nearbyMusic.musics);
   const deviceWidth = Dimensions.get("window").width;
 
-  const renderCarouselCards = ({item, index}) => {
-    return <CarouselCards data={index}/>
+  const renderCarouselCards = ({ item, index }) => {
+    return <CarouselCards data={index} />
   }
 
   const [spinnerEnabled, setSpinnerEnableFlag] = useState(false);
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={true}
-      onRequestClose={() => {
-        setVisibility.setVisibility(false)
-      }}>
-      <View style={styles.viewStyle}>
-        <View style={styles.headStyle}>
-          <Text style={{fontSize: 18, fontWeight: 'bold'}}>Nearby Musics</Text>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => {setVisibility.setVisibility(false);}}>
-            <Text style={{ fontWeight: 'bold', fontSize: 18}}>Close</Text>
-          </TouchableOpacity>
+    <KeyboardAvoidingView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={true}
+        onRequestClose={() => {
+          setVisibility.setVisibility(false)
+        }}>
+        <View style={styles.viewStyle}>
+          <View style={styles.headStyle}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Nearby Musics</Text>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => { setVisibility.setVisibility(false); }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Close</Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <Carousel
+              ref={(carousel) => { this._carousel = carousel; }}
+              data={nearbyMusics}
+              renderItem={renderCarouselCards}
+              sliderWidth={deviceWidth - 10}
+              itemWidth={300}
+            />
+          </View>
         </View>
-        <View>
-          <Carousel
-            ref={(carousel) => {this._carousel = carousel;}}
-            data={nearbyMusics}
-            renderItem={renderCarouselCards}
-            sliderWidth={deviceWidth - 10}
-            itemWidth={300}
-        />
-        </View>
-      </View>
-    </Modal>
+      </Modal>
+    </KeyboardAvoidingView> 
   )
 }
 
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#cad5d8",
   },
   viewStyle: {
-    height: '40%',
+    height: '50%',
     marginTop: 'auto',
     backgroundColor: 'white'
   },

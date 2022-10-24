@@ -88,10 +88,6 @@ export const MapViewPage = () => {
         var data = result.traces;
         dispatch(getNearbyMusic({data}));
       }
-      // const resultArray = result.tracks.items.map((item, index) => {
-      //   return { tracks: item, artists: result.artists.items[index] }
-      // })
-      // setResult(resultArray)
     } catch (e) {
       console.log(e)
     }

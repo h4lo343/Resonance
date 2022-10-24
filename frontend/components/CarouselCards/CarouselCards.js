@@ -6,99 +6,76 @@ import { Box, Input, Button, FlatList } from 'native-base'
 import Spinner from 'react-native-loading-spinner-overlay';
 
 export const CarouselCards = (index) => {
-    console.log("--- index3: " + index.data);
-    // console.log("--- index: " + Object.entries(index));
+    const [newComment, setNewComment] = useState('');
     const nearbyMusics = useSelector((state) => state.nearbyMusic.musics);
+    const [musicData, setMusicData] = useState({});
 
-    var nearbyMusic = nearbyMusics[index.data];
-    console.log(`nearby music: ` + Object.entries(nearbyMusic));
-    var songImageUri = nearbyMusic.song.songImageUrl;
-    console.log(songImageUri);
-    var songSharer = nearbyMusic.sharer;
-    var sharerId = nearbyMusic.id;
-    var songName = nearbyMusic.song.name;
-    console.log(songName);
-    var songArtist = nearbyMusic.song.artist;
-    console.log(songArtist);
-    var songUrl = nearbyMusic.song.songUrl;
-    console.log(songUrl);
-    var comments = nearbyMusic.comments;
-    var timestamp = nearbyMusic.timestamp;
-    console.log(timestamp);
+    useEffect(() => {
+        console.log("useEffect")
+        var nearbyMusic = nearbyMusics[index.data];
+        var songImageUri = nearbyMusic.song.songImageUrl;
+        var songSharer = nearbyMusic.sharer;
+        var sharerId = nearbyMusic.id;
+        var songName = nearbyMusic.song.name;
+        var songArtist = nearbyMusic.song.artist;
+        var songUrl = nearbyMusic.song.songUrl;
+        var comments = nearbyMusic.comments;
+        var timestamp = nearbyMusic.timestamp;
+        setMusicData({
+            songImageUri: songImageUri,
+            songSharer: songSharer,
+            sharerId: sharerId,
+            songName: songName,
+            songArtist: songArtist,
+            songUrl: songUrl,
+            comments: comments,
+            timestamp: timestamp
+        })
+
+    }, [nearbyMusics])
 
     const [spinnerEnabled, setSpinnerEnableFlag] = useState(false);
+    const add = () => {
 
+    }
 
     return (
-        // <View style={styles.row}>
-
-        //     <Image source={{uri: nearbyMusics[index.data].song.songImageUrl}} size={50} />
-        // </View>
-
         <View>
-            <View style={{ display: "flex", justifyContent: "space-between", flexWrap: "nowrap", flexDirection: "row", alignItems: "center" }}>
-                <Image style={{ width: 70, height: 70 }} resizeMode="contain" source={{ uri: songImageUri }} alt={songName} />
+            <View style={styles.displayStyle}>
+                <Image style={{ width: 70, height: 70 }} resizeMode="contain" source={{ uri: musicData.songImageUri }} alt={musicData.songName} />
                 <View>
-                    <Text style={{ fontWeight: 'bold' }}>sharer: {songSharer}</Text>
-                    <Text>{timestamp}</Text>
-                    <Text>song:{songName}</Text>
-                    <Text>artist: {songArtist}</Text>
-                    <Text>{songUrl}</Text>
+                    <Text style={{ fontWeight: 'bold' }}>sharer: {musicData.songSharer}</Text>
+                    <Text>{musicData.timestamp}</Text>
+                    <Text>song:{musicData.songName}</Text>
+                    <Text>artist: {musicData.songArtist}</Text>
+                    <Text>{musicData.songUrl}</Text>
                 </View>
             </View>
-            {/* <View style={styles.container}>
-                <ScrollView>
-                    <View>
-                        {comments.map((content) => {
-                            return (
-                            <View key = {content.id}>
-                                <Text style={styles.item}>{content.user} - {content.timestamp}</Text>
-                                <Text style={styles.item}>{content.comment}</Text>
-                            </View>
-                            );
-                        })}
-                    </View>
-                </ScrollView> */}
+            <View>
                 <View>
-                <ScrollView nestedScrollEnabled={true}>
-                    <FlatList
-                        data={comments}
-                        keyExtractor={(item) => item.id}
-                        contentContainerStyle={{
-                            flexGrow: 1,
-                        }}
-                        // style={{ backgroundColor: "#f0f0f0", zIndex: 30 }}
-                        renderItem={({ item }) => (
+                    <Button onPress={(e) => add(e)} style={styles.addButton}><Text style={{ fontWeight: 'bold', fontSize: 12 }}>Submit Comment</Text></Button>
+                    <Input variant="underlined" placeholder="Type New Comment" fontSize={14} onChangeText={setNewComment} />
+                </View>
+                <View style = {{height: 200}}>
+                    <ScrollView nestedScrollEnabled={true} directionalLockEnabled={false} disableScrollViewPanResponder={false} style={{ marginTop: 5 }}>
+                        <Text style={{ fontWeight: 'bold' }}>Comments</Text>
+                        <FlatList
+                            data={musicData.comments}
+                            keyExtractor={(item) => item.id + item.timestamp}
+                            contentContainerStyle={{
+                                flexGrow: 1,
+                            }}
+                            renderItem={({ item }) => (
                                 <View>
-                                    <Text>user - {item.user}</Text>
-                                    <Text>Hello - {item.timestamp}</Text>
-                                    <Text>{item.comment}</Text>
-                                    <Text>fjaioaej sifjoisejafljeasljefalsejfl;asejflasejfl sea efaselkfj
-                                        a ejlsjefleijfalesjalesfjsalk fjalskjflsje fjaes;lkfjse;alk fjalsekfj
-                                        fj asejfl;ksjflkesjflksajfklajeklajlejflakjeflkjslk;aajf;esalk f
-                                         jaslfj;alse kjflsekjfl;sakjfklsaejkflajs;ekfje
-                                          jakl;sfj;ealskjflksejlkfja;lesjfse;alfjkes'false eakl;sjf;lkfjse\
-                                          jaioaej sifjoisejafljeasljefalsejfl;asejflasejfl sea efaselkfj
-                                        a ejlsjefleijfalesjalesfjsalk fjalskjflsje fjaes;lkfjse;alk fjalsekfj
-                                        fj asejfl;ksjflkesjflksajfklajeklajlejflakjeflkjslk;aajf;esalk f
-                                         jaslfj;alse kjflsekjfl;sakjfklsaejkflajs;ekfje
-                                          jakl;sfj;ealskjflksejlkfja;lesjfse;alfjkes'false eakl;sjf;lkfjse\
-                                    </Text>
+                                    <Text style={{ backgroundColor: "#f0f0f0", fontWeight: 'bold' }}>{item.user} - {item.timestamp}</Text>
+                                    <Text style={{ backgroundColor: "#f0f0f0" }}>{item.comment}</Text>
                                 </View>
                             )
-                        }
-                        // renderItem={({ item }) => (
-                        //     <View style={{ display: "flex", justifyContent: "flex-start", flexWrap: "nowrap", flexDirection: "row", alignItems: "center" }}>
-                        //             <Text style={{ fontWeight: 'bold' }}>{item.user}</Text>
-                        //             <Text>{item.timestamp}</Text>
-                        //             <Text>{item.comment}</Text>
-                        //     </View>
-                        //     <Text style={{ fontWeight: 'bold' }}>{item.user}</Text>
-                        // )}
-                    ></FlatList>
-                </ScrollView>
-
+                            }
+                        ></FlatList>
+                    </ScrollView>
                 </View>
+            </View>
 
             {/* </View> */}
         </View>
@@ -120,5 +97,19 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 15,
         marginTop: 5,
-    }
+    },
+    displayStyle: {
+        display: "flex",
+        justifyContent: "space-between",
+        flexWrap: "nowrap",
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    addButton: {
+        backgroundColor: "#e4b1a5",
+        display: "flex",
+        justifyContent: "space-between",
+        width: 120
+    },
+
 })
