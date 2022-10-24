@@ -57,9 +57,9 @@ export const MapViewPage = () => {
       longitude: longitude
     })
     setShowModal(true);
-    fetchNearbyMusic().then(() => {
-      console.log("received info from backend")
-    })
+    // fetchNearbyMusic().then(() => {
+    //   setShowModal(true);
+    // })
     }
 
   const fetchNearbyMusic = async () => {
