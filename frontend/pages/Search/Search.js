@@ -1,6 +1,6 @@
-import { FlatList, Input, View   } from "native-base";
-import React, { memo, useCallback, useEffect, useState,   } from "react";
-import { StyleSheet, TouchableOpacity, Text, Image, Alert } from "react-native";
+import { FlatList,   View, Input  } from "native-base";
+import React, { memo, useCallback, useEffect, useState   } from "react";
+import { StyleSheet, TouchableOpacity, Text, Image, Alert, TextInput } from "react-native";
 import { useSelector } from "react-redux";
 
   const Search = ({longitude, latitude, finished}) => {
@@ -27,7 +27,7 @@ import { useSelector } from "react-redux";
   }
 
   const sendTrace = async  (e) => {
-    console.log(latitude+" "+longitude);
+    setKey("")
     const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/trace/addTrace", {
       method: 'POST',
       headers: {
@@ -49,6 +49,22 @@ import { useSelector } from "react-redux";
     })
     const result = await response.json()
     console.log(result);
+    if (response.status == 201) {
+
+      Alert.alert(
+        "Share Successful",
+        "Your music trace has been recorded"
+      );
+      finished(true)
+           }
+    else {
+
+      Alert.alert(
+        "Share Failed",
+        result.message
+      );
+
+    }
   }
   const getResult = useCallback(async () => {
 
@@ -77,8 +93,13 @@ import { useSelector } from "react-redux";
   }, [getResult])
   return (
     <View style={style.header}>
-      <Text>Search Your Music Here</Text>
-      <Input w="150%" onChangeText={(key) => { setKey(key) }}  ></Input>
+      <TextInput
+        style={{backgroundColor:"white", width:300}}
+        onChangeText={(key) => { setKey(key) }}
+        placeholder="search your song"
+        value={key}
+      >
+      </TextInput>
       <FlatList
         data={key.length > 0 ? result : ""}
         keyExtractor={item => item.tracks.id}

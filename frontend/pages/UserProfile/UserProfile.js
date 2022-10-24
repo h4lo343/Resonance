@@ -52,7 +52,8 @@ export const UserProfile = ({navigation}) => {
 
                 setSpinnerEnableFlag(false);
 
-            }).catch((e) => { console.log("error " + e) });
+            }).catch((e) => { console.log("error " + e); setSpinnerEnableFlag(false);
+        });
     })
 
     const editProfile = () => {
