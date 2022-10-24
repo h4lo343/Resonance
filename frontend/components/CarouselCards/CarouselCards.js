@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Modal, Text, View, Image, Alert, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Modal, Text, View, Image, Alert, TouchableOpacity, ScrollView, Linking } from 'react-native';
 import { useSelector } from 'react-redux';
+import {WebView} from 'react-native-webview'
 import { Link } from 'react-router-native';
 import { Box, Input, Button, FlatList } from 'native-base'
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -48,7 +49,7 @@ export const CarouselCards = (index) => {
                     <Text>{musicData.timestamp}</Text>
                     <Text>song:{musicData.songName}</Text>
                     <Text>artist: {musicData.songArtist}</Text>
-                    <Text>{musicData.songUrl}</Text>
+                    <Text style={styles.link} onPress={()=>{Linking.openURL(musicData.songUrl)}}>music spotify link</Text>
                 </View>
             </View>
             <View>
@@ -111,5 +112,9 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         width: 120
     },
+    link: {
+        color: "#63C5DA",
+        textDecorationLine: 'underline',
+    }
 
 })

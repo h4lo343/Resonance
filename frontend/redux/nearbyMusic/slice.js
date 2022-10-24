@@ -8,7 +8,7 @@ const initialState = {
             "song": {
                 "_id": "634423ed5f9d5e2e4c7109da",
                 "name": "testSong",
-                "songUrl": "tesSongUrl",
+                "songUrl": "https://open.spotify.com/",
                 "artist": "testArtist",
                 "songImageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Chain_link_icon.png",
                 "__v": 0
@@ -26,6 +26,18 @@ const initialState = {
                     "user": "test1",
                     "timestamp": "2022-10-16T11:40:01.809Z",
                     "comment": "hello world1"
+                },
+                {
+                    "id": "634bed9121f7aeaa54a80168",
+                    "user": "test2",
+                    "timestamp": "2022-10-17T11:40:01.809Z",
+                    "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
+                },
+                {
+                    "id": "634bed9121f7aeaa54a80168",
+                    "user": "test2",
+                    "timestamp": "2022-10-18T11:40:01.809Z",
+                    "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 }
             ],
             "location": {
@@ -39,7 +51,7 @@ const initialState = {
             "song": {
                 "_id": "634423ed5f9d5e2e4c7109dg",
                 "name": "testSong2",
-                "songUrl": "tesSongUrl2",
+                "songUrl": "https://open.spotify.com/playlist/37i9dQZF1DX4sWSpwq3LiO",
                 "artist": "testArtist2",
                 "songImageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Chain_link_icon.png",
                 "__v": 0
@@ -51,6 +63,24 @@ const initialState = {
                     "user": "test2",
                     "timestamp": "2022-11-16T11:40:01.809Z",
                     "comment": "hello world2"
+                },
+                {
+                    "id": "634bed9121f7aeaa54a80168",
+                    "user": "test1",
+                    "timestamp": "2022-10-16T11:40:01.809Z",
+                    "comment": "hello world1"
+                },
+                {
+                    "id": "634bed9121f7aeaa54a80168",
+                    "user": "test2",
+                    "timestamp": "2022-10-17T11:40:01.809Z",
+                    "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
+                },
+                {
+                    "id": "634bed9121f7aeaa54a80168",
+                    "user": "test2",
+                    "timestamp": "2022-10-18T11:40:01.809Z",
+                    "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 }
             ],
             "location": {
