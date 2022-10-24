@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Navigate, useNavigate } from 'react-router-native';
 import { Box, Button } from 'native-base';
 import { Avatar } from 'react-native-paper';
@@ -9,7 +9,8 @@ import RNFetchBlob from "rn-fetch-blob";
 import { useLocation } from 'react-router-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-export const UserProfile = () => {
+
+export const UserProfile = ({navigation}) => {
     const dispatch = useDispatch();
     const stateUsername = useSelector((state) => state.userProfile.username);
     const stateFullName = useSelector((state) => state.userProfile.fullName);
@@ -88,7 +89,10 @@ export const UserProfile = () => {
             </View>
 
             <Box alignItems="center" style={{ marginTop: 40 }}>
-                <Button onPress={(e) => editProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Edit Profile</Text></Button>
+                <TouchableOpacity style={styles.editProfile} onPress={() => navigation.navigate('EditProfile')}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Edit Profile</Text>
+                </TouchableOpacity>
+                {/* <Button onPress={(e) => editProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Edit Profile</Text></Button> */}
             </Box>
         </View>
 

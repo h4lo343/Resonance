@@ -17,26 +17,10 @@ const App = () => {
     <Provider store={Store}>
       <NativeBaseProvider>
         <NativeRouter>
-          {/* <View  >
-            <Routes>
-              <Route path='/login' element={<Login />}></Route>
-              <Route path='/register' element={<Register />}></Route>
-              <Route path='/reset' element={<PasswordReset />}></Route>
-              <Route path='/MapViewPage' element={<MapViewPage />}></Route>
-              <Route path='/search' element={<Search />}></Route>
-              <Route path='/edit-profile' element={<EditProfile />}></Route>
-              <Route path='/user-profile' element={<UserProfile />}></Route>
-              <Route path='/' element={<Navigate to='/login'/>}></Route>
-            </Routes>
-          </View> */}
+
           <NavigationContainer>
             <StackNavigator />
           </NavigationContainer>
-
-          <Routes>
-            <Route path='/edit-profile' element={<EditProfile />}></Route>
-            <Route path='/user-profile' element={<UserProfile />}></Route>
-          </Routes>
           
         </NativeRouter>
       </NativeBaseProvider>
