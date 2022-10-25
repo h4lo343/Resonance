@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity} from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -14,7 +14,6 @@ import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
 
 const deviceHeight = Dimensions.get("window").height
 const deviceWidth = Dimensions.get("window").width
-
 
 export const MapViewPage = () => {
   const dispatch = useDispatch();
@@ -52,6 +51,8 @@ export const MapViewPage = () => {
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   const requireNearbyMusic = (latitude, longitude) => {
+    console.log("require nearby music called");
+    console.log("requireNearbyMusic: latitude: " + latitude + " | longitude: " + longitude);
     setNearbyLocation({
       latitude: latitude,
       longitude: longitude
@@ -60,7 +61,7 @@ export const MapViewPage = () => {
     // fetchNearbyMusic().then(() => {
     //   setShowModal(true);
     // })
-    }
+  }
 
   const fetchNearbyMusic = async () => {
     const url = `https://comp90018-mobile-computing.herokuapp.com/trace/getNearbyTraces`;
@@ -72,7 +73,6 @@ export const MapViewPage = () => {
       }
     }
 
-    console.log(JSON.stringify(requestBody))
     try {
       const response = await fetch(url,
         {

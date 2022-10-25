@@ -1,10 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Modal, Text, View, Image, Alert, TouchableOpacity, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { useSelector } from 'react-redux';
 import Carousel from 'react-native-snap-carousel'
-import { Link } from 'react-router-native';
-import { Box, Input, Button, FlatList } from 'native-base'
-import Spinner from 'react-native-loading-spinner-overlay';
 import { CarouselCards } from '../../components/CarouselCards';
 
 export const NearbyMusicDisplay = (setVisibility) => {
@@ -12,10 +9,9 @@ export const NearbyMusicDisplay = (setVisibility) => {
   const deviceWidth = Dimensions.get("window").width;
 
   const renderCarouselCards = ({ item, index }) => {
+    console.log("nearbyMusics: " + Object.entries(nearbyMusics))
     return <CarouselCards data={index} />
   }
-
-  const [spinnerEnabled, setSpinnerEnableFlag] = useState(false);
 
   return (
     <KeyboardAvoidingView>
@@ -24,6 +20,7 @@ export const NearbyMusicDisplay = (setVisibility) => {
         transparent={true}
         visible={true}
         onRequestClose={() => {
+          console.log("onRequestClose")
           setVisibility.setVisibility(false)
         }}>
         <View style={styles.viewStyle}>
@@ -41,7 +38,7 @@ export const NearbyMusicDisplay = (setVisibility) => {
               data={nearbyMusics}
               renderItem={renderCarouselCards}
               sliderWidth={deviceWidth - 10}
-              itemWidth={300}
+              itemWidth={320}
             />
           </View>
         </View>

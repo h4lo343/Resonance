@@ -3,7 +3,7 @@ import {authorize} from 'react-native-app-auth';
 
 const initialState = {
   
-  jwtToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzQ0YjQ5ZmViMjAxODgzOGFlNzJhZDgiLCJpYXQiOjE2NjU5MDc2MTAsImV4cCI6MTY2NTk5NDAxMH0.HCeYrDZly-vZHXaXvXq2w9hlVwryF0eqfPUBNXbSq84",
+  jwtToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzQ0YjQ5ZmViMjAxODgzOGFlNzJhZDgiLCJpYXQiOjE2NjY1ODQ0NDAsImV4cCI6MTY2NjY3MDg0MH0.vmfDO0M_FWRAnGmhHDZOh4E0RAVx9k3D8SZCjILxwiM",
   accessToken: ""
 }
 
@@ -26,8 +26,6 @@ export const getAccessToken = createAsyncThunk(
     
   }
 )
-
-
 
 export const authSlice = createSlice({
   name: "auth",

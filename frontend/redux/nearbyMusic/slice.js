@@ -103,7 +103,7 @@ export const nearbyMusicSlice = createSlice({
     initialState,
     reducers: {
         setMusics: (state, actions) => {
-              state.musics = actions.payload
+              state.musics = actions.payload;
           },
       }
   })
