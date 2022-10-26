@@ -5,22 +5,23 @@ import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { Marker } from 'react-native-maps';
 import Search from '../Search/Search';
-import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
+import { Button } from 'native-base';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
 import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
 import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
-const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
 
+const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
 const deviceHeight = Dimensions.get("window").height
 const deviceWidth = Dimensions.get("window").width
 
-export const MapViewPage = () => {
+export const MapViewPage = ({navigation}) => {
   const [renderNearbyMusicSpinnerFlag, setNearbyMusciSpinnerFlag] = useState(false);
   const dispatch = useDispatch();
   const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
+  const [nearbyMusicProps, setNearbyMusicProps] = useState({})
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 37.3882733,
     longitude: -122.0867283 // default values
@@ -40,17 +41,24 @@ export const MapViewPage = () => {
 
   const [showUserLocationDot, setUserLocationDot] = useState(true);
   const [showSearchBar, setshowSearchBar] = React.useState(false);
+
   useEffect(() => {
-    console.log("check permission")
-    _checkPermission()
-    setInitialRegion({
-      latitude: currentLocation.latitude,
-      longitude: currentLocation.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    })
-    loadHistoryMarkers()
-  }, [])
+    // this is to ensure that this page would refresh to get new user data from backend
+    const focusHandler = navigation.addListener('focus', () => {
+        console.log("check permission")
+        _checkPermission()
+        setInitialRegion({
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        })
+        loadHistoryMarkers()
+        });
+  
+      // this return is to unsubscribe handler from the event
+      return focusHandler;
+  }, [navigation]);
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   const requireNearbyMusic = (latitude, longitude) => {
@@ -64,6 +72,11 @@ export const MapViewPage = () => {
 
     fetchNearbyMusic().then(() => {
       setNearbyMusciSpinnerFlag(false);
+      setNearbyMusicProps({
+        profileNavigationCallBack: () => {
+          navigation.navigate("AnotherUserProfile")},
+        setVisibilityCallBack: (value) => setVisibility(value)
+      });
       setShowNearbyMusicModal(true);
     }).catch((e) => {
       console.log("error: " + e);
@@ -226,7 +239,7 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
               textStyle={styles.spinnerTextStyle}
           />
       {
-        showNearbyMusicModal &&   <NearbyMusicDisplay setVisibility={(value) => setVisibility(value)}/>
+        showNearbyMusicModal &&   <NearbyMusicDisplay nearbyMusicProps={nearbyMusicProps}/>
       }
     </View>
 

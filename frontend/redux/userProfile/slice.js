@@ -133,7 +133,6 @@ export const userProfileSlice = createSlice({
   initialState,
   reducers: {
     setUsername: (state, actions) => {
-      console.log("username payload: " + actions.payload);
       state.username = actions.payload
     },
     setFullName: (state, actions) => {

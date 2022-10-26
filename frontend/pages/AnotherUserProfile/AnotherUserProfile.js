@@ -3,23 +3,22 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Linking } 
 import { Box, Button, FlatList } from 'native-base';
 import { Avatar } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-native';
 
-export const AnotherUserProfile = () => {
+export const AnotherUserProfile = ({ navigation }) => {
+    const defaultUri = Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri;
     const username = useSelector((state) => state.anotherUserProfile.username);
     const musicList = useSelector((state) => state.anotherUserProfile.musicList);
     const avatarUri = useSelector((state) => state.anotherUserProfile.avatarUri);
 
     const backToMap = () => {
-        Navigate("/MapViewPage");
+        navigation.navigate("MapViewPage");
     }
 
-    const Navigate = useNavigate();
-
     return (
-        <View >
+        <View>
+            <Text style={{padding: 10 ,backgroundColor: '#5F9F9F', color: "#fff", fontSize: 20, fontWeight: "bold"}}>Profile</Text>
             <View style={styles.row}>
-                <Avatar.Image source={{ uri: avatarUri }} size={100} />
+                <Avatar.Image source={{ uri: avatarUri == undefined? defaultUri : avatarUri }} size={100} />
             </View>
 
             <View style={styles.userrow}>

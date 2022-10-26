@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import { StyleSheet, Modal, Text, View, Image, Alert, TouchableOpacity, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { useSelector } from 'react-redux';
 import Carousel from 'react-native-snap-carousel'
 import { CarouselCards } from '../../components/CarouselCards';
 
-export const NearbyMusicDisplay = (setVisibility) => {
+export const NearbyMusicDisplay = ({nearbyMusicProps}) => {
   const nearbyMusics = useSelector((state) => state.nearbyMusic.musics);
   const deviceWidth = Dimensions.get("window").width;
 
   const renderCarouselCards = ({ item, index }) => {
-    return <CarouselCards data={index} />
+    var propsData = {
+      index: index,
+      navigationCallback: () => {nearbyMusicProps.profileNavigationCallBack()},
+      setVisibilityCallBack: () => {nearbyMusicProps.setVisibilityCallBack(false)}
+    }
+    return <CarouselCards data={propsData} />
   }
 
   return (
@@ -20,14 +25,14 @@ export const NearbyMusicDisplay = (setVisibility) => {
         visible={true}
         onRequestClose={() => {
           console.log("onRequestClose")
-          setVisibility.setVisibility(false)
+          nearbyMusicProps.setVisibilityCallBack(false)
         }}>
         <View style={styles.cardStyle}>
           <View style={styles.headDisplayStyle}>
             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Nearby Musics</Text>
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => { setVisibility.setVisibility(false); }}>
+              onPress={() => { nearbyMusicProps.setVisibilityCallBack(false)}}>
               <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Close</Text>
             </TouchableOpacity>
           </View>

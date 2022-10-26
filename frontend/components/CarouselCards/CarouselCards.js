@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, Linking } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-native';
 import { Box, Input, Button, FlatList } from 'native-base'
 import { getAnotherUserProfile } from '../../redux/anotherUserProfile/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import RNFetchBlob from "rn-fetch-blob";
 
-export const CarouselCards = (index) => {
+export const CarouselCards = (propsData) => {
     const dispatch = useDispatch();
     const [newComment, setNewComment] = useState('');
     const [anotherUserSpinnerFlag, SetAnotherUserSpinnerFlag] = useState(false);
@@ -18,7 +17,7 @@ export const CarouselCards = (index) => {
     useEffect(() => {
         console.log("CarouseCards useEffect called")
         const musicDataArray = Object.values(nearbyMusics);
-        processMusicData(musicDataArray[index.data])
+        processMusicData(musicDataArray[propsData.data.index])
     }, [nearbyMusics])
 
     const processMusicData = (nearbyMusic) => {
@@ -44,12 +43,14 @@ export const CarouselCards = (index) => {
         })
     }
 
-    const Navigate = useNavigate();
-
     const goToAnotherUserProfile = () => {
+        console.log("navigation callback");
         SetAnotherUserSpinnerFlag(true);
         getAnotherUserInfo().then(() => {
-            Navigate("/another-user-profile");
+            propsData.data.setVisibilityCallBack();
+            propsData.data.navigationCallback();
+        }).catch(() => {
+            SetAnotherUserSpinnerFlag(false);
         })
     }
 
@@ -69,8 +70,6 @@ export const CarouselCards = (index) => {
         const result = await response.json();
 
         const dirs = RNFetchBlob.fs.dirs;
-
-        console.log(Object.values(result.traces))
 
         const imageType = result.avatar.avatarType;
 

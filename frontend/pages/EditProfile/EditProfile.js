@@ -4,11 +4,13 @@ import { launchCamera } from 'react-native-image-picker';
 import { Box, Input, Button } from 'native-base';
 import { useSelector } from 'react-redux';
 import { Avatar } from 'react-native-paper';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { UserProfile } from '../UserProfile';
 import RNFetchBlob from "rn-fetch-blob";
-import { Navigate, useNavigate } from 'react-router-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-export const EditProfile = () => {
+export const EditProfile = ({ navigation }) => {
+  const Drawer = createDrawerNavigator();
   const currentUsername = useSelector((state) => state.userProfile.username);
   const avatarUri = useSelector((state) => state.userProfile.avatarUri);
   const avatarBase64 = useSelector((state) => state.userProfile.avatarBase64);
@@ -19,7 +21,6 @@ export const EditProfile = () => {
   const [newUsername, setNewUsername] = useState('');
   const [newFullname, setNewFullname] = useState('');
   const [profileSpinnerFlag, setProfileSpinnerFlag] = useState(false);
-  const Navigate = useNavigate();
 
   const requestCameraPermission = async () => {
     try {
@@ -117,18 +118,17 @@ export const EditProfile = () => {
     setProfileSpinnerFlag(true);
     postToBackend().then(() => {
       setProfileSpinnerFlag(false);
-      Navigate('/user-profile');
+      navigation.navigate("UserProfile");
     }).catch((error) => {
       console.log("error: " + error);
     })
   }
 
-  const backToUserProfile = () => {
-    Navigate('/user-profile');
-  }
-
   return (
-    <View>
+    <View style={{backgroundColor: "#fff"}}>
+      <Drawer.Navigator>
+        <Drawer.Screen name="Profile" component={UserProfile} />
+      </Drawer.Navigator>
       <View style={styles.profileSpinnerStyle}>
         <Spinner
           visible={profileSpinnerFlag}
@@ -163,8 +163,7 @@ export const EditProfile = () => {
         </Box>
 
         <Box alignItems="center" style={styles.saveProfile}>
-          <Button onPress={(e) => save(e)} style={styles.saveButton}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Save</Text></Button>
-          <Button onPress={(e) => backToUserProfile(e)} style={styles.saveButton}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Back To UserProfile</Text></Button>
+          <Button onPress={(e) => save(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Save</Text></Button>
         </Box>
       </ScrollView>
 
@@ -192,18 +191,10 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   saveProfile: {
-    marginTop: 15,
-    flexDirection: 'row',
-    marginLeft: 80,
-    width: 260,
-    justifyContent: 'space-between',
-  },
-  saveButton: {
-    backgroundColor: "#e4b1a5",
+    marginTop: 20,
+    marginBottom: 250
   },
   profileSpinnerStyle: {
-    paddingTop: 20,
     backgroundColor: '#cad5d8',
-    padding: 8,
   },
 });

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { Navigate, useNavigate } from 'react-router-native';
 import { Box, Button, FlatList } from 'native-base';
 import { Avatar } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserProfile } from '../../redux/userProfile/slice';
 import RNFetchBlob from "rn-fetch-blob";
-import { useLocation } from 'react-router-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
@@ -18,11 +16,24 @@ export const UserProfile = ({navigation}) => {
     const musicList = useSelector((state) => state.anotherUserProfile.musicList);
     const [profileSpinnerFlag, setProfileSpinnerFlag] = useState(true);
     const jwtToken = useSelector((state) => state.auth.jwtToken);
-    const location = useLocation();
-    const Navigate = useNavigate();
+
+    useEffect(() => {
+        // this is to ensure that this page would refresh to get new user data from backend
+        const focusHandler = navigation.addListener('focus', () => {
+            console.log('user profile use effact called')
+            getUserInfo().then().catch((e) => { 
+                console.log("error: " + e);
+                setProfileSpinnerFlag(false);
+            });
+          });
+      
+          // this return is to unsubscribe handler from the event
+          return focusHandler;
+    }, [navigation]);
 
     const getUserInfo = (async () => {
-        console.log("user effect called");
+        setProfileSpinnerFlag(true);
+
         const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/user/getUserInfo",
             {
                 headers: { Authorization: "Bearer " + jwtToken },
@@ -30,8 +41,6 @@ export const UserProfile = ({navigation}) => {
             }
         )
         const result = await response.json();
-
-        console.log("result: " + result.username);
 
         const dirs = RNFetchBlob.fs.dirs;
 
@@ -84,15 +93,11 @@ export const UserProfile = ({navigation}) => {
     })
 
     const editProfile = () => {
-        Navigate("/edit-profile");
+        navigation.navigate("EditProfile");
     }
 
-    useEffect(() => {
-        getUserInfo().then().catch((e) => { console.log("error: " + e) });
-    }, [location.key]);
-
     return (
-        <View>
+        <View style={{backgroundColor: "#fff"}}>
             <View style={styles.profileSpinnerStyle}>
                 <Spinner
                     visible={profileSpinnerFlag}
@@ -134,7 +139,7 @@ export const UserProfile = ({navigation}) => {
                 ></FlatList>
             </View>
 
-            <Box alignItems="center" style={{ marginTop: 20 }}>
+            <Box alignItems="center" style={{ marginTop: 20, marginBottom: 200 }}>
                 <Button onPress={(e) => editProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Edit Profile</Text></Button>
             </Box>
         </View>
@@ -162,9 +167,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#e4b1a5",
     },
     profileSpinnerStyle: {
-        paddingTop: 20,
         backgroundColor: '#cad5d8',
-        padding: 8,
     },
     musicListHeader: {
         backgroundColor: "#cad5d8",
