@@ -2,7 +2,7 @@ import { NativeBaseProvider } from "native-base";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { NativeRouter, Route, Link, Navigate, Routes,   } from "react-router-native";
-import { Login, PasswordReset, Register,  MapViewPage, UserProfile, EditProfile } from "./pages";
+import { Login, PasswordReset, Register,  MapViewPage, UserProfile, EditProfile, AnotherUserProfile } from "./pages";
 import Search from "./pages/Search/Search";
 import { Map } from "./pages/Main/Map/Map";
 import { Provider } from "react-redux";
@@ -28,8 +28,9 @@ const App = () => {
               <Route path='/search' element={<Search />}></Route>
               <Route path='/edit-profile' element={<EditProfile />}></Route>
               <Route path='/user-profile' element={<UserProfile />}></Route>
+              <Route path='/another-user-profile' element={<AnotherUserProfile />}></Route>
               <Route path='/nearby-music' element={<NearbyMusicDisplay />}></Route>
-              <Route path='/' element={<Navigate to='/nearby-music'/>}></Route>
+              <Route path='/' element={<Navigate to='/another-user-profile'/>}></Route>
             </Routes>
           </View>
           {/* <NavigationContainer>

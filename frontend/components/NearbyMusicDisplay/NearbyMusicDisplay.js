@@ -9,7 +9,6 @@ export const NearbyMusicDisplay = (setVisibility) => {
   const deviceWidth = Dimensions.get("window").width;
 
   const renderCarouselCards = ({ item, index }) => {
-    console.log("nearbyMusics: " + Object.entries(nearbyMusics))
     return <CarouselCards data={index} />
   }
 

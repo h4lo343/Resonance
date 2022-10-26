@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Navigate, useNavigate } from 'react-router-native';
-import { Box, Button } from 'native-base';
+import { Box, Button, FlatList } from 'native-base';
 import { Avatar } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserProfile } from '../../redux/userProfile/slice';
@@ -21,7 +21,7 @@ export const UserProfile = () => {
 
     const getUserInfo = (async () => {
         console.log("user effect called");
-        const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/user/getUserInfo",
+        const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/user/updateUserInfo",
             {
                 headers: { Authorization: "Bearer " + jwtToken },
                 method: 'GET'
@@ -51,7 +51,10 @@ export const UserProfile = () => {
 
                 setSpinnerEnableFlag(false);
 
-            }).catch((e) => { console.log("error " + e) });
+            }).catch((e) => { 
+                console.log("error " + e);
+                setSpinnerEnableFlag(false);
+            });
     })
 
     const editProfile = () => {

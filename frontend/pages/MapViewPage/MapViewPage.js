@@ -57,10 +57,10 @@ export const MapViewPage = () => {
       latitude: latitude,
       longitude: longitude
     })
-    setShowModal(true);
-    // fetchNearbyMusic().then(() => {
-    //   setShowModal(true);
-    // })
+    // setShowModal(true);
+    fetchNearbyMusic().then(() => {
+      setShowModal(true);
+    })
   }
 
   const fetchNearbyMusic = async () => {

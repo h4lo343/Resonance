@@ -4,7 +4,10 @@ const initialState = {
   musics: [
         {
             "id": "634bed8121f7aeaa54a8015c",
-            "sharer": "test",
+            "sharer": {
+                "id": "63564f921ba6d1ff21217914",
+                "username": "test"
+            },
             "song": {
                 "_id": "634423ed5f9d5e2e4c7109da",
                 "name": "testSong",
@@ -47,7 +50,10 @@ const initialState = {
         },
         {
             "id": "634bed8121f7aeaa54a80155",
-            "sharer": "test2",
+            "sharer": {
+                "id": "63564f921ba6d1ff21217915",
+                "username": "test2"
+            },
             "song": {
                 "_id": "634423ed5f9d5e2e4c7109dg",
                 "name": "testSong2",
