@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Navigate, useNavigate } from 'react-router-native';
 import { Box, Button, FlatList } from 'native-base';
 import { Avatar } from 'react-native-paper';
@@ -9,7 +9,8 @@ import RNFetchBlob from "rn-fetch-blob";
 import { useLocation } from 'react-router-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-export const UserProfile = () => {
+
+export const UserProfile = ({navigation}) => {
     const dispatch = useDispatch();
     const stateUsername = useSelector((state) => state.userProfile.username);
     const stateFullName = useSelector((state) => state.userProfile.fullName);

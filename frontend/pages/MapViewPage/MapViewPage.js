@@ -12,6 +12,7 @@ import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
 import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
+const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
 
 const deviceHeight = Dimensions.get("window").height
 const deviceWidth = Dimensions.get("window").width
@@ -145,22 +146,21 @@ export const MapViewPage = () => {
     setShowNearbyMusicModal(false);
   }
 
-  const leaveTraceMarker = <Marker
-    coordinate={{
-      latitude: currentLocation.latitude,
-      longitude: currentLocation.longitude
-    }}
-    key={1}
+  const leaveTraceMarker =<Marker
+  coordinate={{
+    latitude :  currentLocation.latitude,
+    longitude : currentLocation.longitude }}
+    key = {1}
   >
-    <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{ height: 50, width: 50 }} />
-  </Marker>
-  const attachHistoryMarker = historyMarkers.map((history) => (
-    <Marker
-      coordinate={{
-        latitude: history.coordinate.latitude,
-        longitude: history.coordinate.longitude
-      }}
-      id={history.id}
+  <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{height: 50, width:50 }} />
+</Marker>
+
+const attachHistoryMarker = historyMarkers.map((history)=>(
+  <Marker
+    coordinate={{
+      latitude :  history.coordinate.latitude,
+      longitude : history.coordinate.longitude }}
+      id= {history.id}
       key={history.id}
       onPress={()=> requireNearbyMusic(history.coordinate.latitude, history.coordinate.longitude)}
     >
@@ -200,25 +200,25 @@ export const MapViewPage = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View  style={styles.container}>
+
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
-        showsUserLocation={showUserLocationDot}
+        showsUserLocation = {showUserLocationDot}
         followsUserLocation
-        initialRegion={initialRegion}
-      >
+        initialRegion = {initialRegion}
+        >
         {getMarkers()}
       </MapView>
       <TouchableOpacity style={styles.overlay}>
         <Button
-          style={{ position: "absolute", top: 600, width: "100%", backgroundColor: '#e4b1a5' }}
-          onPress={leaveTrace} >
+        style={{position: "absolute", top: 600, width: "100%" ,backgroundColor: '#e4b1a5'}}
+        onPress={leaveTrace} >
           <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
         {
-          showSearchBar && <Search />
+          showSearchBar && <Search longitude={currentLocation.longitude} latitude={currentLocation.latitude } finished={setLeaveTraceComplete}/>
         }
-
       </TouchableOpacity>
       <Spinner
               visible={renderNearbyMusicSpinnerFlag}
@@ -229,8 +229,8 @@ export const MapViewPage = () => {
         showNearbyMusicModal &&   <NearbyMusicDisplay setVisibility={(value) => setVisibility(value)}/>
       }
     </View>
-  )
-}
+
+)}
 
 const styles = StyleSheet.create({
   container: {
