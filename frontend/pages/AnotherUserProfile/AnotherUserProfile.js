@@ -13,7 +13,7 @@ export const AnotherUserProfile = () => {
     const backToMap = () => {
         Navigate("/MapViewPage");
     }
-    
+
     const Navigate = useNavigate();
 
     return (
@@ -26,20 +26,20 @@ export const AnotherUserProfile = () => {
                 <Text style={styles.userDataFont}>Username: {username}</Text>
             </View>
 
-            <View style={styles.userrow}>
-                <Text style={styles.userDataFont}>Music Lists:</Text>
+            <View style={styles.musicListHeader}>
+                <Text style={{fontSize: 16, color: '#795C34'}}>Music Lists:</Text>
             </View>
 
-            <View style={{ marginLeft: 80, marginTop: 10, height: 300, width: 280}}>
+            <View style={{ marginLeft: 65, marginTop: 10, height: 200, width: 310}}>
                 <FlatList
                     data={musicList}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <View style={styles.displayStyle}>
-                            <Image style={{ width: 70, height: 70 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
-                            <View>
-                                <Text>song:{item.song.name}</Text>
-                                <Text>artist: {item.song.artist}</Text>
+                        <View style={styles.listStyle}>
+                            <Image style={{ width: 70, height: 70, marginBottom: 5 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
+                            <View style={{marginLeft: 15}}>
+                                <Text style={{fontWeight: 'bold'}}>Song: {item.song.name}</Text>
+                                <Text>Artist: {item.song.artist}</Text>
                                 <Text style={styles.link} onPress={() => { Linking.openURL(item.song.songUrl) }}>music spotify link</Text>
                             </View>
                         </View>
@@ -49,7 +49,7 @@ export const AnotherUserProfile = () => {
             </View>
 
             <Box alignItems="center" style={{ marginTop: 20 }}>
-                <Button onPress={(e) => backToMap(e)} style={styles.backButtonProfile}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Back To Map</Text></Button>
+                <Button onPress={(e) => backToMap(e)} style={{backgroundColor: "#e4b1a5"}}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Back To Map</Text></Button>
             </Box>
         </View>
     )
@@ -59,32 +59,34 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         marginTop: 30,
-        marginBottom: 10,
+        marginBottom: 5,
         justifyContent: 'center'
     },
     userrow: {
         flexDirection: 'row',
-        marginTop: 20,
+        marginTop: 18,
         justifyContent: 'center'
     },
+    musicListHeader: {
+        backgroundColor: "#cad5d8",
+        flexDirection: 'row',
+        marginTop: 18,
+        justifyContent: 'center',
+        paddingBottom: 5,
+    },
     userDataFont: {
-        fontSize: 20,
+        fontSize: 18,
         color: '#795C34',
     },
-    backButtonProfile: {
-        backgroundColor: "#e4b1a5",
-        width: "50%",
-    },
-    displayStyle: {
+    listStyle: {
         display: "flex",
-        justifyContent: "space-between",
-        flexWrap: "nowrap",
         flexDirection: "row",
+        flexWrap: "nowrap",
         alignItems: "center",
-        marginRight: 30,
+        marginRight: 10,
     },
     link: {
-        color: "#63C5DA",
+        color: "#5F9F9F",
         textDecorationLine: 'underline',
     },
 });

@@ -22,8 +22,8 @@ export const NearbyMusicDisplay = (setVisibility) => {
           console.log("onRequestClose")
           setVisibility.setVisibility(false)
         }}>
-        <View style={styles.viewStyle}>
-          <View style={styles.headStyle}>
+        <View style={styles.cardStyle}>
+          <View style={styles.headDisplayStyle}>
             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Nearby Musics</Text>
             <TouchableOpacity
               style={styles.closeButton}
@@ -47,15 +47,16 @@ export const NearbyMusicDisplay = (setVisibility) => {
 }
 
 const styles = StyleSheet.create({
-  headStyle: {
-    flexDirection: 'row',
-    margin: 15,
+  headDisplayStyle: {
+    marginVertical: 5,
+    marginHorizontal: 10,
     padding: 5,
     justifyContent: 'space-between',
     backgroundColor: "#cad5d8",
+    flexDirection: 'row',
   },
-  viewStyle: {
-    height: '50%',
+  cardStyle: {
+    height: '55%',
     marginTop: 'auto',
     backgroundColor: 'white'
   },

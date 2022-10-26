@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Image } from 'react-native';
 
 const initialState = {
-    username: "jasmine",
+    username: "UserA",
     avatarType: "",
     avatarUri: Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri,
     avatarBase64: "",
@@ -16,7 +16,7 @@ const initialState = {
             "song": {
                 "_id": "634423ed5f9d5e2e4c7109da",
                 "name": "testSong",
-                "songUrl": "tesSongUrl",
+                "songUrl": "https://open.spotify.com/",
                 "artist": "testArtist",
                 "songImageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Chain_link_icon.png",
                 "__v": 0
@@ -37,7 +37,7 @@ const initialState = {
             "song": {
                 "_id": "634423ed5f9d5e2e4c7109da",
                 "name": "testSong0",
-                "songUrl": "tesSongUrl",
+                "songUrl": "https://open.spotify.com/",
                 "artist": "testArtist",
                 "songImageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Chain_link_icon.png",
                 "__v": 0
@@ -58,7 +58,7 @@ const initialState = {
             "song": {
                 "_id": "634423ed5f9d5e2e4c7109da",
                 "name": "testSong1",
-                "songUrl": "tesSongUrl",
+                "songUrl": "https://open.spotify.com/",
                 "artist": "testArtist",
                 "songImageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Chain_link_icon.png",
                 "__v": 0
@@ -79,7 +79,7 @@ const initialState = {
             "song": {
                 "_id": "634423ed5f9d5e2e4c7109da",
                 "name": "testSong2",
-                "songUrl": "tesSongUrl",
+                "songUrl": "https://open.spotify.com/",
                 "artist": "testArtist",
                 "songImageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Chain_link_icon.png",
                 "__v": 0
@@ -100,7 +100,7 @@ const initialState = {
             "song": {
                 "_id": "634423ed5f9d5e2e4c7109da",
                 "name": "testSong4",
-                "songUrl": "tesSongUrl",
+                "songUrl": "https://open.spotify.com/",
                 "artist": "testArtist",
                 "songImageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Chain_link_icon.png",
                 "__v": 0
@@ -118,12 +118,11 @@ const initialState = {
 export const getAnotherUserProfile = createAsyncThunk(
     "anotherUserProfile/getAnotherUserProfile",
     async ({ data }, thunkAPI) => {
-        thunkAPI.dispatch(userProfileSlice.actions.setMusicList(data.musicList))
-        thunkAPI.dispatch(userProfileSlice.actions.setAvatarUri(data.uri))
-        thunkAPI.dispatch(userProfileSlice.actions.setUsername(data.username))
-        thunkAPI.dispatch(userProfileSlice.actions.setFullName(data.fullName))
-        thunkAPI.dispatch(userProfileSlice.actions.setAvatarType(data.type))
-        thunkAPI.dispatch(userProfileSlice.actions.setAvatarBase64(data.base64))
+        thunkAPI.dispatch(anotherUserProfileSlice.actions.setMusicList(data.musicList))
+        thunkAPI.dispatch(anotherUserProfileSlice.actions.setAvatarUri(data.uri))
+        thunkAPI.dispatch(anotherUserProfileSlice.actions.setUsername(data.username))
+        thunkAPI.dispatch(anotherUserProfileSlice.actions.setAvatarType(data.type))
+        thunkAPI.dispatch(anotherUserProfileSlice.actions.setAvatarBase64(data.base64))
     }
 )
 

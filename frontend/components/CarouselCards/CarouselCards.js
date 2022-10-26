@@ -1,6 +1,6 @@
-import React, { useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, Linking} from 'react-native';
-import { useSelector, useDispatch  } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image, ScrollView, Linking } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-native';
 import { Box, Input, Button, FlatList } from 'native-base'
 import { getAnotherUserProfile } from '../../redux/anotherUserProfile/slice';
@@ -10,27 +10,22 @@ import RNFetchBlob from "rn-fetch-blob";
 export const CarouselCards = (index) => {
     const dispatch = useDispatch();
     const [newComment, setNewComment] = useState('');
-    const [spinnerEnabled, setSpinnerEnableFlag] = useState(false);
+    const [anotherUserSpinnerFlag, SetAnotherUserSpinnerFlag] = useState(false);
     const nearbyMusics = useSelector((state) => state.nearbyMusic.musics);
     const [musicData, setMusicData] = useState({});
     const jwtToken = useSelector((state) => state.auth.jwtToken);
 
     useEffect(() => {
-        console.log("useEffect modal is false")
-        console.log("index: " + index.data)
+        console.log("CarouseCards useEffect called")
         const musicDataArray = Object.values(nearbyMusics);
         processMusicData(musicDataArray[index.data])
-        console.log("-----------");
     }, [nearbyMusics])
 
     const processMusicData = (nearbyMusic) => {
         var traceId = nearbyMusic.id;
-        console.log("trace id: " + traceId);
         var songImageUri = nearbyMusic.song.songImageUrl;
         var songSharerId = nearbyMusic.sharer.id;
-        console.log("song sharer id: " + songSharerId);
         var songSharerUsername = nearbyMusic.sharer.username;
-        console.log("song sharer user name: " + songSharerUsername);
         var songName = nearbyMusic.song.name;
         var songArtist = nearbyMusic.song.artist;
         var songUrl = nearbyMusic.song.songUrl;
@@ -52,9 +47,8 @@ export const CarouselCards = (index) => {
     const Navigate = useNavigate();
 
     const goToAnotherUserProfile = () => {
-        setSpinnerEnableFlag(true);
+        SetAnotherUserSpinnerFlag(true);
         getAnotherUserInfo().then(() => {
-            console.log("navigate to a new page");
             Navigate("/another-user-profile");
         })
     }
@@ -62,7 +56,7 @@ export const CarouselCards = (index) => {
     const getAnotherUserInfo = (async () => {
         console.log("received sharer id: " + musicData.songSharerId);
         var requestBody = {
-            id: "634414f7505472f68e36ab33"
+            id: musicData.songSharerId
         }
         const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/user/retrieveOtherUserInfo",
             {
@@ -74,11 +68,6 @@ export const CarouselCards = (index) => {
 
         const result = await response.json();
 
-        console.log(`result: ${Object.entries(result)}`);
-
-        console.log("avatar: " + result.avatar + " | " + (result.avatar == {}));
-        console.log("image type: " + result.avatar.avatarType + " | " + (result.avatar.avatarType == undefined));
-
         const dirs = RNFetchBlob.fs.dirs;
 
         console.log(Object.values(result.traces))
@@ -86,76 +75,75 @@ export const CarouselCards = (index) => {
         const imageType = result.avatar.avatarType;
 
         var path = dirs.DCIMDir + "/user-avatar." + imageType;
-        console.log("path: " + path);
 
         if (!(result.avatar == {} || imageType == undefined)) {
             RNFetchBlob.fs.writeFile(path, result.avatar.base64image, 'base64')
-            .then((res) => {
-                var uri = "file://" + path;
-                console.log("get uri from base64: " + uri);
-                const data = {
-                    username: result.username,
-                    musicList: result.traces,
-                    type: imageType,
-                    uri: uri,
-                    base64: result.avatar.base64image
-                }
+                .then((res) => {
+                    var uri = "file://" + path;
+                    console.log("get uri from base64: " + uri);
+                    const data = {
+                        username: result.username,
+                        musicList: result.traces,
+                        type: imageType,
+                        uri: uri,
+                        base64: result.avatar.base64image
+                    }
+                    dispatch(getAnotherUserProfile({ data }))
 
-                console.log("username: " + username);
+                    SetAnotherUserSpinnerFlag(false);
 
-                dispatch(getAnotherUserProfile({ data }))
-
-                setSpinnerEnableFlag(false);
-
-            }).catch((e) => { 
-                console.log("error " + e);
-                setSpinnerEnableFlag(false);
-            });
+                }).catch((e) => {
+                    console.log("error " + e);
+                    const data = {
+                        username: result.username,
+                        musicList: result.traces,
+                    }
+                    dispatch(getAnotherUserProfile({ data }))
+                    SetAnotherUserSpinnerFlag(false);
+                });
         } else {
             const data = {
                 username: result.username,
                 musicList: result.traces,
             }
-            console.log("--image not valid:");
-            console.log("data: " + Object.values(data));
             dispatch(getAnotherUserProfile({ data }))
-            setSpinnerEnableFlag(false);
+            SetAnotherUserSpinnerFlag(false);
         }
     })
-    
+
     const add = () => {
         // can save comment here
     }
 
     return (
         <View>
-            <View style={styles.spinnerStyle}>
+            <View>
                 <Spinner
-                    visible={spinnerEnabled}
+                    visible={anotherUserSpinnerFlag}
                     textContent={'Retrieving user profile...'}
                     textStyle={styles.spinnerTextStyle}
                 />
             </View>
             <View>
-                <View style={styles.displayStyle}>
-                    <Image style={{ width: 70, height: 70 }} resizeMode="contain" source={{ uri: musicData.songImageUri }} alt={musicData.songName} />
+                <View style={styles.wrapperStyle}>
+                    <Image style={{ width: 70, height: 70, marginLeft: 20 }} resizeMode="contain" source={{ uri: musicData.songImageUri }} alt={musicData.songName} />
                     <View>
-                        <Text style={styles.link} onPress={() => goToAnotherUserProfile()}>sharer: {musicData.songSharerUsername}</Text>
-                        <Text>{musicData.timestamp}</Text>
-                        <Text>song:{musicData.songName}</Text>
-                        <Text>artist: {musicData.songArtist}</Text>
-                        <Text style={styles.link} onPress={()=>{Linking.openURL(musicData.songUrl)}}>music spotify link</Text>
+                        <Text style={styles.sharerLink} onPress={() => goToAnotherUserProfile()}>Sharer: {musicData.songSharerUsername}</Text>
+                        <Text style={styles.textInList}>{musicData.timestamp}</Text>
+                        <Text style={styles.textInList}>Song:{musicData.songName}</Text>
+                        <Text style={styles.textInList}>Artist: {musicData.songArtist}</Text>
+                        <Text style={styles.link} onPress={() => { Linking.openURL(musicData.songUrl) }}>music spotify link</Text>
                     </View>
                 </View>
             </View>
             <View>
                 <View>
-                    <Button onPress={(e) => add(e)} style={styles.addButton}><Text style={{ fontWeight: 'bold', fontSize: 12 }}>Submit Comment</Text></Button>
+                    <Button onPress={(e) => add(e)} style={styles.addButton}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Submit Comment</Text></Button>
                     <Input variant="underlined" placeholder="Type New Comment" fontSize={14} onChangeText={setNewComment} />
                 </View>
-                <View style = {{height: 200}}>
-                    <ScrollView nestedScrollEnabled={true} style={{ marginTop: 5 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Comments</Text>
+                <View style={{ height: 160 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
+                    <ScrollView nestedScrollEnabled={true} style={{ marginTop: 5 , backgroundColor: "#f0f0f0"}}>
                         <FlatList
                             data={musicData.comments}
                             keyExtractor={(item) => item.id + item.timestamp}
@@ -164,8 +152,8 @@ export const CarouselCards = (index) => {
                             }}
                             renderItem={({ item }) => (
                                 <View>
-                                    <Text style={{ backgroundColor: "#f0f0f0", fontWeight: 'bold' }}>{item.user} - {item.timestamp}</Text>
-                                    <Text style={{ backgroundColor: "#f0f0f0" }}>{item.comment}</Text>
+                                    <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user} - {item.timestamp}</Text>
+                                    <Text style={{marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
                                 </View>
                             )
                             }
@@ -178,30 +166,37 @@ export const CarouselCards = (index) => {
 }
 
 const styles = StyleSheet.create({
-    displayStyle: {
+    wrapperStyle: {
         display: "flex",
-        justifyContent: "space-between",
-        flexWrap: "nowrap",
         flexDirection: "row",
-        alignItems: "center"
+        flexWrap: "nowrap",
+        alignItems: "center",
+        justifyContent: "space-between",
     },
     addButton: {
         backgroundColor: "#e4b1a5",
         display: "flex",
+        paddingVertical: 2,
+        height: 40,
         justifyContent: "space-between",
-        width: 120
+        width: 136
     },
-    link: {
-        color: "#63C5DA",
+    sharerLink: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: "#5F9F9F",
         textDecorationLine: 'underline',
     },
-    spinnerStyle: {
-        // paddingTop: 20,
-        backgroundColor: '#cad5d8',
-        // padding: 8,
+    link: {
+        color: "#5F9F9F",
+        fontSize: 14.5,
+        textDecorationLine: 'underline',
+    },
+    textInList: {
+        fontSize: 14.5
     },
     spinnerTextStyle: {
-        color: '#fff',
+        color: '#FFF',
         paddingTop: 10,
     },
 })

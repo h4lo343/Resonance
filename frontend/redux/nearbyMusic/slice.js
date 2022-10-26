@@ -38,7 +38,7 @@ const initialState = {
                 },
                 {
                     "id": "634bed9121f7aeaa54a80168",
-                    "user": "test2",
+                    "user": "test3",
                     "timestamp": "2022-10-18T11:40:01.809Z",
                     "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 }

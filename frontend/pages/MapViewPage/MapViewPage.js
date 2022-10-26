@@ -11,11 +11,13 @@ import { MarkerCallOut } from '../../components/MarkerCallOut';
 import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
 import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const deviceHeight = Dimensions.get("window").height
 const deviceWidth = Dimensions.get("window").width
 
 export const MapViewPage = () => {
+  const [renderNearbyMusicSpinnerFlag, setNearbyMusciSpinnerFlag] = useState(false);
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false)
   const [currentLocation, setCurrentLocation] = useState({
@@ -51,25 +53,30 @@ export const MapViewPage = () => {
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   const requireNearbyMusic = (latitude, longitude) => {
+    setNearbyMusciSpinnerFlag(true);
     console.log("require nearby music called");
     console.log("requireNearbyMusic: latitude: " + latitude + " | longitude: " + longitude);
     setNearbyLocation({
       latitude: latitude,
       longitude: longitude
     })
-    // setShowModal(true);
+
     fetchNearbyMusic().then(() => {
+      setNearbyMusciSpinnerFlag(false);
       setShowModal(true);
+    }).catch((e) => {
+      console.log("error: " + e);
+      setNearbyMusciSpinnerFlag(false);
     })
   }
 
   const fetchNearbyMusic = async () => {
     const url = `https://comp90018-mobile-computing.herokuapp.com/trace/getNearbyTraces`;
-    // console.log(nearbyLocation)
+    
     var requestBody = {
       "location": {
-        "latitude": 6.5693754,
-        "longitude":103.2656823
+        "latitude": nearbyLocation.latitude,
+        "longitude": nearbyLocation.longitude
       }
     }
 
@@ -213,6 +220,11 @@ export const MapViewPage = () => {
         }
 
       </TouchableOpacity>
+      <Spinner
+              visible={renderNearbyMusicSpinnerFlag}
+              textContent={'Retrieving nearby musics...'}
+              textStyle={styles.spinnerTextStyle}
+          />
       {
         showModal &&   <NearbyMusicDisplay setVisibility={(value) => setVisibility(value)}/>
       }
@@ -248,5 +260,8 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: 'center'
   },
-
+  spinnerTextStyle: {
+    color: '#fff',
+    paddingTop: 10,
+  },
 });
