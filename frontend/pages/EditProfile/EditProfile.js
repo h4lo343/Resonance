@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, PermissionsAndroid, FormControl } from 'react-native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { StyleSheet, Text, View, Image, PermissionsAndroid, FormControl, ScrollView } from 'react-native';
+import { launchCamera } from 'react-native-image-picker';
 import { Box, Input, Button } from 'native-base';
 import { useSelector } from 'react-redux';
 import { Avatar } from 'react-native-paper';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { UserProfile } from '../UserProfile';
 import RNFetchBlob from "rn-fetch-blob";
-import { Navigate, useNavigate } from 'react-router-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-export const EditProfile = () => {
+export const EditProfile = ({ navigation }) => {
+  const Drawer = createDrawerNavigator();
   const currentUsername = useSelector((state) => state.userProfile.username);
   const avatarUri = useSelector((state) => state.userProfile.avatarUri);
   const avatarBase64 = useSelector((state) => state.userProfile.avatarBase64);
@@ -18,8 +20,7 @@ export const EditProfile = () => {
   const [newAvatar, setNewAvatar] = useState({ type: '', uri: '' });
   const [newUsername, setNewUsername] = useState('');
   const [newFullname, setNewFullname] = useState('');
-  const [spinnerEnabled, setSpinnerEnableFlag] = useState(false);
-  const Navigate = useNavigate();
+  const [profileSpinnerFlag, setProfileSpinnerFlag] = useState(false);
 
   const requestCameraPermission = async () => {
     try {
@@ -27,16 +28,16 @@ export const EditProfile = () => {
         PermissionsAndroid.PERMISSIONS.CAMERA,
         {
           title: "Camera Permission",
-          message: "Give This App Camera Access",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK"
+          message: "Would you like to give This App Camera Access?",
+          buttonNegative: "No",
+          buttonPositive: "Yes",
+          buttonNeutral: "Later",
         }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("Give permission");
+        console.log("User granted camera permission.");
       } else {
-        console.log("Deny permission");
+        console.log("Failed to get camera permission");
       }
     } catch (err) {
       console.warn(err);
@@ -44,7 +45,6 @@ export const EditProfile = () => {
   }
 
   const postToBackend = async () => {
-    // TODO: replace Authorization with real jwt token
     try {
       var requestBody =
       {
@@ -65,11 +65,9 @@ export const EditProfile = () => {
         requestBody["updates"]["fullName"] = newFullname;
       }
 
-      // newAvatar.uri != avatarUri && newAvatar.type != ''
-      if (true) {
+      if (newAvatar.type != '') {
         await RNFetchBlob.fs.readFile(newAvatar.uri, 'base64').then(async (data) => {
           // data is the avatar content in base64 format
-
           requestBody["updates"]["avatar"]["base64image"] = data;
           requestBody["updates"]["avatar"]["avatarType"] = newAvatar.type;
 
@@ -100,13 +98,11 @@ export const EditProfile = () => {
     };
 
     launchCamera(options, (response) => {
-
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+        console.log('ImagePicker Reports Error: ', response.error);
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
         alert(response.customButton);
       } else {
 
@@ -119,55 +115,57 @@ export const EditProfile = () => {
   }
 
   const save = () => {
-    setSpinnerEnableFlag(true);
+    setProfileSpinnerFlag(true);
     postToBackend().then(() => {
-      setSpinnerEnableFlag(false);
-      Navigate('/user-profile');
+      setProfileSpinnerFlag(false);
+      navigation.navigate("UserProfile");
     }).catch((error) => {
       console.log("error: " + error);
     })
   }
 
   return (
-    <View>
-      <View style={styles.spinnerView}>
+    <View style={{backgroundColor: "#fff"}}>
+      <Drawer.Navigator>
+        <Drawer.Screen name="Profile" component={UserProfile} />
+      </Drawer.Navigator>
+      <View style={styles.profileSpinnerStyle}>
         <Spinner
-          //visibility of Overlay Loading Spinner
-          visible={spinnerEnabled}
-          //Text with the Spinner
+          visible={profileSpinnerFlag}
           textContent={'Saving user profile updates...'}
-          //Text style of the Spinner Text
-          textStyle={styles.spinnerFontStyle}
+          textStyle={{ color: '#fff' }}
         />
       </View>
 
       <View style={styles.row}>
-        <Avatar.Image source={{ uri: newAvatar.uri === '' ? avatarUri : newAvatar.uri }} size={150} />
+        <Avatar.Image source={{ uri: newAvatar.uri === '' ? avatarUri : newAvatar.uri }} size={100} />
       </View>
 
-      <Box alignItems="center" style={{ marginTop: 40 }}>
-        <Button onPress={uploadPhoto} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Take Photo</Text></Button>
+      <Box alignItems="center" style={{ marginTop: 15 }}>
+        <Button onPress={uploadPhoto} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Take Photo</Text></Button>
       </Box>
 
-      <View style={styles.userrow}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Current Username: {currentUsername}</Text>
-      </View>
-      
-      <Box alignItems="center" style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
-        <Input variant="outline" placeholder="Username" fontSize={16} onChangeText={setNewUsername} />
-      </Box>
+      <ScrollView>
+        <View style={styles.userrow}>
+          <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Current Username: {currentUsername}</Text>
+        </View>
 
-      <View style={styles.userrow}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Current Full Name: {currentFullName}</Text>
-      </View>
+        <Box alignItems="center" style={{ marginTop: 15, justifyContent: "space-between", flexDirection: "row" }}>
+          <Input variant="outline" placeholder="New Username" fontSize={16} onChangeText={setNewUsername} />
+        </Box>
 
-      <Box alignItems="center" style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
-        <Input variant="outline" placeholder="New Full Name" fontSize={16} onChangeText={setNewFullname} />
-      </Box>
+        <View style={styles.userrow}>
+          <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Current Full Name: {currentFullName}</Text>
+        </View>
 
-      <Box alignItems="center" style={{ marginTop: 40 }}>
-        <Button onPress={(e) => save(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Save</Text></Button>
-      </Box>
+        <Box alignItems="center" style={{ marginTop: 15, justifyContent: "space-between", flexDirection: "row" }}>
+          <Input variant="outline" placeholder="New Full Name" fontSize={16} onChangeText={setNewFullname} />
+        </Box>
+
+        <Box alignItems="center" style={styles.saveProfile}>
+          <Button onPress={(e) => save(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Save</Text></Button>
+        </Box>
+      </ScrollView>
 
     </View>
   )
@@ -182,7 +180,7 @@ const styles = StyleSheet.create({
   },
   userrow: {
     flexDirection: 'row',
-    marginTop: 30,
+    marginTop: 20,
     justifyContent: 'center'
   },
   userDataFont: {
@@ -192,12 +190,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#e4b1a5",
     width: "50%",
   },
-  spinnerView: {
-    paddingTop: 20,
-    backgroundColor: '#cad5d8',
-    padding: 8,
+  saveProfile: {
+    marginTop: 20,
+    marginBottom: 250
   },
-  spinnerFontStyle: {
-    color: '#fff',
+  profileSpinnerStyle: {
+    backgroundColor: '#cad5d8',
   },
 });
