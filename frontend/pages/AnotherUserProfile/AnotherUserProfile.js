@@ -30,7 +30,7 @@ export const AnotherUserProfile = () => {
                 <Text style={{fontSize: 16, color: '#795C34'}}>Music Lists:</Text>
             </View>
 
-            <View style={{ marginLeft: 65, marginTop: 10, height: 200, width: 310}}>
+            <View style={{ marginLeft: 70, marginTop: 10, height: 200, width: 310}}>
                 <FlatList
                     data={musicList}
                     keyExtractor={(item) => item.id}
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     userDataFont: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#795C34',
     },
     listStyle: {

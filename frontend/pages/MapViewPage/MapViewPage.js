@@ -19,7 +19,7 @@ const deviceWidth = Dimensions.get("window").width
 export const MapViewPage = () => {
   const [renderNearbyMusicSpinnerFlag, setNearbyMusciSpinnerFlag] = useState(false);
   const dispatch = useDispatch();
-  const [showModal, setShowModal] = useState(false)
+  const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 37.3882733,
     longitude: -122.0867283 // default values
@@ -63,7 +63,7 @@ export const MapViewPage = () => {
 
     fetchNearbyMusic().then(() => {
       setNearbyMusciSpinnerFlag(false);
-      setShowModal(true);
+      setShowNearbyMusicModal(true);
     }).catch((e) => {
       console.log("error: " + e);
       setNearbyMusciSpinnerFlag(false);
@@ -142,7 +142,7 @@ export const MapViewPage = () => {
   }
 
   const setVisibility = (value) => {
-    setShowModal(false);
+    setShowNearbyMusicModal(false);
   }
 
   const leaveTraceMarker = <Marker
@@ -226,7 +226,7 @@ export const MapViewPage = () => {
               textStyle={styles.spinnerTextStyle}
           />
       {
-        showModal &&   <NearbyMusicDisplay setVisibility={(value) => setVisibility(value)}/>
+        showNearbyMusicModal &&   <NearbyMusicDisplay setVisibility={(value) => setVisibility(value)}/>
       }
     </View>
   )

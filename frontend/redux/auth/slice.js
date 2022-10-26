@@ -3,7 +3,7 @@ import {authorize} from 'react-native-app-auth';
 
 const initialState = {
   
-  jwtToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzQ0YjQ5ZmViMjAxODgzOGFlNzJhZDgiLCJpYXQiOjE2NjY1ODQ0NDAsImV4cCI6MTY2NjY3MDg0MH0.vmfDO0M_FWRAnGmhHDZOh4E0RAVx9k3D8SZCjILxwiM",
+  jwtToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzQ0YjQ5ZmViMjAxODgzOGFlNzJhZDgiLCJpYXQiOjE2NjY3NDA5NjUsImV4cCI6MTY2NjgyNzM2NX0.1soudemLga2pB84DugY9JHOqkccGKJVePpqokIcjq_Y",
   accessToken: ""
 }
 

@@ -14,14 +14,15 @@ export const UserProfile = () => {
     const stateUsername = useSelector((state) => state.userProfile.username);
     const stateFullName = useSelector((state) => state.userProfile.fullName);
     const stateAvatarUri = useSelector((state) => state.userProfile.avatarUri);
-    const [spinnerEnabled, setSpinnerEnableFlag] = useState(true);
+    const musicList = useSelector((state) => state.anotherUserProfile.musicList);
+    const [profileSpinnerFlag, setProfileSpinnerFlag] = useState(true);
     const jwtToken = useSelector((state) => state.auth.jwtToken);
     const location = useLocation();
     const Navigate = useNavigate();
 
     const getUserInfo = (async () => {
         console.log("user effect called");
-        const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/user/updateUserInfo",
+        const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/user/getUserInfo",
             {
                 headers: { Authorization: "Bearer " + jwtToken },
                 method: 'GET'
@@ -29,13 +30,16 @@ export const UserProfile = () => {
         )
         const result = await response.json();
 
+        console.log("result: " + result.username);
+
         const dirs = RNFetchBlob.fs.dirs;
 
         const imageType = result.avatar.avatarType;
 
         var path = dirs.DCIMDir + "/user-avatar." + imageType;
 
-        RNFetchBlob.fs.writeFile(path, result.avatar.base64image, 'base64')
+        if (!(imageType == undefined || result.avatar == {})) {
+            RNFetchBlob.fs.writeFile(path, result.avatar.base64image, 'base64')
             .then((res) => {
                 var uri = "file://" + path;
                 console.log("get uri from base64: " + uri);
@@ -44,17 +48,38 @@ export const UserProfile = () => {
                     fullName: result.fullName,
                     type: imageType,
                     uri: uri,
-                    base64: result.avatar.base64image
+                    base64: result.avatar.base64image,
+                    musicList: result.traces
                 }
 
                 dispatch(getUserProfile({ data }))
 
-                setSpinnerEnableFlag(false);
+                setProfileSpinnerFlag(false);
 
             }).catch((e) => { 
                 console.log("error " + e);
-                setSpinnerEnableFlag(false);
+                const data = {
+                    username: result.username,
+                    fullName: result.fullName,
+                    musicList: result.traces
+                }
+
+                dispatch(getUserProfile({ data }))
+
+                setProfileSpinnerFlag(false);
             });
+        } else {
+            const data = {
+                username: result.username,
+                fullName: result.fullName,
+                musicList: result.traces
+            }
+
+            console.log("image invalid: username: " + username);
+            dispatch(getUserProfile({ data }))
+
+            setProfileSpinnerFlag(false);
+        }
     })
 
     const editProfile = () => {
@@ -62,24 +87,20 @@ export const UserProfile = () => {
     }
 
     useEffect(() => {
-        // Update the document title using the browser API
         getUserInfo().then().catch((e) => { console.log("error: " + e) });
     }, [location.key]);
 
     return (
         <View>
-            <View style={styles.spinnerView}>
+            <View style={styles.profileSpinnerStyle}>
                 <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={spinnerEnabled}
-                    //Text with the Spinner
+                    visible={profileSpinnerFlag}
                     textContent={'Updating user profile...'}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerFontStyle}
+                    textStyle={{color: '#fff'}}
                 />
             </View>
             <View style={styles.row}>
-                <Avatar.Image source={{ uri: stateAvatarUri }} size={150} />
+                <Avatar.Image source={{ uri: stateAvatarUri }} size={100} />
             </View>
 
             <View style={styles.userrow}>
@@ -90,8 +111,30 @@ export const UserProfile = () => {
                 <Text style={styles.userDataFont}>Full Name: {stateFullName}</Text>
             </View>
 
-            <Box alignItems="center" style={{ marginTop: 40 }}>
-                <Button onPress={(e) => editProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 20 }}>Edit Profile</Text></Button>
+            <View style={styles.musicListHeader}>
+                <Text style={{fontSize: 16, color: '#795C34'}}>Music Lists:</Text>
+            </View>
+
+            <View style={{ marginLeft: 70, marginTop: 10, height: 200, width: 310}}>
+                <FlatList
+                    data={musicList}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <View style={styles.listStyle}>
+                            <Image style={{ width: 70, height: 70, marginBottom: 5 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
+                            <View style={{marginLeft: 15}}>
+                                <Text style={{fontWeight: 'bold'}}>Song: {item.song.name}</Text>
+                                <Text>Artist: {item.song.artist}</Text>
+                                <Text style={styles.link} onPress={() => { Linking.openURL(item.song.songUrl) }}>music spotify link</Text>
+                            </View>
+                        </View>
+                    )
+                    }
+                ></FlatList>
+            </View>
+
+            <Box alignItems="center" style={{ marginTop: 20 }}>
+                <Button onPress={(e) => editProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Edit Profile</Text></Button>
             </Box>
         </View>
 
@@ -107,24 +150,37 @@ const styles = StyleSheet.create({
     },
     userrow: {
         flexDirection: 'row',
-        marginTop: 20,
+        marginTop: 10,
         justifyContent: 'center'
     },
     userDataFont: {
-        fontSize: 20,
+        fontSize: 16,
         color: '#795C34',
     },
     editProfile: {
         backgroundColor: "#e4b1a5",
-        width: "50%",
     },
-    spinnerView: {
+    profileSpinnerStyle: {
         paddingTop: 20,
         backgroundColor: '#cad5d8',
         padding: 8,
     },
-    spinnerFontStyle: {
-        color: '#fff',
-        paddingTop: 10,
+    musicListHeader: {
+        backgroundColor: "#cad5d8",
+        flexDirection: 'row',
+        marginTop: 18,
+        justifyContent: 'center',
+        paddingBottom: 5,
+    },
+    listStyle: {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "nowrap",
+        alignItems: "center",
+        marginRight: 10,
+    },
+    link: {
+        color: "#5F9F9F",
+        textDecorationLine: 'underline',
     },
 });

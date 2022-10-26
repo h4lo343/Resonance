@@ -30,7 +30,7 @@ const App = () => {
               <Route path='/user-profile' element={<UserProfile />}></Route>
               <Route path='/another-user-profile' element={<AnotherUserProfile />}></Route>
               <Route path='/nearby-music' element={<NearbyMusicDisplay />}></Route>
-              <Route path='/' element={<Navigate to='/another-user-profile'/>}></Route>
+              <Route path='/' element={<Navigate to='/user-profile'/>}></Route>
             </Routes>
           </View>
           {/* <NavigationContainer>
