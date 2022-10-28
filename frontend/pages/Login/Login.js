@@ -102,6 +102,9 @@ export const Login = ({navigation}) => {
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={{ color: "black" }}>  Sign up</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('DrawerNavigator')}>
+          <Text style={{ color: "black" }}>  Map View</Text>
+        </TouchableOpacity>
         {/* <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link> */}
 
         {/* <Link to="/MapViewPage" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Map View</Text></Link> */}
