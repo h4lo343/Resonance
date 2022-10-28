@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {authorize} from 'react-native-app-auth';
 
 const initialState = {
-  
+
   jwtToken: "",
   accessToken: ""
 }
@@ -13,7 +13,7 @@ export const getAccessToken = createAsyncThunk(
     const authConfig = {
       clientId: 'a9205c92bf074d49b879dea6bf2ab1de',
       // optional clien secret
-      // clientSecret: 'client secret',
+      clientSecret: '60cf95629ba64036b702db361fab49fe',
       redirectUrl: 'com.yourmusic://oauth/',
       scopes: ['playlist-modify-public', 'playlist-modify-private'],
       serviceConfiguration: {
@@ -23,7 +23,7 @@ export const getAccessToken = createAsyncThunk(
     }
     const result = await authorize(authConfig)
     thunkAPI.dispatch(authSlice.actions.setAccessToken(result.accessToken))
-    
+
   }
 )
 
@@ -37,5 +37,10 @@ export const authSlice = createSlice({
     setJwtToken: (state, actions) => {
       state.jwtToken = actions.payload
     },
+    initToken: (state) => {
+      state.jwtToken=""
+      state.accessToken=""
+      console.log("tokens has been emptied");
+    }
   }
 })

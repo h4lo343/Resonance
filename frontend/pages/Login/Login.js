@@ -17,6 +17,11 @@ export const Login = ({navigation}) => {
   const jwtToken = useSelector((state) => state.auth.jwtToken)
   const [userCode, setUserCode] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    dispatch(authSlice.actions.initToken())
+  },[])
+
   const inputUserCode = (v) => {
     setUserCode(v)
   }
@@ -50,7 +55,6 @@ export const Login = ({navigation}) => {
       dispatch(authSlice.actions.setJwtToken(result.Authorization))
       dispatch(getAccessToken())
       navigation.navigate('DrawerNavigator')
-
     }
   }
 
