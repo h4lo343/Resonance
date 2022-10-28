@@ -23,6 +23,7 @@ export const UserProfile = ({navigation}) => {
             console.log('user profile use effact called')
             getUserInfo().then().catch((e) => { 
                 console.log("error: " + e);
+                backToMapProfile();
                 setProfileSpinnerFlag(false);
             });
           });
@@ -73,6 +74,7 @@ export const UserProfile = ({navigation}) => {
                     fullName: result.fullName,
                     musicList: result.traces
                 }
+                console.log("username: " + username);
 
                 dispatch(getUserProfile({ data }))
 
@@ -94,6 +96,10 @@ export const UserProfile = ({navigation}) => {
 
     const editProfile = () => {
         navigation.navigate("EditProfile");
+    }
+
+    const backToMapProfile = () => {
+        navigation.navigate("MapViewPage");
     }
 
     return (
@@ -139,8 +145,12 @@ export const UserProfile = ({navigation}) => {
                 ></FlatList>
             </View>
 
-            <Box alignItems="center" style={{ marginTop: 20, marginBottom: 200 }}>
+            <Box alignItems="center" style={{ marginTop: 20 }}>
                 <Button onPress={(e) => editProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Edit Profile</Text></Button>
+            </Box>
+
+            <Box alignItems="center" style={{ marginTop: 20, marginBottom: 250 }}>
+                <Button onPress={(e) => backToMapProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Back To Map</Text></Button>
             </Box>
         </View>
 
