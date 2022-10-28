@@ -8,6 +8,7 @@ import { Login } from '../Login/Login';
 import { Register } from '../Register/Register';
 import { PasswordReset } from '../PasswordReset/PasswordReset';
 import { UserProfile } from '../UserProfile/UserProfile';
+import { EditProfile } from '../EditProfile/EditProfile';
 import { AnotherUserProfile } from '../AnotherUserProfile/AnotherUserProfile';
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ const StackNavigator = () => {
       <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} options={{ headerShown: false }}/>
       <Stack.Screen name="AnotherUserProfile" component={AnotherUserProfile} options={{ headerShown: false }} />
       <Stack.Screen name="UserProfile" component={UserProfile} options={{ headerShown: false }}/>
+      <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );
 };
