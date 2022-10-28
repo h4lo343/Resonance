@@ -145,12 +145,8 @@ export const UserProfile = ({navigation}) => {
                 ></FlatList>
             </View>
 
-            <Box alignItems="center" style={{ marginTop: 20 }}>
-                <Button onPress={(e) => editProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Edit Profile</Text></Button>
-            </Box>
-
             <Box alignItems="center" style={{ marginTop: 20, marginBottom: 250 }}>
-                <Button onPress={(e) => backToMapProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Back To Map</Text></Button>
+                <Button onPress={(e) => editProfile(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Edit Profile</Text></Button>
             </Box>
         </View>
 

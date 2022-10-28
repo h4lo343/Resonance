@@ -118,7 +118,7 @@ export const EditProfile = ({ navigation }) => {
     setProfileSpinnerFlag(true);
     postToBackend().then(() => {
       setProfileSpinnerFlag(false);
-      navigation.navigate("UserProfile");
+      navigation.navigate("DrawerNavigator");
     }).catch((error) => {
       console.log("error: " + error);
     })

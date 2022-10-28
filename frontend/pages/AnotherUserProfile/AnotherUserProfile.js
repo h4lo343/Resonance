@@ -11,7 +11,7 @@ export const AnotherUserProfile = ({ navigation }) => {
     const avatarUri = useSelector((state) => state.anotherUserProfile.avatarUri);
 
     const backToMap = () => {
-        navigation.navigate("MapViewPage");
+        navigation.navigate("DrawerNavigator");
     }
 
     return (
