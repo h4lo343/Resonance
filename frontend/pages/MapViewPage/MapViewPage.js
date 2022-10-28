@@ -8,13 +8,13 @@ import  Search  from '../Search/Search';
 import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
-const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
-
+import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
 const deviceHeight =Dimensions.get("window").height
 const deviceWidth =Dimensions.get("window").width
-
-
 export const MapViewPage = () => {
+  let resetNumber= false
+  let mid = 0; 
+  const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 37.3882733,
     longitude: -122.0867283 // default values
@@ -39,6 +39,23 @@ export const MapViewPage = () => {
      })
      loadHistoryMarkers()
   }, [])
+
+  const leftTrace = () => {
+    setLeaveTraceComplete(true)
+    resetNumber = true
+    loadHistoryMarkers()
+    setUserLocationDot(true)
+    setCurrentCategory('Initial')
+  }
+  
+  const generateMarkerId = () => {
+    if (resetNumber){ 
+      mid = 0
+      resetNumber = false 
+    }
+    mid += 1 
+    return mid
+  }
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   const getCurrentLocation = () => {
@@ -60,8 +77,9 @@ export const MapViewPage = () => {
   const [historyMarkers, setHistoryMarkers] = React.useState([])
   const loadHistoryMarkers = () => [
     getHistoryTrace().then(response => {
-      setHistoryMarkers(response);
-      console.log("length: " + response.length)
+      setHistoryMarkers(response.traces);
+      console.log("get history trace " )
+      console.log("response: "  +response)
       }).catch(err => console.log(err))
   ]
   const leaveTrace = async () => {
@@ -75,7 +93,7 @@ export const MapViewPage = () => {
     switch (currentCategory) {
         case 'Initial': return [ ...attachHistoryMarker];
         case 'highLightUserLocation': return [leaveTraceMarker];
-        // case 'commerce': return afficheCommerce;
+       // case 'commerce': return afficheCommerce;
         // default: return [...afficheHotel, ...afficheRestaurant, ...afficheCommerce];
     }
     return leaveTraceMarker
@@ -84,24 +102,26 @@ export const MapViewPage = () => {
   const leaveTraceMarker =<Marker
   coordinate={{
     latitude :  currentLocation.latitude,
-    longitude : currentLocation.longitude }}
-    key = {1}
+    longitude : currentLocation.longitude }} 
+    key = {generateMarkerId()}
   >
   <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{height: 50, width:50 }} />
 </Marker>
 
-const attachHistoryMarker = historyMarkers.map((history)=>(
+const attachHistoryMarker = historyMarkers.map((history,i)=>(
   <Marker
     coordinate={{
-      latitude :  history.coordinate.latitude,
-      longitude : history.coordinate.longitude }}
+      latitude :  history.location.latitude,
+      longitude : history.location.longitude }}
       id= {history.id}
-      key={history.id}
+      key={generateMarkerId()}
     >
     <Image source={require('../../assets/imgs/mapMarkerPast.png')} style={{height: 50, width:50 }} />
-    <MarkerCallOut songName={history.info.songName} songVisual={history.info.visualUrl}></MarkerCallOut>
+    <MarkerCallOut songName={history.song.name} songVisual={history.song.songImageUrl}></MarkerCallOut>
   </Marker>
 ))
+
+
 
 
   const _checkPermission = async () => {
@@ -149,7 +169,7 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
         onPress={leaveTrace} >
           <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
         {
-          showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude } finished={setLeaveTraceComplete}/>
+          showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude } finished={leftTrace}/>
         }
       </TouchableOpacity>
     </View>
