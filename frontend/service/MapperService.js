@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+
 //mock data 
 const BACKEND_API_URL = "https://comp90018-mobile-computing.herokuapp.com/"
 
@@ -41,9 +41,8 @@ const BACKEND_API_URL = "https://comp90018-mobile-computing.herokuapp.com/"
 //         });
 // })}
 
-export const getHistoryTrace = async () => {
-    console.log("get history trace ..  tocken: " + state.auth.accessToken)
-    const AccessToken = useSelector((state) => state.auth.accessToken)
+export const getHistoryTrace = async (AccessToken) => {
+    console.log("getHistoryTrace")
     const response = await fetch(BACKEND_API_URL+"trace/getTraces", {
         method: 'GET',
         headers: {
@@ -52,7 +51,7 @@ export const getHistoryTrace = async () => {
         }
       });
 
-    if (!response.ok ){
+    if (response.status != 200){
         const message = `An error has occured: ${response.status}`;
         throw new Error(message);
     }

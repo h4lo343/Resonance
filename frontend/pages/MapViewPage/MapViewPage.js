@@ -9,11 +9,13 @@ import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pres
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
 import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
+import { useSelector } from "react-redux";
 const deviceHeight =Dimensions.get("window").height
 const deviceWidth =Dimensions.get("window").width
 export const MapViewPage = () => {
   let resetNumber= false
   let mid = 0; 
+  const AccessToken = useSelector((state) => state.auth.accessToken)
   const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 37.3882733,
@@ -31,12 +33,14 @@ export const MapViewPage = () => {
   useEffect(() => {
     console.log("check permission")
      _checkPermission()
+     console.log("current location: " + currentLocation)
      setInitialRegion({
       latitude: currentLocation.latitude,
       longitude: currentLocation.longitude,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
      })
+     console.log("load history .." )
      loadHistoryMarkers()
   }, [])
 
@@ -69,6 +73,7 @@ export const MapViewPage = () => {
         })
       },
       (error) => {
+        console.log("falls in error ");
         console.log(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
@@ -76,7 +81,7 @@ export const MapViewPage = () => {
   }
   const [historyMarkers, setHistoryMarkers] = React.useState([])
   const loadHistoryMarkers = () => [
-    getHistoryTrace().then(response => {
+    getHistoryTrace(AccessToken).then(response => {
       setHistoryMarkers(response.traces);
       console.log("get history trace " )
       console.log("response: "  +response)
