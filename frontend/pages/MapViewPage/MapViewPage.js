@@ -15,7 +15,7 @@ const deviceWidth =Dimensions.get("window").width
 export const MapViewPage = () => {
   let resetNumber= false
   let mid = 0; 
-  const AccessToken = useSelector((state) => state.auth.accessToken)
+  const AccessToken = useSelector((state) => state.auth.jwtToken)
   const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 37.3882733,
