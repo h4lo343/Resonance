@@ -48,7 +48,7 @@ export const getHistoryTrace = async () => {
         method: 'GET',
         headers: {
           "Content-Type": "application/json",
-          "Authorization": AccessToken
+          "Authorization": `Bearer ${AccessToken}`
         }
       });
 
