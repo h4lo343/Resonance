@@ -43,7 +43,7 @@ const BACKEND_API_URL = "https://comp90018-mobile-computing.herokuapp.com/"
 
 export const getHistoryTrace = async (AccessToken) => {
     console.log("getHistoryTrace")
-    const response = await fetch(BACKEND_API_URL+"trace/getTraces", {
+    const response = await fetch(BACKEND_API_URL+"trace/getSelfTraces", {
         method: 'GET',
         headers: {
           "Content-Type": "application/json",
