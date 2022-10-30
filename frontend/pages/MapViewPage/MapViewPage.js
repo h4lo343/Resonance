@@ -9,7 +9,7 @@ import { Button } from 'native-base';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
 import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
 import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
@@ -50,17 +50,17 @@ export const MapViewPage = ({navigation}) => {
 
   useEffect(() => {
     // this is to ensure that this page would refresh to get new user data from backend
-    const focusHandler = navigation.addListener('focus', () => {
-        console.log("check permission")
-        _checkPermission()
-        setInitialRegion({
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        })
-        loadHistoryMarkers()
-        });
+    const focusHandler = navigation.addListener('focus', async () => {
+      console.log("check permission")
+      await _checkPermission();
+      setInitialRegion({
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      })
+      loadHistoryMarkers()
+    });
   
       // this return is to unsubscribe handler from the event
       return focusHandler;
@@ -139,7 +139,7 @@ export const MapViewPage = ({navigation}) => {
 
   }
 
-  const getCurrentLocation = () => {
+  const getCurrentLocation = async () => {
 
     Geolocation.getCurrentPosition(
       (position) => {
@@ -148,6 +148,7 @@ export const MapViewPage = ({navigation}) => {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         })
+        console.log("current Location lat: "  + position.coords.latitude + " long:" + position.coords.longitude);
       },
       (error) => {
         console.log("falls in error ");
@@ -165,7 +166,8 @@ export const MapViewPage = ({navigation}) => {
       }).catch(err => console.log(err))
   ]
   const leaveTrace = async () => {
-    getCurrentLocation()
+    await getCurrentLocation();
+    console.log(currentLocation)
     setCurrentCategory('highLightUserLocation')
     setUserLocationDot(false)
     setshowSearchBar(true)
@@ -216,7 +218,9 @@ const attachHistoryMarker = historyMarkers.map((history,i)=>(
     try {
       const result = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
       if (result == true) {
-        getCurrentLocation()
+
+        await getCurrentLocation();
+        console.log(currentLocation)
       }
       else if (result == false) {
         const status = await PermissionsAndroid.request(
@@ -252,7 +256,7 @@ const attachHistoryMarker = historyMarkers.map((history,i)=>(
       </MapView>
       <TouchableOpacity style={styles.overlay}>
         <Button
-        style={{position: "absolute", top: 600, width: "100%" ,backgroundColor: '#e4b1a5'}}
+        style={{position: "absolute", top: '90%', width: "100%" ,backgroundColor: '#e4b1a5'}}
         onPress={leaveTrace} >
           <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
         {
@@ -274,8 +278,8 @@ const attachHistoryMarker = historyMarkers.map((history,i)=>(
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    height: deviceHeight,
-    width: deviceWidth,
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width,
 
     flex: 1,
     justifyContent: 'center',
