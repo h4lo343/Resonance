@@ -17,6 +17,11 @@ export const Login = ({navigation}) => {
   const jwtToken = useSelector((state) => state.auth.jwtToken)
   const [userCode, setUserCode] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    dispatch(authSlice.actions.initToken())
+  },[])
+
   const inputUserCode = (v) => {
     setUserCode(v)
   }
@@ -50,7 +55,6 @@ export const Login = ({navigation}) => {
       dispatch(authSlice.actions.setJwtToken(result.Authorization))
       dispatch(getAccessToken())
       navigation.navigate('DrawerNavigator')
-
     }
   }
 
@@ -101,6 +105,9 @@ export const Login = ({navigation}) => {
         <Text>Don't have an account?</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={{ color: "black" }}>  Sign up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('DrawerNavigator')}>
+          <Text style={{ color: "black" }}>  Map View</Text>
         </TouchableOpacity>
         {/* <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link> */}
 

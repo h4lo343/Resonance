@@ -1,10 +1,11 @@
-import { FlatList, Input, View   } from "native-base";
-import React, { memo, useCallback, useEffect, useState,   } from "react";
-import { StyleSheet, TouchableOpacity, Text, Image, Alert } from "react-native";
+import { FlatList,   View, Input  } from "native-base";
+import React, { memo, useCallback, useEffect, useState   } from "react";
+import { StyleSheet, TouchableOpacity, Text, Image, Alert, TextInput } from "react-native";
 import { useSelector } from "react-redux";
 
-  const Search = (longitude, latitude, finished) => {
+  const Search = ({longitude, latitude, finished}) => {
   const AccessToken = useSelector((state) => state.auth.accessToken)
+  const jwtToken = useSelector( (s) => s.auth.jwtToken)
   const [key, setKey] = useState("")
   const [result, setResult] = useState([]);
 
@@ -15,15 +16,56 @@ import { useSelector } from "react-redux";
       [
         {
           text: "yes",
+          onPress: () => sendTrace(e)
         },
         {
           text: "no"
         }
       ]
     )
-    console.log(e);
+
   }
 
+  const sendTrace = async  (e) => {
+    setKey("")
+    const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/trace/addTrace", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`
+      },
+      body: JSON.stringify({
+        song : {
+          name: e.tracks.name,
+          songUrl: e.tracks.external_urls.spotify,
+          artist: e.artists.name,
+          songImageUrl: e.tracks.album.images[0].url
+        },
+        location: {
+          latitude,
+          longitude
+        }
+      })
+    })
+    const result = await response.json()
+    console.log(result);
+    if (response.status == 201) {
+
+      Alert.alert(
+        "Share Successful",
+        "Your music trace has been recorded"
+      );
+      finished(true)
+           }
+    else {
+
+      Alert.alert(
+        "Share Failed",
+        result.message
+      );
+
+    }
+  }
   const getResult = useCallback(async () => {
 
     const url = `https://api.spotify.com/v1/search?q=${key}&type=track,artist`;
@@ -51,8 +93,13 @@ import { useSelector } from "react-redux";
   }, [getResult])
   return (
     <View style={style.header}>
-      <Text>Search Your Music Here</Text>
-      <Input w="150%" onChangeText={(key) => { setKey(key) }}  ></Input>
+      <TextInput
+        style={{backgroundColor:"white", width:300}}
+        onChangeText={(key) => { setKey(key) }}
+        placeholder="search your song"
+        value={key}
+      >
+      </TextInput>
       <FlatList
         data={key.length > 0 ? result : ""}
         keyExtractor={item => item.tracks.id}

@@ -1,22 +1,32 @@
-import React, {useEffect, useState} from 'react';
-import { StyleSheet, Text, View, Image ,Dimensions,TouchableOpacity} from 'react-native';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
+import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity} from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { Marker } from 'react-native-maps';
-import  Search  from '../Search/Search';
-import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
+import Search from '../Search/Search';
+import { Button } from 'native-base';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
 import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
 import { useSelector } from "react-redux";
-const deviceHeight =Dimensions.get("window").height
-const deviceWidth =Dimensions.get("window").width
-export const MapViewPage = () => {
+import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
+import { useSelector, useDispatch } from "react-redux";
+import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
+import Spinner from 'react-native-loading-spinner-overlay';
+
+
+export const MapViewPage = ({navigation}) => {
   let resetNumber= false
   let mid = 0; 
   const AccessToken = useSelector((state) => state.auth.jwtToken)
   const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
+  const deviceHeight = Dimensions.get("window").height
+  const deviceWidth = Dimensions.get("window").width
+  const [renderNearbyMusicSpinnerFlag, setNearbyMusciSpinnerFlag] = useState(false);
+  const dispatch = useDispatch();
+  const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
+  const [nearbyMusicProps, setNearbyMusicProps] = useState({})
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 37.3882733,
     longitude: -122.0867283 // default values
@@ -26,23 +36,35 @@ export const MapViewPage = () => {
     longitude: -122.4324,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,//initial region
-  }  );
+  });
+
+  const jwtToken = useSelector((state) => state.auth.jwtToken);
+  const [nearbyLocation, setNearbyLocation] = useState({
+    latitude: 37.3882733,
+    longitude: -122.0867283 // default values
+  });
 
   const [showUserLocationDot, setUserLocationDot] = useState(true);
   const [showSearchBar, setshowSearchBar] = React.useState(false);
+
+
   useEffect(() => {
-    console.log("check permission")
-     _checkPermission()
-     console.log("current location: " + currentLocation)
-     setInitialRegion({
-      latitude: currentLocation.latitude,
-      longitude: currentLocation.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-     })
-     console.log("load history .." )
-     loadHistoryMarkers()
-  }, [])
+    // this is to ensure that this page would refresh to get new user data from backend
+    const focusHandler = navigation.addListener('focus', () => {
+        console.log("check permission")
+        _checkPermission()
+        setInitialRegion({
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        })
+        loadHistoryMarkers()
+        });
+  
+      // this return is to unsubscribe handler from the event
+      return focusHandler;
+  }, [navigation]);
 
   const leftTrace = () => {
     setLeaveTraceComplete(true)
@@ -60,7 +82,62 @@ export const MapViewPage = () => {
     mid += 1 
     return mid
   }
+
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
+
+  const requireNearbyMusic = (latitude, longitude) => {
+    setNearbyMusciSpinnerFlag(true);
+    console.log("require nearby music called");
+    console.log("requireNearbyMusic: latitude: " + latitude + " | longitude: " + longitude);
+    setNearbyLocation({
+      latitude: latitude,
+      longitude: longitude
+    })
+
+    fetchNearbyMusic().then(() => {
+      setNearbyMusciSpinnerFlag(false);
+      setNearbyMusicProps({
+        profileNavigationCallBack: () => {
+          navigation.navigate("AnotherUserProfile")},
+        setVisibilityCallBack: (value) => setVisibility(value)
+      });
+      setShowNearbyMusicModal(true);
+    }).catch((e) => {
+      console.log("error: " + e);
+      setNearbyMusciSpinnerFlag(false);
+    })
+  }
+
+  const fetchNearbyMusic = async () => {
+    const url = `https://comp90018-mobile-computing.herokuapp.com/trace/getNearbyTraces`;
+    
+    var requestBody = {
+      "location": {
+        "latitude": nearbyLocation.latitude,
+        "longitude": nearbyLocation.longitude
+      }
+    }
+
+    try {
+      const response = await fetch(url,
+        {
+          headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + jwtToken },
+          method: 'POST',
+          body: JSON.stringify(requestBody)
+        }
+      )
+      const result = await response.json();
+
+      if ("traces" in result) {
+        console.log("result traces: " + result.traces);
+        var data = result.traces;
+        dispatch(getNearbyMusic({data}));
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+  }
 
   const getCurrentLocation = () => {
 
@@ -77,7 +154,7 @@ export const MapViewPage = () => {
         console.log(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-  );
+    );
   }
   const [historyMarkers, setHistoryMarkers] = React.useState([])
   const loadHistoryMarkers = () => [
@@ -102,6 +179,10 @@ export const MapViewPage = () => {
         // default: return [...afficheHotel, ...afficheRestaurant, ...afficheCommerce];
     }
     return leaveTraceMarker
+  }
+
+  const setVisibility = (value) => {
+    setShowNearbyMusicModal(false);
   }
 
   const leaveTraceMarker =<Marker
@@ -130,29 +211,30 @@ const attachHistoryMarker = historyMarkers.map((history,i)=>(
 
 
   const _checkPermission = async () => {
+    
 
     try {
-        const result = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-        if (result == true) {
+      const result = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+      if (result == true) {
+        getCurrentLocation()
+      }
+      else if (result == false) {
+        const status = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          rationale = {
+            title: "App location Permission",
+            message: "App needs access to your location ",
+            buttonPositive: "OK"
+          }
+        )
+        if (status === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('permission granted')
           getCurrentLocation()
         }
-        else if (result == false) {
-            const status = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-              rationale ={
-                title: "App location Permission",
-                message: "App needs access to your location ",
-                buttonPositive: "OK"
-              }
-              )
-            if (status === PermissionsAndroid.RESULTS.GRANTED) {
-              console.log('permission granted')
-              getCurrentLocation()
-            }
-        }
+      }
 
     } catch (error) {
-        console.log('error', error)
+      console.log('error', error)
     }
   }
 
@@ -177,6 +259,14 @@ const attachHistoryMarker = historyMarkers.map((history,i)=>(
           showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude } finished={leftTrace}/>
         }
       </TouchableOpacity>
+      <Spinner
+              visible={renderNearbyMusicSpinnerFlag}
+              textContent={'Retrieving nearby musics...'}
+              textStyle={styles.spinnerTextStyle}
+          />
+      {
+        showNearbyMusicModal &&   <NearbyMusicDisplay nearbyMusicProps={nearbyMusicProps}/>
+      }
     </View>
 
 )}
@@ -188,7 +278,7 @@ const styles = StyleSheet.create({
     width: deviceWidth,
 
     flex: 1,
-    justifyContent:'center',
+    justifyContent: 'center',
     alignItems: 'center'
 
   },
@@ -202,7 +292,6 @@ const styles = StyleSheet.create({
     width: "50%",
     alignItems: 'center'
   },
-
   searchContainer: {
     position: 'absolute',
     bottom: 10,
@@ -210,5 +299,8 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: 'center'
   },
-
- });
+  spinnerTextStyle: {
+    color: '#fff',
+    paddingTop: 10,
+  },
+});
