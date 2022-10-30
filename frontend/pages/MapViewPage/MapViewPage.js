@@ -8,16 +8,21 @@ import Search from '../Search/Search';
 import { Button } from 'native-base';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
+import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
+import { useSelector } from "react-redux";
 import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
 import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
-const deviceHeight = Dimensions.get("window").height
-const deviceWidth = Dimensions.get("window").width
 
 export const MapViewPage = ({navigation}) => {
+  let resetNumber= false
+  let mid = 0; 
+  const AccessToken = useSelector((state) => state.auth.jwtToken)
+  const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
+  const deviceHeight = Dimensions.get("window").height
+  const deviceWidth = Dimensions.get("window").width
   const [renderNearbyMusicSpinnerFlag, setNearbyMusciSpinnerFlag] = useState(false);
   const dispatch = useDispatch();
   const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
@@ -42,6 +47,7 @@ export const MapViewPage = ({navigation}) => {
   const [showUserLocationDot, setUserLocationDot] = useState(true);
   const [showSearchBar, setshowSearchBar] = React.useState(false);
 
+
   useEffect(() => {
     // this is to ensure that this page would refresh to get new user data from backend
     const focusHandler = navigation.addListener('focus', () => {
@@ -59,6 +65,24 @@ export const MapViewPage = ({navigation}) => {
       // this return is to unsubscribe handler from the event
       return focusHandler;
   }, [navigation]);
+
+  const leftTrace = () => {
+    setLeaveTraceComplete(true)
+    resetNumber = true
+    loadHistoryMarkers()
+    setUserLocationDot(true)
+    setCurrentCategory('Initial')
+  }
+  
+  const generateMarkerId = () => {
+    if (resetNumber){ 
+      mid = 0
+      resetNumber = false 
+    }
+    mid += 1 
+    return mid
+  }
+
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   const requireNearbyMusic = (latitude, longitude) => {
@@ -126,6 +150,7 @@ export const MapViewPage = ({navigation}) => {
         })
       },
       (error) => {
+        console.log("falls in error ");
         console.log(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
@@ -133,10 +158,11 @@ export const MapViewPage = ({navigation}) => {
   }
   const [historyMarkers, setHistoryMarkers] = React.useState([])
   const loadHistoryMarkers = () => [
-    getHistoryTrace().then(response => {
-      setHistoryMarkers(response);
-      console.log("length: " + response.length)
-    }).catch(err => console.log(err))
+    getHistoryTrace(AccessToken).then(response => {
+      setHistoryMarkers(response.traces);
+      console.log("get history trace " )
+      console.log("response: "  +response)
+      }).catch(err => console.log(err))
   ]
   const leaveTrace = async () => {
     getCurrentLocation()
@@ -147,10 +173,10 @@ export const MapViewPage = ({navigation}) => {
 
   const getMarkers = () => {
     switch (currentCategory) {
-      case 'Initial': return [...attachHistoryMarker];
-      case 'highLightUserLocation': return [leaveTraceMarker];
-      // case 'commerce': return afficheCommerce;
-      // default: return [...afficheHotel, ...afficheRestaurant, ...afficheCommerce];
+        case 'Initial': return [ ...attachHistoryMarker];
+        case 'highLightUserLocation': return [leaveTraceMarker];
+       // case 'commerce': return afficheCommerce;
+        // default: return [...afficheHotel, ...afficheRestaurant, ...afficheCommerce];
     }
     return leaveTraceMarker
   }
@@ -162,26 +188,26 @@ export const MapViewPage = ({navigation}) => {
   const leaveTraceMarker =<Marker
   coordinate={{
     latitude :  currentLocation.latitude,
-    longitude : currentLocation.longitude }}
-    key = {1}
+    longitude : currentLocation.longitude }} 
+    key = {generateMarkerId()}
   >
   <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{height: 50, width:50 }} />
 </Marker>
 
-const attachHistoryMarker = historyMarkers.map((history)=>(
+const attachHistoryMarker = historyMarkers.map((history,i)=>(
   <Marker
     coordinate={{
-      latitude :  history.coordinate.latitude,
-      longitude : history.coordinate.longitude }}
+      latitude :  history.location.latitude,
+      longitude : history.location.longitude }}
       id= {history.id}
-      key={history.id}
-      onPress={()=> requireNearbyMusic(history.coordinate.latitude, history.coordinate.longitude)}
+      key={generateMarkerId()}
     >
     <Image source={require('../../assets/imgs/mapMarkerPast.png')} style={{height: 50, width:50 }} />
-    <MarkerCallOut songName={history.info.songName} songVisual={history.info.visualUrl}></MarkerCallOut>
-
+    <MarkerCallOut songName={history.song.name} songVisual={history.song.songImageUrl}></MarkerCallOut>
   </Marker>
 ))
+
+
 
 
   const _checkPermission = async () => {
@@ -230,7 +256,7 @@ const attachHistoryMarker = historyMarkers.map((history)=>(
         onPress={leaveTrace} >
           <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Button>
         {
-          showSearchBar && <Search longitude={currentLocation.longitude} latitude={currentLocation.latitude } finished={setLeaveTraceComplete}/>
+          showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude } finished={leftTrace}/>
         }
       </TouchableOpacity>
       <Spinner

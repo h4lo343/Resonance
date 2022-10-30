@@ -1,47 +1,24 @@
+
 //mock data 
+const BACKEND_API_URL = "https://comp90018-mobile-computing.herokuapp.com/"
 
-
-export const getHistoryTrace = () => {
-    return new Promise((resolve, reject) => {
-        resolve([{
-            info: {
-                songName: "song1",
-                author: "abc",
-                url: "https://open.spotify.com/artist/0du5cEVh5yTK9QJze8zA0C",
-                visualUrl: "https://i.scdn.co/image/ab67616d00001e02b2c7ecf239a2b98e36e009d6"
-            } ,
-            id: 2,
-            coordinate: {
-                latitude: 37.3882736,
-                longitude: -122.0867290
-            }
-        },
-        {
-            info: {
-                songName: "song2",
-                author: "abc",
-                url: "https://open.spotify.com/artist/0du5cEVh5yTK9QJze8zA0C",
-                visualUrl: "https://i.scdn.co/image/ab67616d00001e02b2c7ecf239a2b98e36e009d6"
-            } ,
-            id: 3,
-            coordinate: {
-                latitude: 37.3882500,
-                longitude: -122.0867283
-            }
-        },
-        {
-            info: {
-                songName: "song3",
-                author: "abc",
-                url: "https://open.spotify.com/artist/0du5cEVh5yTK9QJze8zA0C",
-                visualUrl: "https://i.scdn.co/image/ab67616d00001e02b2c7ecf239a2b98e36e009d6"
-            } ,
-            id: 4,
-            coordinate: {
-                latitude: 37.3883736,
-                longitude: -122.0867630
-            }
+export const getHistoryTrace = async (AccessToken) => {
+    console.log("token: " + AccessToken)
+    const response = await fetch(BACKEND_API_URL+"trace/getSelfTraces", {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${AccessToken}`
         }
-        ]);
       });
-};
+
+    if (response.status != 200){
+        const message = `An error has occured: ${response.status}`;
+        throw new Error(message);
+    }
+    
+    const histories = await response.json();
+    console.log(histories)
+    return histories;
+
+}
