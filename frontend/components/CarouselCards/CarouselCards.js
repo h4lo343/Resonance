@@ -5,6 +5,7 @@ import { Box, Input, Button, FlatList } from 'native-base'
 import { getAnotherUserProfile } from '../../redux/anotherUserProfile/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import RNFetchBlob from "rn-fetch-blob";
+import {CommentSession} from "../CommentSession/CommentSession";
 
 export const CarouselCards = (propsData) => {
     const dispatch = useDispatch();
@@ -136,10 +137,11 @@ export const CarouselCards = (propsData) => {
                 </View>
             </View>
             <View>
-                <View>
-                    <Button onPress={(e) => add(e)} style={styles.addButton}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Submit Comment</Text></Button>
-                    <Input variant="underlined" placeholder="Type New Comment" fontSize={14} onChangeText={setNewComment} />
-                </View>
+                <CommentSession
+                    musicData = {musicData}
+                    setMusicData = {setMusicData}
+                ></CommentSession>
+
                 <View style={{ height: 160 }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
                     <ScrollView nestedScrollEnabled={true} style={{ marginTop: 5 , backgroundColor: "#f0f0f0"}}>
