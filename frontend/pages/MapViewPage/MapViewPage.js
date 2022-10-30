@@ -129,7 +129,7 @@ export const MapViewPage = ({navigation}) => {
       const result = await response.json();
 
       if ("traces" in result) {
-        console.log("result traces: " + result.traces);
+        // console.log("result traces: " + result.traces);
         var data = result.traces;
         dispatch(getNearbyMusic({data}));
       }
@@ -137,6 +137,46 @@ export const MapViewPage = ({navigation}) => {
       console.log(e)
     }
 
+  }
+
+  const requireTrace = (trace_id) => {
+    setNearbyMusciSpinnerFlag(true);
+    fetchMarkerTrace(trace_id).then(()=>{
+      setNearbyMusciSpinnerFlag(false);
+      setNearbyMusicProps({
+        profileNavigationCallBack: () => {
+          navigation.navigate("AnotherUserProfile")},
+        setVisibilityCallBack: (value) => setVisibility(value)
+      });
+      setShowNearbyMusicModal(true);
+    }).catch((e) => {
+      console.log("error: " + e);
+      setNearbyMusciSpinnerFlag(false);
+    })
+  }
+
+  const fetchMarkerTrace = async (trace_id) =>{
+    const url = `https://comp90018-mobile-computing.herokuapp.com/trace/getTrace`;
+    let requestBody = {
+      "trace_id" : trace_id
+    }
+    try {
+      const response = await fetch(url,
+          {
+            headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + jwtToken },
+            method: 'POST',
+            body: JSON.stringify(requestBody)
+          }
+      )
+      const result = await response.json();
+
+      if ("trace" in result) {
+        var data = [result.trace];
+        dispatch(getNearbyMusic({data}));
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const getCurrentLocation = async () => {
@@ -203,9 +243,14 @@ const attachHistoryMarker = historyMarkers.map((history,i)=>(
       longitude : history.location.longitude }}
       id= {history.id}
       key={generateMarkerId()}
+      onPress={()=>requireTrace(history.id)}
     >
     <Image source={require('../../assets/imgs/mapMarkerPast.png')} style={{height: 50, width:50 }} />
-    <MarkerCallOut songName={history.song.name} songVisual={history.song.songImageUrl}></MarkerCallOut>
+    <MarkerCallOut
+        songName={history.song.name}
+        songUrl = {history.song.songUrl}
+        songAuthor = {history.song.artist}
+        songVisual={history.song.songImageUrl}></MarkerCallOut>
   </Marker>
 ))
 
@@ -233,7 +278,7 @@ const attachHistoryMarker = historyMarkers.map((history,i)=>(
         )
         if (status === PermissionsAndroid.RESULTS.GRANTED) {
           console.log('permission granted')
-          getCurrentLocation()
+          await getCurrentLocation();
         }
       }
 
