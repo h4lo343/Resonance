@@ -34,6 +34,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
     const [playPath, setPlayPath] = React.useState();
     const [duration, setDuration] = React.useState();
     const [pathToRecord, setPath] = React.useState();
+    const [isPlaying, setIsPlaying] = React.useState(false);
     const jwtToken = useSelector((state) => state.auth.jwtToken);
 
     const requestAudioRecordingPermission = async () => {
@@ -116,6 +117,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
     const onStartPlay = async () => {
         console.log('onStartPlay');
         setPausedPlay(!pausedPlay);
+
         const msg = await audioRecorderPlayer.startPlayer(playPath);
         audioRecorderPlayer.addPlayBackListener(e => {
             setCurrentPositionSec(e.currentPosition);
@@ -132,7 +134,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
 
     const onStopPlay = async () => {
         console.log('onStopPlay');
-        await audioRecorderPlayer.stopPlayer();
+        await audioRecorderPlayer.stopPlayer(playPath);
         setPausedPlay(true);
         setCurrentPositionSec(0);
         setPlayTime(0)
@@ -175,12 +177,14 @@ export const CommentSession = ({musicData, setMusicData}) => {
     };
 
     const onPlayComment = async (trackUrl) => {
-        setPlayPath(trackUrl);
+        console.log("play comment")
+        await setPlayPath(trackUrl);
         await onStartPlay();
     }
 
     const saveVoiceComment = async () => {
         console.log("saving Voice Comment in path :" + path);
+        await onStopPlay();
         setConfirmationWindow(false);
         const reference = storage().ref(pathToRecord);
         await reference.putFile(pathToRecord);
@@ -308,33 +312,53 @@ export const CommentSession = ({musicData, setMusicData}) => {
                                 <View>
                                     <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
                                     <View style={{width:200}}>
-                                        <View style={styles.audioPlayerContainer}>
-                                            { !pausedPlay ? (
-                                                <TouchableOpacity onPress={onPausePlay}>
-                                                    <Image source={require('../../assets/imgs/video-pause-button.png')}></Image>
-                                                </TouchableOpacity>
-                                                // <Button title={'Pause'} onPress={onPausePlay} >Pause</Button>
-                                            ) : (
-                                                <TouchableOpacity onPress = {()=>onPlayComment(item.comment)}>
-                                                    <Image source={require('../../assets/imgs/play.png')}></Image>
-                                                </TouchableOpacity>
-                                                // <Button title={'Start'} onPress={onStartPlay} >Start</Button>
+                                        {item.comment === playPath ?
+                                            (
+                                                <View style={styles.audioPlayerContainer}>
+                                                    { !pausedPlay ? (
+                                                        <TouchableOpacity onPress={onPausePlay}>
+                                                            <Image source={require('../../assets/imgs/video-pause-button.png')}></Image>
+                                                        </TouchableOpacity>
+                                                        // <Button title={'Pause'} onPress={onPausePlay} >Pause</Button>
+                                                    ) : (
+                                                        <TouchableOpacity onPress = {()=>onPlayComment(item.comment)}>
+                                                            <Image source={require('../../assets/imgs/play.png')}></Image>
+                                                        </TouchableOpacity>
+                                                        // <Button title={'Start'} onPress={onStartPlay} >Start</Button>
+                                                    )}
+                                                    <View style={styles.progressIndicatorContainer}>
+                                                        <View
+
+                                                            style={[
+                                                                styles.progressLine,
+                                                                {
+                                                                    width: `${(currentPositionSec / currentDurationSec) * 100}%`,
+                                                                },
+                                                            ]}
+                                                        />
+                                                    </View>
+                                                </View>
+                                        ):
+                                            (
+                                                <View style={styles.audioPlayerContainer}>
+                                                    <TouchableOpacity onPress = {()=>onPlayComment(item.comment)}>
+                                                        <Image source={require('../../assets/imgs/play.png')}></Image>
+                                                    </TouchableOpacity>
+                                                    <View style={styles.progressIndicatorContainer}>
+                                                        <View
+
+                                                            style={[
+                                                                styles.progressLine,
+                                                                {
+                                                                    width: `0%`,
+                                                                },
+                                                            ]}
+                                                        />
+                                                    </View>
+                                                </View>
                                             )}
-                                            <View style={styles.progressIndicatorContainer}>
-                                                <View
-                                                    style={[
-                                                        styles.progressLine,
-                                                        {
-                                                            width: `${(currentPositionSec / currentDurationSec) * 100}%`,
-                                                        },
-                                                    ]}
-                                                />
-                                            </View>
-                                        </View>
-                                        <View style={styles.progressDetailsContainer}>
-                                            <Text style={styles.progressDetailsText}>Progress: {playTime}</Text>
-                                            <Text style={styles.progressDetailsText}>Duration: {duration}</Text>
-                                        </View>
+
+
                                     </View>
                                 </View>
                             )
