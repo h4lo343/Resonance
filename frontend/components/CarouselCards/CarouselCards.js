@@ -115,10 +115,6 @@ export const CarouselCards = (propsData) => {
         }
     })
 
-    const add = () => {
-        // can save comment here
-    }
-
     return (
         <View>
             <View>
@@ -147,23 +143,6 @@ export const CarouselCards = (propsData) => {
                             musicData={musicData}
                             setMusicData={setMusicData}
                         ></CommentSession>
-
-                        <View>
-                            <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
-                            <View style={{ marginTop: 5, backgroundColor: "#f0f0f0" }}>
-                                <FlatList
-                                    data={musicData.comments}
-                                    keyExtractor={(item) => item.id + item.timestamp}
-                                    renderItem={({ item }) => (
-                                        <View>
-                                            <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
-                                            <Text style={{ marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
-                                        </View>
-                                    )
-                                    }
-                                ></FlatList>
-                            </View>
-                        </View>
                     </View>
                 </ScrollView>
             </View>

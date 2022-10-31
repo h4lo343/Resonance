@@ -4,22 +4,21 @@ import {
     Text,
     View,
     Image,
-    ScrollView,
-    Linking,
+    Pressable,
     Platform,
     PermissionsAndroid,
     TouchableWithoutFeedback, Alert, Modal, TouchableOpacity
 } from 'react-native';
-import {Button, FlatList, Input, Pressable} from 'native-base'
+import { Button, FlatList, Input } from 'native-base'
 import AudioRecorderPlayer from "react-native-audio-recorder-player/index";
 import RNFetchBlob from "rn-fetch-blob";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import storage from '@react-native-firebase/storage';
 import uuid from 'react-native-uuid';
 import auth from '@react-native-firebase/auth';
 
 
-export const CommentSession = ({musicData, setMusicData}) => {
+export const CommentSession = ({ musicData, setMusicData }) => {
     const commentTextInput = React.createRef();
 
     const [isRecording, setIsRecording] = React.useState(false);
@@ -78,10 +77,10 @@ export const CommentSession = ({musicData, setMusicData}) => {
     });
 
     const onStartRecord = async () => {
-        await auth().signInAnonymously().then(()=> {console.log("signed in")});
+        await auth().signInAnonymously().then(() => { console.log("signed in") });
         let fileId = uuid.v4();
         let filePath = path + fileId + ".mp4"
-        try{
+        try {
             await requestAudioRecordingPermission();
             const result = await audioRecorderPlayer.startRecorder(filePath);
             setPath(result);
@@ -94,7 +93,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
                 ))
                 setDuration(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
             });
-        }catch (e){
+        } catch (e) {
             console.log(e);
             console.log("unable to record");
         }
@@ -110,7 +109,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
             audioRecorderPlayer.removeRecordBackListener();
             setRecordingTime(0);
             console.log(result);
-        }catch(e){
+        } catch (e) {
             console.log(e)
         }
     };
@@ -146,7 +145,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
         console.log(musicData.traceId);
         console.log("jwtToken" + jwtToken);
         console.log("comment = " + newComment);
-        try{
+        try {
             var requestBody = {
                 "type": "TEXT",
                 "traceId": musicData.traceId,
@@ -160,13 +159,13 @@ export const CommentSession = ({musicData, setMusicData}) => {
                 })
             setNewComment("");
             console.log(musicData)
-            let res = await  response.json()
-            let updateMusicData = {...musicData};
+            let res = await response.json()
+            let updateMusicData = { ...musicData };
             updateMusicData.comments = res.trace.comments
             setMusicData(updateMusicData);
             console.log(updateMusicData);
 
-        }catch{
+        } catch {
             console.log("error can't save to backend")
         }
 
@@ -192,7 +191,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
         await reference.putFile(pathToRecord);
         let savedUrl = await reference.getDownloadURL();
         console.log(savedUrl)
-        try{
+        try {
             console.log("in try")
             let requestBody = {
                 "type": "AUDIO",
@@ -206,13 +205,13 @@ export const CommentSession = ({musicData, setMusicData}) => {
                     body: JSON.stringify(requestBody)
                 })
             console.log(musicData)
-            let res = await  response.json()
-            let updateMusicData = {...musicData};
+            let res = await response.json()
+            let updateMusicData = { ...musicData };
             updateMusicData.comments = res.trace.comments
             setMusicData(updateMusicData);
             console.log(updateMusicData);
 
-        }catch{
+        } catch {
             console.log("error can't save to backend")
         }
 
@@ -231,9 +230,9 @@ export const CommentSession = ({musicData, setMusicData}) => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <View style={{width:200}}>
+                        <View style={{ width: 200 }}>
                             <View style={styles.audioPlayerContainer}>
-                                { !pausedPlay ? (
+                                {!pausedPlay ? (
                                     <TouchableOpacity onPress={onPausePlay}>
                                         <Image source={require('../../assets/imgs/video-pause-button.png')}></Image>
                                     </TouchableOpacity>
@@ -260,7 +259,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
                                 <Text style={styles.progressDetailsText}>Duration: {duration}</Text>
                             </View>
                         </View>
-                        <View style ={styles.modalButtons}>
+                        <View style={styles.modalButtons}>
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={saveVoiceComment}
@@ -277,15 +276,22 @@ export const CommentSession = ({musicData, setMusicData}) => {
                     </View>
                 </View>
             </Modal>
-            <View style={{flexDirection:"row"}}>
+            <View style={{ flexDirection: "row" }}>
                 <TouchableWithoutFeedback
                     onPressIn={onStartRecord}
                     onPressOut={onStopRecord}
                 >
-                    <Image style={styles.record_button} source={require('../../assets/imgs/microphone.png')}/>
+                    <Image style={styles.record_button} source={require('../../assets/imgs/microphone.png')} />
                 </TouchableWithoutFeedback>
-                <View style = {{marginLeft:10}}>
-                    <Button onPress={(e) => saveMessage(e)} style={styles.addButton}><Text style={{ fontWeight: 'bold', fontSize: 13 }}>Submit Comment</Text></Button>
+                <View style={{ marginLeft: 10 }}>
+                    <Pressable
+                        style={({ pressed }) => [
+                            {
+                                backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
+                            },
+                            styles.addButton,
+                        ]}
+                        onPress={(e) => saveMessage(e)}><Text style={{ fontWeight: 'bold', fontSize: 13 }}>Submit Comment</Text></Pressable>
                 </View>
             </View>
             {!isRecording ?
@@ -302,30 +308,30 @@ export const CommentSession = ({musicData, setMusicData}) => {
             }
             <View>
                 <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
-                <View style={{ marginTop: 5 , backgroundColor: "#f0f0f0"}}>
+                <View style={{ marginTop: 5, backgroundColor: "#f0f0f0" }}>
                     <FlatList
                         data={musicData.comments}
                         keyExtractor={(item) => item.id + item.timestamp}
                         renderItem={({ item }) => (
                             item.type === "TEXT" ? (
                                 <View>
-                                    <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
-                                    <Text style={{marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
+                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
+                                    <Text style={{ marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
                                 </View>
-                            ):(
+                            ) : (
                                 <View>
-                                    <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
-                                    <View style={{width:200}}>
+                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
+                                    <View style={{ width: 200 }}>
                                         {item.comment === playPath ?
                                             (
                                                 <View style={styles.audioPlayerContainer}>
-                                                    { !pausedPlay ? (
+                                                    {!pausedPlay ? (
                                                         <TouchableOpacity onPress={onPausePlay}>
                                                             <Image source={require('../../assets/imgs/video-pause-button.png')}></Image>
                                                         </TouchableOpacity>
                                                         // <Button title={'Pause'} onPress={onPausePlay} >Pause</Button>
                                                     ) : (
-                                                        <TouchableOpacity onPress = {()=>onPlayComment(item.comment)}>
+                                                        <TouchableOpacity onPress={() => onPlayComment(item.comment)}>
                                                             <Image source={require('../../assets/imgs/play.png')}></Image>
                                                         </TouchableOpacity>
                                                         // <Button title={'Start'} onPress={onStartPlay} >Start</Button>
@@ -342,10 +348,10 @@ export const CommentSession = ({musicData, setMusicData}) => {
                                                         />
                                                     </View>
                                                 </View>
-                                        ):
+                                            ) :
                                             (
                                                 <View style={styles.audioPlayerContainer}>
-                                                    <TouchableOpacity onPress = {()=>onPlayComment(item.comment)}>
+                                                    <TouchableOpacity onPress={() => onPlayComment(item.comment)}>
                                                         <Image source={require('../../assets/imgs/play.png')}></Image>
                                                     </TouchableOpacity>
                                                     <View style={styles.progressIndicatorContainer}>
@@ -384,21 +390,22 @@ const styles = StyleSheet.create(
             flexDirection: "row",
         },
         addButton: {
-            backgroundColor: "#e4b1a5",
             display: "flex",
-            marginTop: 3,
+            marginTop: 5,
             paddingTop: 5,
-            height: 35,
+            paddingLeft: 5,
+            height: 30,
             justifyContent: "space-between",
-            width: 128
+            width: "110%",
+            borderRadius: 2
         },
         record_button: {
-            height:40,
-            width:40,
+            height: 40,
+            width: 40,
             marginLeft: 5,
             borderRadius: 30,
-            borderWidth:1,
-            backgroundColor:"#e4b1a5"
+            borderWidth: 1,
+            backgroundColor: "#e4b1a5"
         },
         centeredView: {
             flex: 1,
@@ -443,7 +450,7 @@ const styles = StyleSheet.create(
             flexDirection: 'row', alignItems: 'center'
         },
         progressIndicatorContainer: {
-            marginLeft:3,
+            marginLeft: 3,
             flex: 1,
             backgroundColor: '#e2e2e2',
         },
@@ -460,7 +467,7 @@ const styles = StyleSheet.create(
             color: 'grey',
             fontSize: 10,
         },
-        modalButtons :{
+        modalButtons: {
             flexDirection: "row",
             marginTop: 10,
         }
