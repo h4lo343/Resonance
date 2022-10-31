@@ -14,8 +14,10 @@ import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
 import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
+import RNShake from 'react-native-shake';
 import { nightMapStyle } from '../../assets/mapStyle';
 import { Appearance } from 'react-native';
+
 
 export const MapViewPage = ({ navigation }) => {
   let resetNumber = false
@@ -74,6 +76,16 @@ export const MapViewPage = ({ navigation }) => {
     // this return is to unsubscribe handler from the event
     return focusHandler;
   }, [navigation]);
+
+  useEffect(()=>{
+    const subscription = RNShake.addListener(()=>{
+      console.log("shake shake")
+      requireNearbyMusic(currentLocation.latitude,currentLocation.longitude)
+    })
+    return () => {
+      subscription.remove()
+    }
+  })
 
   const leftTrace = () => {
     setLeaveTraceComplete(true)
@@ -147,7 +159,10 @@ export const MapViewPage = ({ navigation }) => {
     }
 
   }
-
+  /**
+   * get maker trace with trace id
+   * display trace modal
+   * **/
   const requireTrace = (trace_id) => {
     setNearbyMusciSpinnerFlag(true);
     fetchMarkerTrace(trace_id).then(() => {
@@ -165,6 +180,9 @@ export const MapViewPage = ({ navigation }) => {
     })
   }
 
+  /**
+   * get marker trace with fetch
+   * **/
   const fetchMarkerTrace = async (trace_id) => {
     console.log("enter fetch")
     const url = `https://comp90018-mobile-computing.herokuapp.com/trace/getTrace`;
