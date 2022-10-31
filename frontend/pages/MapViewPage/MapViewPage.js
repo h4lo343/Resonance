@@ -110,7 +110,6 @@ export const MapViewPage = ({navigation}) => {
 
   const fetchNearbyMusic = async () => {
     const url = `https://comp90018-mobile-computing.herokuapp.com/trace/getNearbyTraces`;
-    
     var requestBody = {
       "location": {
         "latitude": nearbyLocation.latitude,
@@ -156,9 +155,11 @@ export const MapViewPage = ({navigation}) => {
   }
 
   const fetchMarkerTrace = async (trace_id) =>{
+    console.log("enter fetch")
     const url = `https://comp90018-mobile-computing.herokuapp.com/trace/getTrace`;
+    console.log("traceId", trace_id)
     let requestBody = {
-      "trace_id" : trace_id
+      "traceId" : trace_id
     }
     try {
       const response = await fetch(url,
@@ -169,6 +170,7 @@ export const MapViewPage = ({navigation}) => {
           }
       )
       const result = await response.json();
+      console.log("result =", result)
 
       if ("trace" in result) {
         var data = [result.trace];

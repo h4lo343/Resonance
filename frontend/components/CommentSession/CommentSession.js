@@ -10,7 +10,7 @@ import {
     PermissionsAndroid,
     TouchableWithoutFeedback, Alert, Modal, TouchableOpacity
 } from 'react-native';
-import {Button, Input, Pressable} from 'native-base'
+import {Button, FlatList, Input, Pressable} from 'native-base'
 import AudioRecorderPlayer from "react-native-audio-recorder-player/index";
 import RNFetchBlob from "rn-fetch-blob";
 import {useSelector} from "react-redux";
@@ -31,6 +31,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
     const [currentPositionSec, setCurrentPositionSec] = React.useState();
     const [currentDurationSec, setCurrentDurationSec] = React.useState();
     const [playTime, setPlayTime] = React.useState("00:00:00");
+    const [playPath, setPlayPath] = React.useState();
     const [duration, setDuration] = React.useState();
     const [pathToRecord, setPath] = React.useState();
     const jwtToken = useSelector((state) => state.auth.jwtToken);
@@ -78,12 +79,11 @@ export const CommentSession = ({musicData, setMusicData}) => {
         await auth().signInAnonymously().then(()=> {console.log("signed in")});
         let fileId = uuid.v4();
         let filePath = path + fileId + ".mp4"
-        console.log(path);
-        console.log(path + fileId + ".mp4");
         try{
             await requestAudioRecordingPermission();
             const result = await audioRecorderPlayer.startRecorder(filePath);
             setPath(result);
+            setPlayPath(result);
             setIsRecording(true);
             audioRecorderPlayer.addRecordBackListener((e) => {
                 // setRecordingTime(e.currentPosition)
@@ -116,7 +116,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
     const onStartPlay = async () => {
         console.log('onStartPlay');
         setPausedPlay(!pausedPlay);
-        const msg = await audioRecorderPlayer.startPlayer(pathToRecord);
+        const msg = await audioRecorderPlayer.startPlayer(playPath);
         audioRecorderPlayer.addPlayBackListener(e => {
             setCurrentPositionSec(e.currentPosition);
             setCurrentDurationSec(e.duration);
@@ -173,6 +173,11 @@ export const CommentSession = ({musicData, setMusicData}) => {
         await audioRecorderPlayer.pausePlayer();
         setPausedPlay(true);
     };
+
+    const onPlayComment = async (trackUrl) => {
+        setPlayPath(trackUrl);
+        await onStartPlay();
+    }
 
     const saveVoiceComment = async () => {
         console.log("saving Voice Comment in path :" + path);
@@ -287,6 +292,57 @@ export const CommentSession = ({musicData, setMusicData}) => {
                     </View>
                 )
             }
+            <View>
+                <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
+                <View style={{ marginTop: 5 , backgroundColor: "#f0f0f0"}}>
+                    <FlatList
+                        data={musicData.comments}
+                        keyExtractor={(item) => item.id + item.timestamp}
+                        renderItem={({ item }) => (
+                            item.type === "TEXT" ? (
+                                <View>
+                                    <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
+                                    <Text style={{marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
+                                </View>
+                            ):(
+                                <View>
+                                    <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
+                                    <View style={{width:200}}>
+                                        <View style={styles.audioPlayerContainer}>
+                                            { !pausedPlay ? (
+                                                <TouchableOpacity onPress={onPausePlay}>
+                                                    <Image source={require('../../assets/imgs/video-pause-button.png')}></Image>
+                                                </TouchableOpacity>
+                                                // <Button title={'Pause'} onPress={onPausePlay} >Pause</Button>
+                                            ) : (
+                                                <TouchableOpacity onPress = {()=>onPlayComment(item.comment)}>
+                                                    <Image source={require('../../assets/imgs/play.png')}></Image>
+                                                </TouchableOpacity>
+                                                // <Button title={'Start'} onPress={onStartPlay} >Start</Button>
+                                            )}
+                                            <View style={styles.progressIndicatorContainer}>
+                                                <View
+                                                    style={[
+                                                        styles.progressLine,
+                                                        {
+                                                            width: `${(currentPositionSec / currentDurationSec) * 100}%`,
+                                                        },
+                                                    ]}
+                                                />
+                                            </View>
+                                        </View>
+                                        <View style={styles.progressDetailsContainer}>
+                                            <Text style={styles.progressDetailsText}>Progress: {playTime}</Text>
+                                            <Text style={styles.progressDetailsText}>Duration: {duration}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            )
+                        )
+                        }
+                    ></FlatList>
+                </View>
+            </View>
         </View>
 
     );
