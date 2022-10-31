@@ -281,7 +281,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
                     <Image style={styles.record_button} source={require('../../assets/imgs/microphone.png')}/>
                 </TouchableWithoutFeedback>
                 <View style = {{marginLeft:10}}>
-                    <Button onPress={(e) => saveMessage(e)} style={styles.addButton}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Submit Comment</Text></Button>
+                    <Button onPress={(e) => saveMessage(e)} style={styles.addButton}><Text style={{ fontWeight: 'bold', fontSize: 13 }}>Submit Comment</Text></Button>
                 </View>
             </View>
             {!isRecording ?
@@ -382,10 +382,11 @@ const styles = StyleSheet.create(
         addButton: {
             backgroundColor: "#e4b1a5",
             display: "flex",
-            paddingVertical: 2,
-            height: 40,
+            marginTop: 3,
+            paddingTop: 5,
+            height: 35,
             justifyContent: "space-between",
-            width: 136
+            width: 128
         },
         record_button: {
             height:40,

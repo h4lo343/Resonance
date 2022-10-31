@@ -5,7 +5,7 @@ import { Box, Input, Button, FlatList } from 'native-base'
 import { getAnotherUserProfile } from '../../redux/anotherUserProfile/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import RNFetchBlob from "rn-fetch-blob";
-import {CommentSession} from "../CommentSession/CommentSession";
+import { CommentSession } from "../CommentSession/CommentSession";
 
 export const CarouselCards = (propsData) => {
     const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export const CarouselCards = (propsData) => {
         processMusicData(musicDataArray[propsData.data.index])
     }, [nearbyMusics])
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log("musicData Updated")
     }, [musicData])
 
@@ -128,28 +128,45 @@ export const CarouselCards = (propsData) => {
                     textStyle={styles.spinnerTextStyle}
                 />
             </View>
-            <ScrollView nestedScrollEnabled={true} contentContainerStyle={{flexGrow: 1}}>
-            <View >
-                <View style={styles.wrapperStyle}>
-                    <Image style={{ width: 70, height: 70, marginLeft: 20 }} resizeMode="contain" source={{ uri: musicData.songImageUri }} alt={musicData.songName} />
-                    <View>
-                        <Text style={styles.sharerLink} onPress={() => goToAnotherUserProfile()}>Sharer: {musicData.songSharerUsername}</Text>
-                        <Text style={styles.textInList}>{(new Date(musicData.timestamp)).toDateString()}</Text>
-                        <Text style={styles.textInList}>Song:{musicData.songName}</Text>
-                        <Text style={styles.textInList}>Artist: {musicData.songArtist}</Text>
-                        <Text style={styles.link} onPress={() => { Linking.openURL(musicData.songUrl) }}>music spotify link</Text>
+            <View style={{height: 350, width: 330}}>
+                <ScrollView nestedScrollEnabled={true} contentContainerStyle={{ flexGrow: 1, paddingRight: 12 }}>
+                    <View >
+                        <View style={styles.wrapperStyle}>
+                            <Image style={{ width: 70, height: 70, marginLeft: 20 }} resizeMode="contain" source={{ uri: musicData.songImageUri }} alt={musicData.songName} />
+                            <View>
+                                <Text style={styles.sharerLink} onPress={() => goToAnotherUserProfile()}>Sharer: {musicData.songSharerUsername}</Text>
+                                <Text style={styles.textInList}>{musicData.timestamp}</Text>
+                                <Text style={styles.textInList}>Song:{musicData.songName}</Text>
+                                <Text style={styles.textInList}>Artist: {musicData.songArtist}</Text>
+                                <Text style={styles.link} onPress={() => { Linking.openURL(musicData.songUrl) }}>music spotify link</Text>
+                            </View>
+                        </View>
                     </View>
-                </View>
-            </View>
-            <View>
-                <CommentSession
-                    musicData = {musicData}
-                    setMusicData = {setMusicData}
-                ></CommentSession>
+                    <View>
+                        <CommentSession
+                            musicData={musicData}
+                            setMusicData={setMusicData}
+                        ></CommentSession>
 
-
+                        <View>
+                            <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
+                            <View style={{ marginTop: 5, backgroundColor: "#f0f0f0" }}>
+                                <FlatList
+                                    data={musicData.comments}
+                                    keyExtractor={(item) => item.id + item.timestamp}
+                                    renderItem={({ item }) => (
+                                        <View>
+                                            <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
+                                            <Text style={{ marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
+                                        </View>
+                                    )
+                                    }
+                                ></FlatList>
+                            </View>
+                        </View>
+                    </View>
+                </ScrollView>
             </View>
-            </ScrollView>
         </View>
     )
 }
