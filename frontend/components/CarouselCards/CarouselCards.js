@@ -155,7 +155,7 @@ export const CarouselCards = (propsData) => {
                             keyExtractor={(item) => item.id + item.timestamp}
                             renderItem={({ item }) => (
                                 <View>
-                                    <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {item.timestamp}</Text>
+                                    <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
                                     <Text style={{marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
                                 </View>
                             )
