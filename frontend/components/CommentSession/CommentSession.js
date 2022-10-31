@@ -20,6 +20,7 @@ import auth from '@react-native-firebase/auth';
 
 
 export const CommentSession = ({musicData, setMusicData}) => {
+    const commentTextInput = React.createRef();
 
     const [isRecording, setIsRecording] = React.useState(false);
     const [recordings, setRecordings] = React.useState();
@@ -169,6 +170,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
             console.log("error can't save to backend")
         }
 
+        commentTextInput.current.clear();
     }
 
     const onPausePlay = async () => {
@@ -213,6 +215,8 @@ export const CommentSession = ({musicData, setMusicData}) => {
         }catch{
             console.log("error can't save to backend")
         }
+
+        commentTextInput.current.clear();
     }
     return (
         <View >
@@ -287,7 +291,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
             {!isRecording ?
                 (
                     <View>
-                        <Input variant="underlined" placeholder="Type New Comment" fontSize={14} onChangeText={setNewComment} />
+                        <Input ref={commentTextInput} variant="underlined" placeholder="Type New Comment" fontSize={14} onChangeText={setNewComment} />
                     </View>
                 ) :
                 (
