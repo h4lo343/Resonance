@@ -15,7 +15,7 @@ export const getAccessToken = createAsyncThunk(
       // optional clien secret
       clientSecret: '60cf95629ba64036b702db361fab49fe',
       redirectUrl: 'com.yourmusic://oauth/',
-      scopes: ['playlist-modify-public', 'playlist-modify-private'],
+      scopes: ['playlist-modify-public'],
       serviceConfiguration: {
         authorizationEndpoint: 'https://accounts.spotify.com/authorize',
         tokenEndpoint: 'https://accounts.spotify.com/api/token',
