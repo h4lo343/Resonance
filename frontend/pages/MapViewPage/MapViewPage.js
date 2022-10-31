@@ -14,7 +14,8 @@ import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
 import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import { nightMapStyle } from '../../assets/mapStyle';
+import { Appearance } from 'react-native';
 
 export const MapViewPage = ({navigation}) => {
   let resetNumber= false
@@ -37,7 +38,7 @@ export const MapViewPage = ({navigation}) => {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,//initial region
   });
-
+  const [mapTheme, setMapTheme] = useState([])
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const [nearbyLocation, setNearbyLocation] = useState({
     latitude: 37.3882733,
@@ -60,6 +61,14 @@ export const MapViewPage = ({navigation}) => {
         longitudeDelta: 0.0421,
       })
       loadHistoryMarkers()
+    });
+
+    Appearance.addChangeListener((event) => {
+      if (Appearance.getColorScheme() === 'dark') {
+        setMapTheme(nightMapStyle);
+      }else{
+        setMapTheme([]);
+      }
     });
   
       // this return is to unsubscribe handler from the event
@@ -298,6 +307,7 @@ const attachHistoryMarker = historyMarkers.map((history,i)=>(
         showsUserLocation = {showUserLocationDot}
         followsUserLocation
         initialRegion = {initialRegion}
+        customMapStyle={mapTheme}
         >
         {getMarkers()}
       </MapView>
