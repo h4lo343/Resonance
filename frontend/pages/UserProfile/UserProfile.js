@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getUserProfile } from '../../redux/userProfile/slice';
 import RNFetchBlob from "rn-fetch-blob";
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import ImageOverlay from "react-native-image-overlay";
 
 export const UserProfile = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -115,23 +115,22 @@ export const UserProfile = ({ navigation }) => {
                     textStyle={{ color: '#fff' }}
                 />
             </View>
-            <View style={styles.row}>
-                <Avatar.Image source={{ uri: stateAvatarUri }} size={100} />
-            </View>
 
-            <View style={styles.userrow}>
+            <ImageOverlay
+                source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_1.png')).uri }}
+                height={200}
+                overlayAlpha={0.05}
+                contentPosition="center">
+                <Avatar.Image style={{ marginBottom: 5, marginTop: 8 }} source={{ uri: stateAvatarUri }} size={105} />
                 <Text style={styles.userDataFont}>Username: {stateUsername}</Text>
-            </View>
-
-            <View style={styles.userrow}>
                 <Text style={styles.userDataFont}>Full Name: {stateFullName}</Text>
-            </View>
+            </ImageOverlay>
 
             <View style={styles.musicListHeader}>
                 <Text style={{ fontSize: 16, color: '#795C34' }}>Music Lists:</Text>
             </View>
 
-            <View style={{ marginLeft: 70, marginTop: 10, height: 200, width: 310 }}>
+            <View style={{ marginLeft: 70, marginTop: 10, height: 300, width: 310 }}>
                 <FlatList
                     data={musicList}
                     keyExtractor={(item) => item.id}
@@ -177,6 +176,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     userDataFont: {
+        paddingTop: 5,
         fontSize: 16,
         color: '#795C34',
     },
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     musicListHeader: {
         backgroundColor: "#cad5d8",
         flexDirection: 'row',
-        marginTop: 18,
+        marginTop: 10,
         justifyContent: 'center',
         paddingBottom: 5,
     },

@@ -8,6 +8,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { UserProfile } from '../UserProfile';
 import RNFetchBlob from "rn-fetch-blob";
 import Spinner from 'react-native-loading-spinner-overlay';
+import ImageOverlay from "react-native-image-overlay";
+import DrawerNavigator from '../Navigation/DrawerNavigator';
 
 export const EditProfile = ({ navigation }) => {
   const Drawer = createDrawerNavigator();
@@ -127,7 +129,7 @@ export const EditProfile = ({ navigation }) => {
   return (
     <View style={{ backgroundColor: "#fff" }}>
       <Drawer.Navigator>
-        <Drawer.Screen name="Profile" component={UserProfile} />
+        <Drawer.Screen name="Profile" component={DrawerNavigator} />
       </Drawer.Navigator>
       <View style={styles.profileSpinnerStyle}>
         <Spinner
@@ -137,24 +139,31 @@ export const EditProfile = ({ navigation }) => {
         />
       </View>
 
-      <View style={styles.row}>
-        <Avatar.Image source={{ uri: newAvatar.uri === '' ? avatarUri : newAvatar.uri }} size={100} />
-      </View>
+      <ImageOverlay
+        source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_headset.jpg')).uri }}
+        height={160}
+        overlayAlpha={0.05}
+        contentPosition="center">
+        <View>
+          <Avatar.Image source={{ uri: newAvatar.uri === '' ? avatarUri : newAvatar.uri }} size={110} />
+        </View>
+      </ImageOverlay>
 
-      <Box alignItems="center" style={{ marginTop: 15 }}>
+
+      <Box alignItems="center" style={{ marginTop: 10 }}>
         <Pressable
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
             },
-            { top: '20%', width: "35%", height: 40, paddingLeft: 30, paddingTop: 9, borderRadius: 2 },
+            { top: '25%', width: "35%", height: 40, paddingLeft: 30, paddingTop: 9, borderRadius: 2 },
           ]}
           onPress={(e) => uploadPhoto(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Take Photo</Text></Pressable>
       </Box>
 
       <ScrollView>
         <View style={styles.userrow}>
-          <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Current Username: {currentUsername}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}>Current Username: {currentUsername}</Text>
         </View>
 
         <Box alignItems="center" style={{ marginTop: 15, justifyContent: "space-between", flexDirection: "row" }}>
@@ -175,11 +184,20 @@ export const EditProfile = ({ navigation }) => {
               {
                 backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
               },
-              { top: '20%', width: "35%", height: 40, paddingLeft: 50, paddingTop: 9, borderRadius: 2 },
+              { top: '15%', width: "35%", height: 40, paddingLeft: 50, paddingTop: 9, borderRadius: 2 },
             ]}
             onPress={(e) => save(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Save</Text></Pressable>
         </Box>
+
       </ScrollView>
+
+
+      <ImageOverlay
+        source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_headset.jpg')).uri }}
+        height={160}
+        overlayAlpha={0.05}
+        contentPosition="bottom">
+      </ImageOverlay>
 
     </View>
   )
@@ -188,7 +206,7 @@ export const EditProfile = ({ navigation }) => {
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: 8,
     marginTop: 30,
     justifyContent: 'center'
   },
@@ -202,7 +220,7 @@ const styles = StyleSheet.create({
   },
   saveProfile: {
     marginTop: 20,
-    marginBottom: 250
+    marginBottom: 60
   },
   profileSpinnerStyle: {
     backgroundColor: '#cad5d8',

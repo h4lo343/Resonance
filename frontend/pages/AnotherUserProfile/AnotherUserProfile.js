@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Linking, P
 import { Box, Button, FlatList } from 'native-base';
 import { Avatar } from 'react-native-paper';
 import { useSelector } from 'react-redux';
+import ImageOverlay from "react-native-image-overlay";
 
 export const AnotherUserProfile = ({ navigation }) => {
     const defaultUri = Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri;
@@ -17,19 +18,21 @@ export const AnotherUserProfile = ({ navigation }) => {
     return (
         <View>
             <Text style={{ padding: 10, backgroundColor: '#5F9F9F', color: "#fff", fontSize: 20, fontWeight: "bold" }}>Profile</Text>
-            <View style={styles.row}>
-                <Avatar.Image source={{ uri: avatarUri == undefined ? defaultUri : avatarUri }} size={100} />
-            </View>
 
-            <View style={styles.userrow}>
-                <Text style={styles.userDataFont}>Username: {username}</Text>
-            </View>
+            <ImageOverlay
+                source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_2.jpg')).uri }}
+                height={200}
+                overlayAlpha={0.1}
+                contentPosition="center">
+                        <Avatar.Image style={{marginBottom: 5}} source={{ uri: avatarUri == undefined ? defaultUri : avatarUri }} size={105} />
+                        <Text style={styles.userDataFont}>Username: {username}</Text>
+            </ImageOverlay>
 
             <View style={styles.musicListHeader}>
                 <Text style={{ fontSize: 16, color: '#795C34' }}>Music Lists:</Text>
             </View>
 
-            <View style={{ marginLeft: 70, marginTop: 10, height: 200, width: 310 }}>
+            <View style={{ marginLeft: 70, marginTop: 10, height: 300, width: 310 }}>
                 <FlatList
                     data={musicList}
                     keyExtractor={(item) => item.id}
@@ -83,6 +86,9 @@ const styles = StyleSheet.create({
     userDataFont: {
         fontSize: 16,
         color: '#795C34',
+        backgroundColor: 'white',
+        paddingHorizontal: 5,
+        marginTop: 12
     },
     listStyle: {
         display: "flex",
