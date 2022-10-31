@@ -18,7 +18,11 @@ import storage from '@react-native-firebase/storage';
 import uuid from 'react-native-uuid';
 import auth from '@react-native-firebase/auth';
 
-
+/**
+ * Comment Session for each carousel card of traces
+ * musicData to get comment
+ * setMusicData when update data
+ * **/
 export const CommentSession = ({musicData, setMusicData}) => {
 
     const [isRecording, setIsRecording] = React.useState(false);
@@ -37,6 +41,9 @@ export const CommentSession = ({musicData, setMusicData}) => {
     const [isPlaying, setIsPlaying] = React.useState(false);
     const jwtToken = useSelector((state) => state.auth.jwtToken);
 
+    /**
+     * request permission for recording audio
+     * **/
     const requestAudioRecordingPermission = async () => {
         try {
             const grants = await PermissionsAndroid.requestMultiple([
@@ -68,7 +75,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
 
 
     /**
-     * path to where audio file saved in device
+     * create path to where audio file saved in device
      * **/
     const dirs = RNFetchBlob.fs.dirs;
     const path = Platform.select({
@@ -76,21 +83,28 @@ export const CommentSession = ({musicData, setMusicData}) => {
         android: `${dirs.CacheDir}/`,
     });
 
+    /**
+     * start recording
+     * **/
     const onStartRecord = async () => {
         await auth().signInAnonymously().then(()=> {console.log("signed in")});
+        // create unique id for each recording file
         let fileId = uuid.v4();
         let filePath = path + fileId + ".mp4"
         try{
             await requestAudioRecordingPermission();
+            // start recording and set file path/name
             const result = await audioRecorderPlayer.startRecorder(filePath);
             setPath(result);
             setPlayPath(result);
             setIsRecording(true);
+            // set recording duration for display
             audioRecorderPlayer.addRecordBackListener((e) => {
                 // setRecordingTime(e.currentPosition)
                 setRecordingTime(audioRecorderPlayer.mmssss(
                     Math.floor(e.currentPosition),
                 ))
+                // set total recording duration
                 setDuration(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
             });
         }catch (e){
@@ -100,10 +114,14 @@ export const CommentSession = ({musicData, setMusicData}) => {
 
     };
 
+    /**
+     * Stop the recording
+     * **/
     const onStopRecord = async () => {
         try {
             const result = await audioRecorderPlayer.stopRecorder();
             setIsRecording(false);
+            // pop up confirmation window
             setConfirmationWindow(true);
             setRecordings(result);
             audioRecorderPlayer.removeRecordBackListener();
@@ -114,10 +132,13 @@ export const CommentSession = ({musicData, setMusicData}) => {
         }
     };
 
+    /**
+     * start play audio
+     * */
     const onStartPlay = async () => {
         console.log('onStartPlay');
         setPausedPlay(!pausedPlay);
-
+        // start player with play path
         const msg = await audioRecorderPlayer.startPlayer(playPath);
         audioRecorderPlayer.addPlayBackListener(e => {
             setCurrentPositionSec(e.currentPosition);
@@ -132,6 +153,9 @@ export const CommentSession = ({musicData, setMusicData}) => {
         console.log(msg);
     };
 
+    /**
+     * Stop Player
+     * **/
     const onStopPlay = async () => {
         console.log('onStopPlay');
         await audioRecorderPlayer.stopPlayer(playPath);
@@ -141,10 +165,13 @@ export const CommentSession = ({musicData, setMusicData}) => {
         audioRecorderPlayer.removePlayBackListener();
     };
 
+
+    /**
+     * save Text Message
+     * use post request
+     * set response music data to show update
+     * **/
     const saveMessage = async () => {
-        console.log(musicData.traceId);
-        console.log("jwtToken" + jwtToken);
-        console.log("comment = " + newComment);
         try{
             var requestBody = {
                 "type": "TEXT",
@@ -159,7 +186,9 @@ export const CommentSession = ({musicData, setMusicData}) => {
                 })
             setNewComment("");
             console.log(musicData)
+            // convert res to json
             let res = await  response.json()
+            // update musicData state
             let updateMusicData = {...musicData};
             updateMusicData.comments = res.trace.comments
             setMusicData(updateMusicData);
@@ -171,17 +200,30 @@ export const CommentSession = ({musicData, setMusicData}) => {
 
     }
 
+
+    /**
+     * Pause Player
+     * **/
     const onPausePlay = async () => {
         await audioRecorderPlayer.pausePlayer();
         setPausedPlay(true);
     };
 
+    /**
+     * play comment audio
+     * **/
     const onPlayComment = async (trackUrl) => {
         console.log("play comment")
+        // set play path to play
         await setPlayPath(trackUrl);
         await onStartPlay();
     }
 
+    /**
+     * save AUDIO comment
+     * use post request
+     * set response music data to show update
+     * **/
     const saveVoiceComment = async () => {
         console.log("saving Voice Comment in path :" + path);
         await onStopPlay();

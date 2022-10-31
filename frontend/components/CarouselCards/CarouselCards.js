@@ -135,7 +135,7 @@ export const CarouselCards = (propsData) => {
                             <Image style={{ width: 70, height: 70, marginLeft: 20 }} resizeMode="contain" source={{ uri: musicData.songImageUri }} alt={musicData.songName} />
                             <View>
                                 <Text style={styles.sharerLink} onPress={() => goToAnotherUserProfile()}>Sharer: {musicData.songSharerUsername}</Text>
-                                <Text style={styles.textInList}>{musicData.timestamp}</Text>
+                                <Text style={styles.textInList}>{(new Date(musicData.timestamp).toDateString())}</Text>
                                 <Text style={styles.textInList}>Song:{musicData.songName}</Text>
                                 <Text style={styles.textInList}>Artist: {musicData.songArtist}</Text>
                                 <Text style={styles.link} onPress={() => { Linking.openURL(musicData.songUrl) }}>music spotify link</Text>
@@ -148,22 +148,7 @@ export const CarouselCards = (propsData) => {
                             setMusicData={setMusicData}
                         ></CommentSession>
 
-                        <View>
-                            <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
-                            <View style={{ marginTop: 5, backgroundColor: "#f0f0f0" }}>
-                                <FlatList
-                                    data={musicData.comments}
-                                    keyExtractor={(item) => item.id + item.timestamp}
-                                    renderItem={({ item }) => (
-                                        <View>
-                                            <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
-                                            <Text style={{ marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
-                                        </View>
-                                    )
-                                    }
-                                ></FlatList>
-                            </View>
-                        </View>
+
                     </View>
                 </ScrollView>
             </View>
