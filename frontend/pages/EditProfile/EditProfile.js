@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, PermissionsAndroid, FormControl, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, PermissionsAndroid, FormControl, ScrollView, Pressable } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { Box, Input, Button } from 'native-base';
 import { useSelector } from 'react-redux';
@@ -125,7 +125,7 @@ export const EditProfile = ({ navigation }) => {
   }
 
   return (
-    <View style={{backgroundColor: "#fff"}}>
+    <View style={{ backgroundColor: "#fff" }}>
       <Drawer.Navigator>
         <Drawer.Screen name="Profile" component={UserProfile} />
       </Drawer.Navigator>
@@ -142,7 +142,14 @@ export const EditProfile = ({ navigation }) => {
       </View>
 
       <Box alignItems="center" style={{ marginTop: 15 }}>
-        <Button onPress={uploadPhoto} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Take Photo</Text></Button>
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
+            },
+            { top: '20%', width: "35%", height: 40, paddingLeft: 30, paddingTop: 9, borderRadius: 2 },
+          ]}
+          onPress={(e) => uploadPhoto(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Take Photo</Text></Pressable>
       </Box>
 
       <ScrollView>
@@ -163,7 +170,14 @@ export const EditProfile = ({ navigation }) => {
         </Box>
 
         <Box alignItems="center" style={styles.saveProfile}>
-          <Button onPress={(e) => save(e)} style={styles.editProfile}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Save</Text></Button>
+          <Pressable
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
+              },
+              { top: '20%', width: "35%", height: 40, paddingLeft: 50, paddingTop: 9, borderRadius: 2 },
+            ]}
+            onPress={(e) => save(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Save</Text></Pressable>
         </Box>
       </ScrollView>
 
@@ -185,10 +199,6 @@ const styles = StyleSheet.create({
   },
   userDataFont: {
     color: '#795C34',
-  },
-  editProfile: {
-    backgroundColor: "#e4b1a5",
-    width: "50%",
   },
   saveProfile: {
     marginTop: 20,

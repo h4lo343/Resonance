@@ -115,10 +115,6 @@ export const CarouselCards = (propsData) => {
         }
     })
 
-    const add = () => {
-        // can save comment here
-    }
-
     return (
         <View>
             <View>
@@ -147,8 +143,6 @@ export const CarouselCards = (propsData) => {
                             musicData={musicData}
                             setMusicData={setMusicData}
                         ></CommentSession>
-
-
                     </View>
                 </ScrollView>
             </View>

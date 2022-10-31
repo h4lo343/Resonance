@@ -5,6 +5,7 @@ import { MapViewPage } from '../MapViewPage/MapViewPage';
 import { UserProfile } from '../UserProfile';
 import { Login } from '../Login'
 
+
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
@@ -12,7 +13,7 @@ const DrawerNavigator = () => {
       <Drawer.Navigator>
         <Drawer.Screen name="Map" component={MapViewPage} />
         <Drawer.Screen name="Profile" component={UserProfile} />
-        <Drawer.Screen name="Logout" component={Login} />
+        <Drawer.Screen name="Logout" component={Login} options={{ headerShown: false }}/>
       </Drawer.Navigator>
     );
   };
