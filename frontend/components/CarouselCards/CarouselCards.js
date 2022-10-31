@@ -21,6 +21,10 @@ export const CarouselCards = (propsData) => {
         processMusicData(musicDataArray[propsData.data.index])
     }, [nearbyMusics])
 
+    useEffect(()=>{
+        console.log("musicData Updated")
+    }, [musicData])
+
     const processMusicData = (nearbyMusic) => {
         var traceId = nearbyMusic.id;
         var songImageUri = nearbyMusic.song.songImageUrl;
@@ -124,7 +128,8 @@ export const CarouselCards = (propsData) => {
                     textStyle={styles.spinnerTextStyle}
                 />
             </View>
-            <View>
+            <ScrollView nestedScrollEnabled={true} contentContainerStyle={{flexGrow: 1}}>
+            <View >
                 <View style={styles.wrapperStyle}>
                     <Image style={{ width: 70, height: 70, marginLeft: 20 }} resizeMode="contain" source={{ uri: musicData.songImageUri }} alt={musicData.songName} />
                     <View>
@@ -142,26 +147,24 @@ export const CarouselCards = (propsData) => {
                     setMusicData = {setMusicData}
                 ></CommentSession>
 
-                <View style={{ height: 160 }}>
+                <View>
                     <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
-                    <ScrollView nestedScrollEnabled={true} style={{ marginTop: 5 , backgroundColor: "#f0f0f0"}}>
+                    <View style={{ marginTop: 5 , backgroundColor: "#f0f0f0"}}>
                         <FlatList
                             data={musicData.comments}
                             keyExtractor={(item) => item.id + item.timestamp}
-                            contentContainerStyle={{
-                                flexGrow: 1,
-                            }}
                             renderItem={({ item }) => (
                                 <View>
-                                    <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user} - {item.timestamp}</Text>
+                                    <Text style={{fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {item.timestamp}</Text>
                                     <Text style={{marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
                                 </View>
                             )
                             }
                         ></FlatList>
-                    </ScrollView>
+                    </View>
                 </View>
             </View>
+            </ScrollView>
         </View>
     )
 }

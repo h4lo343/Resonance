@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const initialState = {
   musics: [
         {
-            "id": "634bed8121f7aeaa54a8015c",
+            "id": "635e7a15bea2205814f2346c",
             "sharer": {
                 "id": "63564f921ba6d1ff21217914",
                 "username": "test"
@@ -20,25 +20,37 @@ const initialState = {
             "comments": [
                 {
                     "id": "634bed9121f7aeaa54a80166",
-                    "user": "test0",
+                    "user": {
+                        "id":"635be9d54c46cb8bfab2bf4f",
+                        "name": "test0",
+                    },
                     "timestamp": "2022-10-16T11:40:01.809Z",
                     "comment": "hello world0"
                 },
                 {
                     "id": "634bed9121f7aeaa54a80168",
-                    "user": "test1",
+                    "user": {
+                        "id":"635be9d54c46cb8bfab2bf4f",
+                        "name": "test0",
+                    },
                     "timestamp": "2022-10-16T11:40:01.809Z",
                     "comment": "hello world1"
                 },
                 {
                     "id": "634bed9121f7aeaa54a80168",
-                    "user": "test2",
+                    "user": {
+                        "id":"635be9d54c46cb8bfab2bf4f",
+                        "name": "test0",
+                    },
                     "timestamp": "2022-10-17T11:40:01.809Z",
                     "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 },
                 {
                     "id": "634bed9121f7aeaa54a80168",
-                    "user": "test3",
+                    "user": {
+                        "id":"635be9d54c46cb8bfab2bf4f",
+                        "name": "test0",
+                    },
                     "timestamp": "2022-10-18T11:40:01.809Z",
                     "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 }
@@ -66,25 +78,37 @@ const initialState = {
             "comments": [
                 {
                     "id": "634bed9121f7aeaa54a80166",
-                    "user": "test2",
+                    "user": {
+                        "id":"635be9d54c46cb8bfab2bf4f",
+                        "name": "test0",
+                    },
                     "timestamp": "2022-11-16T11:40:01.809Z",
                     "comment": "hello world2"
                 },
                 {
                     "id": "634bed9121f7aeaa54a80168",
-                    "user": "test1",
+                    "user": {
+                        "id":"635be9d54c46cb8bfab2bf4f",
+                        "name": "test0",
+                    },
                     "timestamp": "2022-10-16T11:40:01.809Z",
                     "comment": "hello world1"
                 },
                 {
                     "id": "634bed9121f7aeaa54a80168",
-                    "user": "test2",
+                    "user": {
+                        "id":"635be9d54c46cb8bfab2bf4f",
+                        "name": "test0",
+                    },
                     "timestamp": "2022-10-17T11:40:01.809Z",
                     "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 },
                 {
                     "id": "634bed9121f7aeaa54a80168",
-                    "user": "test2",
+                    "user": {
+                        "id":"635be9d54c46cb8bfab2bf4f",
+                        "name": "test0",
+                    },
                     "timestamp": "2022-10-18T11:40:01.809Z",
                     "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 }

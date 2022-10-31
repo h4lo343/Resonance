@@ -129,7 +129,7 @@ export const MapViewPage = ({navigation}) => {
       const result = await response.json();
 
       if ("traces" in result) {
-        // console.log("result traces: " + result.traces);
+        console.log("result traces: " + result.traces);
         var data = result.traces;
         dispatch(getNearbyMusic({data}));
       }

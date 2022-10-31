@@ -14,6 +14,9 @@ import {Button, Input, Pressable} from 'native-base'
 import AudioRecorderPlayer from "react-native-audio-recorder-player/index";
 import RNFetchBlob from "rn-fetch-blob";
 import {useSelector} from "react-redux";
+import storage from '@react-native-firebase/storage';
+import uuid from 'react-native-uuid';
+import auth from '@react-native-firebase/auth';
 
 
 export const CommentSession = ({musicData, setMusicData}) => {
@@ -68,18 +71,18 @@ export const CommentSession = ({musicData, setMusicData}) => {
     const dirs = RNFetchBlob.fs.dirs;
     const path = Platform.select({
         ios: 'hello.m4a',
-        android: `${dirs.CacheDir}/hello.mp4`,
+        android: `${dirs.CacheDir}/`,
     });
 
     const onStartRecord = async () => {
-        // await auth().signInAnonymously().then(()=> {console.log("signed in")});
-        // let fileId = uuid.v4();
-        // let filePath = path + fileId + ".mp4"
-        // console.log(path);
-        // console.log(path + fileId + ".mp4");
+        await auth().signInAnonymously().then(()=> {console.log("signed in")});
+        let fileId = uuid.v4();
+        let filePath = path + fileId + ".mp4"
+        console.log(path);
+        console.log(path + fileId + ".mp4");
         try{
             await requestAudioRecordingPermission();
-            const result = await audioRecorderPlayer.startRecorder(path);
+            const result = await audioRecorderPlayer.startRecorder(filePath);
             setPath(result);
             setIsRecording(true);
             audioRecorderPlayer.addRecordBackListener((e) => {
@@ -113,7 +116,7 @@ export const CommentSession = ({musicData, setMusicData}) => {
     const onStartPlay = async () => {
         console.log('onStartPlay');
         setPausedPlay(!pausedPlay);
-        const msg = await audioRecorderPlayer.startPlayer(path);
+        const msg = await audioRecorderPlayer.startPlayer(pathToRecord);
         audioRecorderPlayer.addPlayBackListener(e => {
             setCurrentPositionSec(e.currentPosition);
             setCurrentDurationSec(e.duration);
@@ -139,11 +142,12 @@ export const CommentSession = ({musicData, setMusicData}) => {
     const saveMessage = async () => {
         console.log(musicData.traceId);
         console.log("jwtToken" + jwtToken);
+        console.log("comment = " + newComment);
         try{
-            let requestBody = {
-                trace_id: musicData.trace_id,
-                type: "TEXT",
-                comment: newComment
+            var requestBody = {
+                "type": "TEXT",
+                "traceId": musicData.traceId,
+                "comment": newComment,
             }
             let response = await fetch("https://comp90018-mobile-computing.herokuapp.com/trace/addComment",
                 {
@@ -151,10 +155,18 @@ export const CommentSession = ({musicData, setMusicData}) => {
                     method: 'POST',
                     body: JSON.stringify(requestBody)
                 })
-            console.log(response);
+            setNewComment("");
+            console.log(musicData)
+            let res = await  response.json()
+            let updateMusicData = {...musicData};
+            updateMusicData.comments = res.trace.comments
+            setMusicData(updateMusicData);
+            console.log(updateMusicData);
+
         }catch{
             console.log("error can't save to backend")
         }
+
     }
 
     const onPausePlay = async () => {
@@ -165,10 +177,33 @@ export const CommentSession = ({musicData, setMusicData}) => {
     const saveVoiceComment = async () => {
         console.log("saving Voice Comment in path :" + path);
         setConfirmationWindow(false);
-        // const reference = storage().ref(pathToRecord);
-        // await reference.putFile(pathToRecord);
-        // let savedUri = await reference.getDownloadURL();
-        // console.log(savedUri)
+        const reference = storage().ref(pathToRecord);
+        await reference.putFile(pathToRecord);
+        let savedUrl = await reference.getDownloadURL();
+        console.log(savedUrl)
+        try{
+            console.log("in try")
+            let requestBody = {
+                "type": "AUDIO",
+                "traceId": musicData.traceId,
+                "comment": savedUrl,
+            }
+            let response = await fetch("https://comp90018-mobile-computing.herokuapp.com/trace/addComment",
+                {
+                    headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + jwtToken },
+                    method: 'POST',
+                    body: JSON.stringify(requestBody)
+                })
+            console.log(musicData)
+            let res = await  response.json()
+            let updateMusicData = {...musicData};
+            updateMusicData.comments = res.trace.comments
+            setMusicData(updateMusicData);
+            console.log(updateMusicData);
+
+        }catch{
+            console.log("error can't save to backend")
+        }
     }
     return (
         <View >

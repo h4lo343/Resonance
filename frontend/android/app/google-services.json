@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1064817204238",
+    "project_id": "dev-voice-364306",
+    "storage_bucket": "dev-voice-364306.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064817204238:android:f26f8bf77401582c5a705f",
+        "android_client_info": {
+          "package_name": "com.yourmusic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1064817204238-jqffa0bv8gpoo1n58cuibeqv1c8q1pqf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSs5GsVhnan9AxisnXMyFdUUHXqG9lcpE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1064817204238-jqffa0bv8gpoo1n58cuibeqv1c8q1pqf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
