@@ -72,9 +72,11 @@ export const UserProfile = ({navigation}) => {
                 const data = {
                     username: result.username,
                     fullName: result.fullName,
+                    uri: Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri,
+                    type: "png",
                     musicList: result.traces
                 }
-                console.log("username: " + username);
+                console.log("username: " + data.username);
 
                 dispatch(getUserProfile({ data }))
 
@@ -84,10 +86,12 @@ export const UserProfile = ({navigation}) => {
             const data = {
                 username: result.username,
                 fullName: result.fullName,
+                uri: Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri,
+                type: "png",
                 musicList: result.traces
             }
 
-            console.log("image invalid: username: " + username);
+            console.log("image invalid: username: " + data.username);
             dispatch(getUserProfile({ data }))
 
             setProfileSpinnerFlag(false);
@@ -99,7 +103,7 @@ export const UserProfile = ({navigation}) => {
     }
 
     const backToMapProfile = () => {
-        navigation.navigate("MapViewPage");
+        navigation.navigate("DrawerNavigator");
     }
 
     return (
