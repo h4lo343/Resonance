@@ -24,8 +24,9 @@ const initialState = {
                         "id":"635be9d54c46cb8bfab2bf4f",
                         "name": "test0",
                     },
+                    "type": "AUDIO",
                     "timestamp": "2022-10-16T11:40:01.809Z",
-                    "comment": "hello world0"
+                    "comment": "https://firebasestorage.googleapis.com/v0/b/dev-voice-364306.appspot.com/o/file%3A%2Fdata%2Fuser%2F0%2Fcom.yourmusic%2Fcache%2F6820454a-5a4a-4927-b7a3-85ecd64b3a00.mp4?alt=media&token=ac891e3a-b1e6-4a55-91c8-00865125cc3a"
                 },
                 {
                     "id": "634bed9121f7aeaa54a80168",
@@ -33,6 +34,7 @@ const initialState = {
                         "id":"635be9d54c46cb8bfab2bf4f",
                         "name": "test0",
                     },
+                    "type": "TEXT",
                     "timestamp": "2022-10-16T11:40:01.809Z",
                     "comment": "hello world1"
                 },
@@ -42,6 +44,7 @@ const initialState = {
                         "id":"635be9d54c46cb8bfab2bf4f",
                         "name": "test0",
                     },
+                    "type": "TEXT",
                     "timestamp": "2022-10-17T11:40:01.809Z",
                     "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 },
@@ -51,6 +54,7 @@ const initialState = {
                         "id":"635be9d54c46cb8bfab2bf4f",
                         "name": "test0",
                     },
+                    "type": "TEXT",
                     "timestamp": "2022-10-18T11:40:01.809Z",
                     "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 }
@@ -82,6 +86,7 @@ const initialState = {
                         "id":"635be9d54c46cb8bfab2bf4f",
                         "name": "test0",
                     },
+                    "type": "TEXT",
                     "timestamp": "2022-11-16T11:40:01.809Z",
                     "comment": "hello world2"
                 },
@@ -91,6 +96,7 @@ const initialState = {
                         "id":"635be9d54c46cb8bfab2bf4f",
                         "name": "test0",
                     },
+                    "type": "TEXT",
                     "timestamp": "2022-10-16T11:40:01.809Z",
                     "comment": "hello world1"
                 },
@@ -100,6 +106,7 @@ const initialState = {
                         "id":"635be9d54c46cb8bfab2bf4f",
                         "name": "test0",
                     },
+                    "type": "TEXT",
                     "timestamp": "2022-10-17T11:40:01.809Z",
                     "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 },
@@ -109,6 +116,7 @@ const initialState = {
                         "id":"635be9d54c46cb8bfab2bf4f",
                         "name": "test0",
                     },
+                    "type": "TEXT",
                     "timestamp": "2022-10-18T11:40:01.809Z",
                     "comment": "sajlfkdsjkfjaslkdjfkdlfj;kdsajfldkjasl;kdjfl;kadsjl;fkdja;fkdlj;fkladfj;dkla;jfalk;jfakldfj;adlkfakjds;klfjdlkasjfl;dksf"
                 }
