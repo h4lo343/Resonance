@@ -26,7 +26,7 @@ export const MapViewPage = ({ navigation }) => {
   const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
   const deviceHeight = Dimensions.get("window").height
   const deviceWidth = Dimensions.get("window").width
-  const [renderNearbyMusicSpinnerFlag, setNearbyMusciSpinnerFlag] = useState(false);
+  const [renderNearbyMusicSpinnerFlag, setNearbyMusicSpinnerFlag] = useState(false);
   const dispatch = useDispatch();
   const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
   const [nearbyMusicProps, setNearbyMusicProps] = useState({})
@@ -49,6 +49,7 @@ export const MapViewPage = ({ navigation }) => {
 
   const [showUserLocationDot, setUserLocationDot] = useState(true);
   const [showSearchBar, setshowSearchBar] = React.useState(false);
+  const [spinnerMusicText, setSpinnerMusicText] = useState("Retrieving musics...")
 
 
   useEffect(() => {
@@ -107,7 +108,8 @@ export const MapViewPage = ({ navigation }) => {
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   const requireNearbyMusic = (latitude, longitude) => {
-    setNearbyMusciSpinnerFlag(true);
+    setSpinnerMusicText("Retrieving nearby musics...");
+    setNearbyMusicSpinnerFlag(true);
     console.log("require nearby music called");
     console.log("requireNearbyMusic: latitude: " + latitude + " | longitude: " + longitude);
     setNearbyLocation({
@@ -116,8 +118,10 @@ export const MapViewPage = ({ navigation }) => {
     })
 
     fetchNearbyMusic().then(() => {
-      setNearbyMusciSpinnerFlag(false);
+      setNearbyMusicSpinnerFlag(false);
+      // For shake shake, isNearbyMusic is set to true (which is to distinguish from music trace)
       setNearbyMusicProps({
+        isNearbyMusic: true,
         profileNavigationCallBack: () => {
           navigation.navigate("AnotherUserProfile")
         },
@@ -126,7 +130,7 @@ export const MapViewPage = ({ navigation }) => {
       setShowNearbyMusicModal(true);
     }).catch((e) => {
       console.log("error: " + e);
-      setNearbyMusciSpinnerFlag(false);
+      setNearbyMusicSpinnerFlag(false);
     })
   }
 
@@ -164,10 +168,13 @@ export const MapViewPage = ({ navigation }) => {
    * display trace modal
    * **/
   const requireTrace = (trace_id) => {
-    setNearbyMusciSpinnerFlag(true);
+    setSpinnerMusicText("Retrieving music trace...");
+    setNearbyMusicSpinnerFlag(true);
     fetchMarkerTrace(trace_id).then(() => {
-      setNearbyMusciSpinnerFlag(false);
+      setNearbyMusicSpinnerFlag(false);
+      // For getting marker trace, isNearbyMusic is set to false (which is to distinguish from `shake shake`)
       setNearbyMusicProps({
+        isNearbyMusic: false,
         profileNavigationCallBack: () => {
           navigation.navigate("AnotherUserProfile")
         },
@@ -176,7 +183,7 @@ export const MapViewPage = ({ navigation }) => {
       setShowNearbyMusicModal(true);
     }).catch((e) => {
       console.log("error: " + e);
-      setNearbyMusciSpinnerFlag(false);
+      setNearbyMusicSpinnerFlag(false);
     })
   }
 
@@ -368,7 +375,7 @@ export const MapViewPage = ({ navigation }) => {
       </TouchableOpacity>
       <Spinner
         visible={renderNearbyMusicSpinnerFlag}
-        textContent={'Retrieving nearby musics...'}
+        textContent={spinnerMusicText}
         textStyle={styles.spinnerTextStyle}
       />
       {
