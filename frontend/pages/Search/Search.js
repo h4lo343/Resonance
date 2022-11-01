@@ -103,13 +103,13 @@ const Search = ({ longitude, latitude, finished }) => {
     <View >
       <TextInput
         style={{ backgroundColor: "white", width: 300 }}
-        onChangeText={(key) => { setKey(key); 
+        onChangeText={(key) => { setKey(key);
           if (key.length == 0) {
-            setSearchMusicHeight(0); 
+            setSearchMusicHeight(0);
           } else {
-            setSearchMusicHeight(400); 
+            setSearchMusicHeight(400);
           }
-          
+
         }}
         placeholder="search your song"
         value={key}

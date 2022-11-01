@@ -1,5 +1,5 @@
 
-//mock data 
+//fetch history traces 
 const BACKEND_API_URL = "https://comp90018-mobile-computing.herokuapp.com/"
 
 export const getHistoryTrace = async (AccessToken) => {
