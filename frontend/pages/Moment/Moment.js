@@ -67,7 +67,7 @@ export const Moment = ({ navigation }) => {
                 contentPosition="center">
                 <Text style={styles.userDataFontTitle}>Moment</Text>
                 <Text style={styles.userDataFontText}>Check out latest music traces</Text>
-                <Text style={styles.userDataFontText}>shared by your friends</Text>
+                <Text style={styles.userDataFontText}>shared by your following</Text>
             </ImageOverlay>
 
             <View style={{ marginLeft: 70, height: 380, width: 310 }}>
@@ -76,11 +76,11 @@ export const Moment = ({ navigation }) => {
                     keyExtractor={(item) => item.userId}
                     renderItem={({ item }) => (
                         <View style={styles.listStyle}>
-                             <View style={styles.musicListHeader}>
-                                <Text style={{ fontSize: 16, color: '#795C34' }}>{item.userFollowed}</Text>
-                            </View>
-                            <Image style={{ width: 70, height: 70, marginBottom: 5 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
+                            <Image style={{ marginTop: 10, width: 70, height: 70 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
                             <View style={{ marginLeft: 15 }}>
+                                <View style={styles.musicListHeader}>
+                                    <Text style={{ fontSize: 16, color: '#795C34' }}>{item.userFollowed}</Text>
+                                </View>
                                 <Text style={{ fontWeight: 'bold' }}>Song: {item.song.name}</Text>
                                 <Text>Artist: {item.song.artist}</Text>
                                 <Text style={styles.link} onPress={() => { Linking.openURL(item.song.songUrl) }}>music spotify link</Text>
@@ -132,10 +132,11 @@ const styles = StyleSheet.create({
     musicListHeader: {
         backgroundColor: "#cad5d8",
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         paddingBottom: 5,
         paddingHorizontal: 5,
-        marginRight: 10,
+        width: 200,
+        marginTop: 10
     },
     listStyle: {
         display: "flex",
