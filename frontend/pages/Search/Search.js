@@ -7,7 +7,15 @@ const Search = ({ longitude, latitude, finished }) => {
   const AccessToken = useSelector((state) => state.auth.accessToken)
   const jwtToken = useSelector((s) => s.auth.jwtToken)
   const [key, setKey] = useState("")
+  const [searchMusicHeight, setSearchMusicHeight] = useState(0)
   const [result, setResult] = useState([]);
+
+  searchHeightStyle = function() {
+    return {
+      height: searchMusicHeight,
+      width: 260
+    }
+  }
 
   const chooseSong = (e) => {
     Alert.alert(
@@ -50,7 +58,6 @@ const Search = ({ longitude, latitude, finished }) => {
     const result = await response.json()
     console.log(result);
     if (response.status == 201) {
-
       Alert.alert(
         "Share Successful",
         "Your music trace has been recorded"
@@ -91,16 +98,24 @@ const Search = ({ longitude, latitude, finished }) => {
   useEffect(() => {
     getResult()
   }, [getResult])
+
   return (
     <View >
       <TextInput
         style={{ backgroundColor: "white", width: 300 }}
-        onChangeText={(key) => { setKey(key) }}
+        onChangeText={(key) => { setKey(key); 
+          if (key.length == 0) {
+            setSearchMusicHeight(0); 
+          } else {
+            setSearchMusicHeight(400); 
+          }
+          
+        }}
         placeholder="search your song"
         value={key}
       >
       </TextInput>
-      <View style={{ height: 400, width: 260 }}>
+      <View style={searchHeightStyle()}>
         <FlatList
           data={key.length > 0 ? result : ""}
           keyExtractor={item => item.tracks.id}
