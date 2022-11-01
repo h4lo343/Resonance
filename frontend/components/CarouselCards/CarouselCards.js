@@ -84,6 +84,7 @@ export const CarouselCards = (propsData) => {
                     var uri = "file://" + path;
                     console.log("get uri from base64: " + uri);
                     const data = {
+                        userId: musicData.songSharerId,
                         username: result.username,
                         musicList: result.traces,
                         type: imageType,
@@ -97,6 +98,7 @@ export const CarouselCards = (propsData) => {
                 }).catch((e) => {
                     console.log("error " + e);
                     const data = {
+                        userId: musicData.songSharerId,
                         username: result.username,
                         musicList: result.traces,
                     }
@@ -105,6 +107,7 @@ export const CarouselCards = (propsData) => {
                 });
         } else {
             const data = {
+                userId: musicData.songSharerId,
                 username: result.username,
                 musicList: result.traces,
             }

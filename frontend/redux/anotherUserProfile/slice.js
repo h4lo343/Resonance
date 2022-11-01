@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Image } from 'react-native';
 
 const initialState = {
+    userId: "",
     username: "UserA",
     avatarType: "",
     avatarUri: Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri,
@@ -118,6 +119,8 @@ const initialState = {
 export const getAnotherUserProfile = createAsyncThunk(
     "anotherUserProfile/getAnotherUserProfile",
     async ({ data }, thunkAPI) => {
+        console.log("data.userId: " + data.userId);
+        thunkAPI.dispatch(anotherUserProfileSlice.actions.setUserId(data.userId))
         thunkAPI.dispatch(anotherUserProfileSlice.actions.setMusicList(data.musicList))
         thunkAPI.dispatch(anotherUserProfileSlice.actions.setAvatarUri(data.uri))
         thunkAPI.dispatch(anotherUserProfileSlice.actions.setUsername(data.username))
@@ -130,6 +133,9 @@ export const anotherUserProfileSlice = createSlice({
     name: "anotherUserProfile",
     initialState,
     reducers: {
+        setUserId: (state, actions) => {
+            state.userId = actions.payload
+        },
         setUsername: (state, actions) => {
             state.username = actions.payload
         },

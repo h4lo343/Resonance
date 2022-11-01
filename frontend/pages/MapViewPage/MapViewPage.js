@@ -15,6 +15,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import RNShake from 'react-native-shake';
 import { nightMapStyle } from '../../assets/mapStyle';
 import { Appearance } from 'react-native';
+import { updateFollowedUsers } from '../../redux/follower/slice';
 
 
 export const MapViewPage = ({ navigation }) => {
@@ -47,6 +48,29 @@ export const MapViewPage = ({ navigation }) => {
   const [spinnerMusicText, setSpinnerMusicText] = useState("Retrieving musics...")
   const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
+  const fetchFollowedUser = async () => {
+    const url = `https://comp90018-mobile-computing.herokuapp.com/user/getFollowed`;
+
+    try {
+        const response = await fetch(url,
+            {
+                headers: { Authorization: "Bearer " + jwtToken },
+                method: 'GET'
+            }
+        )
+        const result = await response.json();
+
+        console.log("result: " + Object.values(result));
+
+        var data = result.followedUser;
+        dispatch(updateFollowedUsers({ data }));
+
+    } catch (e) {
+        console.log(e);
+    }
+
+}
+
   useEffect(() => {
     // this is to ensure that this page would refresh to get new user data from backend
     const focusHandler = navigation.addListener('focus', async () => {
@@ -58,7 +82,8 @@ export const MapViewPage = ({ navigation }) => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       })
-      loadHistoryMarkers()
+      loadHistoryMarkers();
+      fetchFollowedUser().then().catch((e) => { console.log("error: " + e) });
     });
 
     // If the device is configured to dark mode, change the map style
@@ -78,7 +103,8 @@ export const MapViewPage = ({ navigation }) => {
   useEffect(()=>{
     // add lisnter event to display nearBy music when the user shake their devices
     const subscription = RNShake.addListener(()=>{
-      console.log("shake shake")
+      console.log("shake shake");
+      fetchFollowedUser().then().catch((e) => { console.log("error: " + e) });
       requireNearbyMusic(currentLocation.latitude,currentLocation.longitude)
     })
     return () => {

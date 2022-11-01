@@ -13,14 +13,13 @@ export const UserProfile = ({ navigation }) => {
     const stateUsername = useSelector((state) => state.userProfile.username);
     const stateFullName = useSelector((state) => state.userProfile.fullName);
     const stateAvatarUri = useSelector((state) => state.userProfile.avatarUri);
-    const musicList = useSelector((state) => state.anotherUserProfile.musicList);
+    const musicList = useSelector((state) => state.userProfile.musicList);
     const [profileSpinnerFlag, setProfileSpinnerFlag] = useState(true);
     const jwtToken = useSelector((state) => state.auth.jwtToken);
 
     useEffect(() => {
         // this is to ensure that this page would refresh to get new user data from backend
         const focusHandler = navigation.addListener('focus', () => {
-            console.log('user profile use effact called')
             getUserInfo().then().catch((e) => {
                 console.log("error: " + e);
                 backToMapProfile();
