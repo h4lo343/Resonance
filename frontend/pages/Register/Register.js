@@ -2,37 +2,37 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Alert, TouchableOpacity } from 'react-native';
 import { Link } from 'react-router-native';
 import { Box, Input, Button } from 'native-base'
-export const Register = () => {
+export const Register = ({ navigation }) => {
 
   const [show1, setShow1] = React.useState(false);
   const [show2, setShow2] = React.useState(false);
-  const [email, setEmail] = React.useState(""); 
-  const [fullName, setFullName] = React.useState(""); 
-  const [username, setUserName] = React.useState(""); 
-  const [password1, setPassword1] = React.useState(""); 
-  const [password2, setPassword2] = React.useState(""); 
+  const [email, setEmail] = React.useState("");
+  const [fullName, setFullName] = React.useState("");
+  const [username, setUserName] = React.useState("");
+  const [password1, setPassword1] = React.useState("");
+  const [password2, setPassword2] = React.useState("");
 
   const handleEmail = (text) => {
-    setEmail(text)  
-  }  
+    setEmail(text)
+  }
 
   const handleFullName = (text) => {
-    setFullName(text)    
-  }  
+    setFullName(text)
+  }
 
   const handlePassword1 = (text) => {
-    setPassword1(text)    
-  }  
+    setPassword1(text)
+  }
 
   const handleUserName = (text) => {
-    setUserName(text)    
+    setUserName(text)
   }
 
   const handlePassword2 = (text) => {
-    setPassword2(text)    
-  } 
+    setPassword2(text)
+  }
 
-  const register = async () => { 
+  const register = async () => {
     if (password1!=password2) {
       Alert.alert(
         "Password ",
@@ -53,12 +53,14 @@ export const Register = () => {
       })
     })
     const result = await response.json();
-
+    console.log(response)
       Alert.alert(
         "Register",
          result.msg,
       );
-    
+    if (response.status == "201") {
+      navigation.navigate("Login")
+    }
   }
 
   const handleClick1 = () => {
@@ -105,7 +107,7 @@ export const Register = () => {
 
       <Button style={{marginTop:30}} onPress={register}><Text>Register</Text></Button>
       {/* <Link to="/" underlayColor="#f0f4f7" ><Text>go back</Text></Link> */}
-    
+
     </View>
   )
 }

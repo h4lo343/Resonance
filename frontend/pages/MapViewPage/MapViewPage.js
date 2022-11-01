@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Pressable, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { Marker } from 'react-native-maps';
+import { Button } from 'native-base'
 import Search from '../Search/Search';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
@@ -17,9 +18,9 @@ import { Appearance } from 'react-native';
 
 
 export const MapViewPage = ({ navigation }) => {
-  let resetNumber = false // for generating map marker id 
-  let mid = 0; // for generating map marker id 
-  const AccessToken = useSelector((state) => state.auth.jwtToken) 
+  let resetNumber = false // for generating map marker id
+  let mid = 0; // for generating map marker id
+  const AccessToken = useSelector((state) => state.auth.jwtToken)
   const [renderNearbyMusicSpinnerFlag, setNearbyMusicSpinnerFlag] = useState(false);
   const dispatch = useDispatch();
   const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
@@ -44,7 +45,7 @@ export const MapViewPage = ({ navigation }) => {
   const [showUserLocationDot, setUserLocationDot] = useState(true);
   const [showSearchBar, setshowSearchBar] = React.useState(false);
   const [spinnerMusicText, setSpinnerMusicText] = useState("Retrieving musics...")
-  const [currentCategory, setCurrentCategory] = React.useState('Initial'); 
+  const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   useEffect(() => {
     // this is to ensure that this page would refresh to get new user data from backend
@@ -60,7 +61,7 @@ export const MapViewPage = ({ navigation }) => {
       loadHistoryMarkers()
     });
 
-    // If the device is configured to dark mode, change the map style 
+    // If the device is configured to dark mode, change the map style
     Appearance.addChangeListener((event) => {
       if (Appearance.getColorScheme() === 'dark') {
         setMapTheme(nightMapStyle);
@@ -85,8 +86,8 @@ export const MapViewPage = ({ navigation }) => {
     }
   })
 
-   /** 
-   * update mapView when the user left a trace on the map 
+   /**
+   * update mapView when the user left a trace on the map
   */
   const leftTrace = () => {
     resetNumber = true
@@ -95,9 +96,9 @@ export const MapViewPage = ({ navigation }) => {
     setCurrentCategory('Initial')
   }
 
-  /** 
+  /**
    * This function helps to disply multiple markers inside the mapView
-   * as repetative elements require unique IDs.  
+   * as repetative elements require unique IDs.
   */
   const generateMarkerId = () => {
     if (resetNumber) {
@@ -218,8 +219,8 @@ export const MapViewPage = ({ navigation }) => {
     }
   }
 
-   /** 
-   * obtain user's current location 
+   /**
+   * obtain user's current location
   */
   const getCurrentLocation = async () => {
 
@@ -257,8 +258,8 @@ export const MapViewPage = ({ navigation }) => {
 
   const getMarkers = () => {
     switch (currentCategory) {
-      case 'Initial': return [...attachHistoryMarker]; // mapView1: displays all history traces 
-      case 'highLightUserLocation': return [leaveTraceMarker]; //mapView2: when user leave a trace, hide all the histrory traces 
+      case 'Initial': return [...attachHistoryMarker]; // mapView1: displays all history traces
+      case 'highLightUserLocation': return [leaveTraceMarker]; //mapView2: when user leave a trace, hide all the histrory traces
     }
     return leaveTraceMarker
   }
@@ -273,7 +274,23 @@ export const MapViewPage = ({ navigation }) => {
     setCurrentCategory('Initial');
   }
 
-   /** 
+  const Logout = () => {
+    Alert.alert(
+        "Confirm",
+        `Are you sure to Logout?`,
+        [
+          {
+            text: "yes",
+            onPress: () => { navigation.navigate("Login")}
+          },
+          {
+            text: "no"
+          }
+        ]
+    )
+  }
+
+   /**
    * generate a leave trace marker (indicate users' current location)
   */
   const leaveTraceMarker = <Marker
@@ -286,8 +303,8 @@ export const MapViewPage = ({ navigation }) => {
     <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{ height: 50, width: 50 }} />
   </Marker>
 
- /** 
-   * generate history traces  
+ /**
+   * generate history traces
   */
   const attachHistoryMarker = historyMarkers.map((history, i) => (
     <Marker
@@ -310,7 +327,7 @@ export const MapViewPage = ({ navigation }) => {
 
 
   /**
-   * grant location access from the user 
+   * grant location access from the user
    * **/
   const _checkPermission = async () => {
 
@@ -382,6 +399,7 @@ export const MapViewPage = ({ navigation }) => {
           showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude} finished={leftTrace} />
         }
       </TouchableOpacity>
+     <Button style={{position:"absolute", bottom: 70, left:0}} onPress={Logout}><Text>Logout</Text></Button>
       <Spinner
         visible={renderNearbyMusicSpinnerFlag}
         textContent={spinnerMusicText}
@@ -396,7 +414,7 @@ export const MapViewPage = ({ navigation }) => {
 }
 
   /**
-   * CSS Style 
+   * CSS Style
    * **/
 const styles = StyleSheet.create({
   container: {
@@ -419,6 +437,7 @@ const styles = StyleSheet.create({
     width: "50%",
     alignItems: 'center'
   },
+
   searchContainer: {
     position: 'absolute',
     bottom: 10,
