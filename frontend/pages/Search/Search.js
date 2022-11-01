@@ -42,8 +42,8 @@ import { useSelector } from "react-redux";
           songImageUrl: e.tracks.album.images[0].url
         },
         location: {
-          latitude,
-          longitude
+          latitude : longitude,
+          longitude : latitude
         }
       })
     })
