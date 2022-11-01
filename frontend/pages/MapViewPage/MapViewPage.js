@@ -5,11 +5,8 @@ import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { Marker } from 'react-native-maps';
 import Search from '../Search/Search';
-import { Button } from 'native-base';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
-import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
-// import { useSelector } from "react-redux";
 import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
 import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
@@ -20,12 +17,9 @@ import { Appearance } from 'react-native';
 
 
 export const MapViewPage = ({ navigation }) => {
-  let resetNumber = false
-  let mid = 0;
-  const AccessToken = useSelector((state) => state.auth.jwtToken)
-  const [leaveTraceComplete, setLeaveTraceComplete] = useState(false);
-  const deviceHeight = Dimensions.get("window").height
-  const deviceWidth = Dimensions.get("window").width
+  let resetNumber = false // for generating map marker id 
+  let mid = 0; // for generating map marker id 
+  const AccessToken = useSelector((state) => state.auth.jwtToken) 
   const [renderNearbyMusicSpinnerFlag, setNearbyMusicSpinnerFlag] = useState(false);
   const dispatch = useDispatch();
   const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
@@ -50,7 +44,7 @@ export const MapViewPage = ({ navigation }) => {
   const [showUserLocationDot, setUserLocationDot] = useState(true);
   const [showSearchBar, setshowSearchBar] = React.useState(false);
   const [spinnerMusicText, setSpinnerMusicText] = useState("Retrieving musics...")
-
+  const [currentCategory, setCurrentCategory] = React.useState('Initial'); 
 
   useEffect(() => {
     // this is to ensure that this page would refresh to get new user data from backend
@@ -66,6 +60,7 @@ export const MapViewPage = ({ navigation }) => {
       loadHistoryMarkers()
     });
 
+    // If the device is configured to dark mode, change the map style 
     Appearance.addChangeListener((event) => {
       if (Appearance.getColorScheme() === 'dark') {
         setMapTheme(nightMapStyle);
@@ -78,7 +73,9 @@ export const MapViewPage = ({ navigation }) => {
     return focusHandler;
   }, [navigation]);
 
+
   useEffect(()=>{
+    // add lisnter event to display nearBy music when the user shake their devices
     const subscription = RNShake.addListener(()=>{
       console.log("shake shake")
       requireNearbyMusic(currentLocation.latitude,currentLocation.longitude)
@@ -88,14 +85,20 @@ export const MapViewPage = ({ navigation }) => {
     }
   })
 
+   /** 
+   * update mapView when the user left a trace on the map 
+  */
   const leftTrace = () => {
-    setLeaveTraceComplete(true)
     resetNumber = true
     loadHistoryMarkers()
     setUserLocationDot(true)
     setCurrentCategory('Initial')
   }
 
+  /** 
+   * This function helps to disply multiple markers inside the mapView
+   * as repetative elements require unique IDs.  
+  */
   const generateMarkerId = () => {
     if (resetNumber) {
       mid = 0
@@ -104,8 +107,6 @@ export const MapViewPage = ({ navigation }) => {
     mid += 1
     return mid
   }
-
-  const [currentCategory, setCurrentCategory] = React.useState('Initial');
 
   const requireNearbyMusic = (latitude, longitude) => {
     setSpinnerMusicText("Retrieving nearby musics...");
@@ -217,6 +218,9 @@ export const MapViewPage = ({ navigation }) => {
     }
   }
 
+   /** 
+   * obtain user's current location 
+  */
   const getCurrentLocation = async () => {
 
     Geolocation.getCurrentPosition(
@@ -253,10 +257,8 @@ export const MapViewPage = ({ navigation }) => {
 
   const getMarkers = () => {
     switch (currentCategory) {
-      case 'Initial': return [...attachHistoryMarker];
-      case 'highLightUserLocation': return [leaveTraceMarker];
-      // case 'commerce': return afficheCommerce;
-      // default: return [...afficheHotel, ...afficheRestaurant, ...afficheCommerce];
+      case 'Initial': return [...attachHistoryMarker]; // mapView1: displays all history traces 
+      case 'highLightUserLocation': return [leaveTraceMarker]; //mapView2: when user leave a trace, hide all the histrory traces 
     }
     return leaveTraceMarker
   }
@@ -271,6 +273,9 @@ export const MapViewPage = ({ navigation }) => {
     setCurrentCategory('Initial');
   }
 
+   /** 
+   * generate a leave trace marker (indicate users' current location)
+  */
   const leaveTraceMarker = <Marker
     coordinate={{
       latitude: currentLocation.latitude,
@@ -281,6 +286,9 @@ export const MapViewPage = ({ navigation }) => {
     <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{ height: 50, width: 50 }} />
   </Marker>
 
+ /** 
+   * generate history traces  
+  */
   const attachHistoryMarker = historyMarkers.map((history, i) => (
     <Marker
       coordinate={{
@@ -301,8 +309,9 @@ export const MapViewPage = ({ navigation }) => {
   ))
 
 
-
-
+  /**
+   * grant location access from the user 
+   * **/
   const _checkPermission = async () => {
 
 
@@ -386,6 +395,9 @@ export const MapViewPage = ({ navigation }) => {
   )
 }
 
+  /**
+   * CSS Style 
+   * **/
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
