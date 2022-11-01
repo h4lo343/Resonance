@@ -11,8 +11,14 @@ export const AnotherUserProfile = ({ navigation }) => {
     const musicList = useSelector((state) => state.anotherUserProfile.musicList);
     const avatarUri = useSelector((state) => state.anotherUserProfile.avatarUri);
 
+    const [showFollowButton, setShowFollowButton] = useState(false);
+
     const backToMap = () => {
         navigation.navigate("DrawerNavigator");
+    }
+
+    const followUser = () => {
+
     }
 
     return (
@@ -21,11 +27,22 @@ export const AnotherUserProfile = ({ navigation }) => {
 
             <ImageOverlay
                 source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_2.jpg')).uri }}
-                height={200}
+                height={220}
                 overlayAlpha={0.1}
                 contentPosition="center">
-                        <Avatar.Image style={{marginBottom: 5}} source={{ uri: avatarUri == undefined ? defaultUri : avatarUri }} size={105} />
-                        <Text style={styles.userDataFont}>Username: {username}</Text>
+                <Avatar.Image style={{ marginBottom: 5 }} source={{ uri: avatarUri == undefined ? defaultUri : avatarUri }} size={105} />
+                <Text style={styles.userDataFont}>Username: {username}</Text>
+                {showFollowButton &&
+                    <Pressable
+                        style={({ pressed }) => [
+                            {
+                                backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
+                            },
+                            { top: '5%', width: "20%", height: 35, paddingLeft: 15, paddingTop: 7, borderRadius: 2 },
+                        ]}
+                        onPress={(e) => followUser(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Follow</Text></Pressable>
+                }
+
             </ImageOverlay>
 
             <View style={styles.musicListHeader}>

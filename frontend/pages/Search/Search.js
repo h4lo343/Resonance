@@ -10,7 +10,7 @@ const Search = ({ longitude, latitude, finished }) => {
   const [searchMusicHeight, setSearchMusicHeight] = useState(0)
   const [result, setResult] = useState([]);
 
-  searchHeightStyle = function() {
+  const searchHeightStyle = function() {
     return {
       height: searchMusicHeight,
       width: 260

@@ -130,7 +130,7 @@ export const CarouselCards = (propsData) => {
                             <View>
                                 <Text style={styles.sharerLink} onPress={() => goToAnotherUserProfile()}>Sharer: {musicData.songSharerUsername}</Text>
                                 <Text style={styles.textInList}>{(new Date(musicData.timestamp).toDateString())}</Text>
-                                <Text style={styles.textInList}>Song:{musicData.songName}</Text>
+                                <Text style={styles.textInList}>Song: {musicData.songName}</Text>
                                 <Text style={styles.textInList}>Artist: {musicData.songArtist}</Text>
                                 <Text style={styles.link} onPress={() => { Linking.openURL(musicData.songUrl) }}>music spotify link</Text>
                             </View>
