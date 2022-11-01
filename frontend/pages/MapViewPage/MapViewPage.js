@@ -399,7 +399,15 @@ export const MapViewPage = ({ navigation }) => {
           showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude} finished={leftTrace} />
         }
       </TouchableOpacity>
-     <Button style={{position:"absolute", bottom: 70, left:0}} onPress={Logout}><Text>Logout</Text></Button>
+      <Pressable
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
+              },
+              { position:"absolute", bottom: 110, left:20, borderRadius: 2, paddingHorizontal: 6, paddingVertical: 6 },
+            ]}
+            onPress={Logout} >
+            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Logout</Text></Pressable>
       <Spinner
         visible={renderNearbyMusicSpinnerFlag}
         textContent={spinnerMusicText}
