@@ -71,7 +71,7 @@ export const Login = ({navigation}) => {
   return (
     // setup a style container
     <View style={styles.container}>
-      <Text style={styles.brand}>Trace</Text>
+      <Text style={styles.brand}>Resonance</Text>
       <Text style={styles.banner}>Hi!</Text>
       <Text style={styles.banner}>Welcome</Text>
       <Text>Every Where Leave a Trace</Text>
