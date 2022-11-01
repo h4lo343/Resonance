@@ -10,10 +10,10 @@ People walk through the same way, listening to the same music together. 
 
 ## How It Works 
 
-In *Resonance**, you can connect your account with Spotify. Any moment, anywhere, you can leave a trace in the map along with one song that resonates with you. You could also follow other users and explore what they have left for their memory, or discover and interact with traces in your nearby locations. 
+In **Resonance**, you can connect your account with Spotify. Any moment, anywhere, you can leave a trace in the map along with one song that resonates with you. You could also follow other users and explore what they have left for their memory, or discover and interact with traces in your nearby locations. 
 
 ## For Developers 
-The backend for *Resonance** is deployed in Heroku. Detailed documentation of Api refers to [here](https://github.com/yongk1/resonance-backend) Currently, all you need is to run the frontend. 
+The backend for **Resonance** is deployed in Heroku. Detailed documentation of Api refers to [here](https://github.com/yongk1/resonance-backend). Currently, all you need is to run the frontend. 
 
 ### How to Run in an Emulator 
 
@@ -39,13 +39,13 @@ The backend for *Resonance** is deployed in Heroku. Detailed documentation of Ap
     
 ### Fail to connect to the emulator in MacOS 
 
-Please follow the step-by-step solution [here] (https://github.com/facebook/react-native/issues/28712#issuecomment-617384353).
+Please follow the step-by-step solution [here](https://github.com/facebook/react-native/issues/28712#issuecomment-617384353).
 
 ### Fail to build the app 
 
 1. (In the **/frontend** directory) `cd android` 
 2.  `./gradlew clean`
-3.  Go back to the **/frontend** directory and rerun `npx react-native run-android` 
+3.  Go back to the **/frontend** directory and re-run `npx react-native run-android` 
   
     
     
