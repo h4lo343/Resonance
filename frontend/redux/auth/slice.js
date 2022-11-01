@@ -12,8 +12,6 @@ export const getAccessToken = createAsyncThunk(
   async (_, thunkAPI) => {
     const authConfig = {
       clientId: '6be75aa956bf4ed6be4858de254e6a4f',
-      // optional clien secret
-      clientSecret: '60cf95629ba64036b702db361fab49fe',
       redirectUrl: 'com.yourmusic://oauth/',
       scopes: ['playlist-modify-public'],
       serviceConfiguration: {
