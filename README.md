@@ -39,7 +39,7 @@ The backend for *Resonance** is deployed in Heroku. Detailed documentation of Ap
     
 ### Fail to connect to the emulator in MacOS 
 
-Please follow the step-by-step solution [here] (https://github.com/facebook/react-native/issues/28712#issuecomment-617384353).
+Please follow the step-by-step solution [here](https://github.com/facebook/react-native/issues/28712#issuecomment-617384353).
 
 ### Fail to build the app 
 
