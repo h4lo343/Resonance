@@ -1,11 +1,11 @@
-import { FlatList,   View, Input  } from "native-base";
-import React, { memo, useCallback, useEffect, useState   } from "react";
-import { StyleSheet, TouchableOpacity, Text, Image, Alert, TextInput } from "react-native";
+import { FlatList, View, Input } from "native-base";
+import React, { memo, useCallback, useEffect, useState } from "react";
+import { StyleSheet, TouchableOpacity, Text, Image, Alert, TextInput, TouchableWithoutFeedback, ScrollView, SafeAreaView } from "react-native";
 import { useSelector } from "react-redux";
 
-  const Search = ({longitude, latitude, finished}) => {
+const Search = ({ longitude, latitude, finished }) => {
   const AccessToken = useSelector((state) => state.auth.accessToken)
-  const jwtToken = useSelector( (s) => s.auth.jwtToken)
+  const jwtToken = useSelector((s) => s.auth.jwtToken)
   const [key, setKey] = useState("")
   const [result, setResult] = useState([]);
 
@@ -26,7 +26,7 @@ import { useSelector } from "react-redux";
 
   }
 
-  const sendTrace = async  (e) => {
+  const sendTrace = async (e) => {
     setKey("")
     const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/trace/addTrace", {
       method: 'POST',
@@ -35,15 +35,15 @@ import { useSelector } from "react-redux";
         Authorization: `Bearer ${jwtToken}`
       },
       body: JSON.stringify({
-        song : {
+        song: {
           name: e.tracks.name,
           songUrl: e.tracks.external_urls.spotify,
           artist: e.artists.name,
           songImageUrl: e.tracks.album.images[0].url
         },
         location: {
-          latitude : longitude,
-          longitude : latitude
+          latitude: longitude,
+          longitude: latitude
         }
       })
     })
@@ -56,7 +56,7 @@ import { useSelector } from "react-redux";
         "Your music trace has been recorded"
       );
       finished(true)
-           }
+    }
     else {
 
       Alert.alert(
@@ -92,30 +92,35 @@ import { useSelector } from "react-redux";
     getResult()
   }, [getResult])
   return (
-    <View style={style.header}>
+    <View >
       <TextInput
-        style={{backgroundColor:"white", width:300}}
+        style={{ backgroundColor: "white", width: 300 }}
         onChangeText={(key) => { setKey(key) }}
         placeholder="search your song"
         value={key}
       >
       </TextInput>
-      <FlatList
-        data={key.length > 0 ? result : ""}
-        keyExtractor={item => item.tracks.id}
-        style={{backgroundColor:"#f0f0f0", zIndex:10, width:"115%"}}
-        renderItem={({ item }) => (
-          <TouchableOpacity  onPress={()=> chooseSong(item)} >
-            <View style={{ display: "flex", justifyContent: "flex-start", flexWrap: "nowrap", flexDirection: "row", alignItems: "center" }}>
-              <Image style={{ width: 70, height: 70 }}  resizeMode="contain"  source={{uri: item.tracks.album.images[0].url}} alt={item.tracks.name} />
-              <View>
-                <Text style={{fontWeight: 'bold'}}>{item.tracks.name}</Text>
-                { item.artists? <Text>{item.artists.name}</Text> : <></> }
+      <View style={{ height: 400, width: 260 }}>
+        <FlatList
+          data={key.length > 0 ? result : ""}
+          keyExtractor={item => item.tracks.id}
+          style={{ backgroundColor: "#E0EEE0", zIndex: 10, width: "115%" }}
+          contentContainerStyle={{
+            flexGrow: 1,
+          }}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => chooseSong(item)} >
+              <View style={{ display: "flex", justifyContent: "flex-start", flexWrap: "nowrap", flexDirection: "row", alignItems: "center", paddingTop: 2 }}>
+                <Image style={{ width: 70, height: 70 }} resizeMode="contain" source={{ uri: item.tracks.album.images[0].url }} alt={item.tracks.name} />
+                <View>
+                  <Text style={{ fontWeight: 'bold' }}>{item.tracks.name}</Text>
+                  {item.artists ? <Text>{item.artists.name}</Text> : <></>}
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      ></FlatList>
+            </TouchableOpacity>
+          )}
+        ></FlatList>
+      </View>
     </View>
   )
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, Linking } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Input, Button, FlatList } from 'native-base'
 import { getAnotherUserProfile } from '../../redux/anotherUserProfile/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import RNFetchBlob from "rn-fetch-blob";
@@ -9,7 +8,6 @@ import { CommentSession } from "../CommentSession/CommentSession";
 
 export const CarouselCards = (propsData) => {
     const dispatch = useDispatch();
-    const [newComment, setNewComment] = useState('');
     const [anotherUserSpinnerFlag, SetAnotherUserSpinnerFlag] = useState(false);
     const nearbyMusics = useSelector((state) => state.nearbyMusic.musics);
     const [musicData, setMusicData] = useState({});
