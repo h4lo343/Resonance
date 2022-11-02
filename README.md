@@ -105,7 +105,9 @@ Follow other users and check their traces↓↓↓
 
 ### Edit and Upload Your Profile
 
-Our function provide profile editing function, you can find it in side drawer `Profile` section
+Our application provides profile editing function, you can find it in side drawer `Profile` section
+
+`Open Side Drawer -> Click **Profile** -> Click **Edit** button in your profile page`
 
 ![图片](https://user-images.githubusercontent.com/92515186/199446893-2791c0a5-9154-404e-a246-1ff130c1d69b.png)
 
