@@ -3,7 +3,11 @@ import { StyleSheet, Text, View, Image, CheckBox, Alert, TouchableOpacity } from
 import { useNavigate } from 'react-router-native';
 import { Box, Input, Button, Checkbox } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
-import { authSlice, getAccessToken, anotherUserProfileSlice, updateFollowedUsers, nearbyMusicSlice, userProfileSlice } from '../../redux/auth/slice';
+import { authSlice, getAccessToken } from '../../redux/auth/slice';
+import { anotherUserProfileSlice } from '../../redux/anotherUserProfile/slice'
+import { followerSlice} from '../../redux/follower/slice'
+import { nearbyMusicSlice } from '../../redux/nearbyMusic/slice'
+import { userProfileSlice } from '../../redux/userProfile/slice'
 import ImageOverlay from "react-native-image-overlay";
 
 
@@ -29,7 +33,7 @@ export const Login = ({ navigation }) => {
     dispatch(authSlice.actions.initToken())
     dispatch(userProfileSlice.actions.cleanUp())
     dispatch(anotherUserProfileSlice.actions.cleanUp())
-    dispatch(updateFollowedUsers.actions.cleanUp())
+    dispatch(followerSlice.actions.cleanUp())
     dispatch(nearbyMusicSlice.actions.cleanUp())
     setUserCode("")
     setPassword("")
