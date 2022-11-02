@@ -91,6 +91,8 @@ Our application provides the normal login/out and registration with correspondin
 
 ### Fllow Other Users and Check Their Trace
 
+`Shake to Find Other Music Trace -> Click Sharers' to Access Their Profiles -> Click Follow -> Access **Moment** via side drawer`
+
 **Check Their Profile and Fllow**
 
 ![图片](https://user-images.githubusercontent.com/92515186/199441534-524571d1-2bc8-4692-88f3-283eded7c90a.png)
