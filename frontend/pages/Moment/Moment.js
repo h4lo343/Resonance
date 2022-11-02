@@ -62,15 +62,17 @@ export const Moment = ({ navigation }) => {
 
             <ImageOverlay
                 source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/follower_page.jpg')).uri }}
-                height={140}
+                height={120}
                 overlayAlpha={0.05}
                 contentPosition="center">
-                <Text style={styles.userDataFontTitle}>Moment</Text>
-                <Text style={styles.userDataFontText}>Check out latest music traces</Text>
-                <Text style={styles.userDataFontText}>shared by your following</Text>
+                <View style={{alignItems: "center"}}>
+                    <Text style={styles.userDataFontTitle}>Moment</Text>
+                    <Text style={styles.userDataFontText}>Check out latest music traces</Text>
+                    <Text style={styles.userDataFontText}>shared by your following</Text>
+                </View>
             </ImageOverlay>
 
-            <View style={{ height: 300, width: 360, alignItems: "center", paddingLeft: 15 }}>
+            <View style={{ height: 380, width: 360, alignItems: "center", paddingLeft: 15 }}>
                 <FlatList
                     data={musicsFromFollowers}
                     keyExtractor={(item) => item.userId}
@@ -79,10 +81,10 @@ export const Moment = ({ navigation }) => {
                             <Image style={{ marginTop: 10, width: 70, height: 60 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
                             <View style={{ marginLeft: 15 }}>
                                 <View style={styles.musicListHeader}>
-                                    <Text style={{ fontSize: 15, color: '#795C34' }}>{item.userFollowed}</Text>
+                                    <Text style={{ fontSize: 14, color: '#795C34' }}>{item.userFollowed}</Text>
                                 </View>
-                                <Text style={{ fontWeight: 'bold' }}>Song: {item.song.name}</Text>
-                                <Text>Artist: {item.song.artist}</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 13 }}>Song: {item.song.name}</Text>
+                                <Text style={{ fontSize: 13 }}>Artist: {item.song.artist}</Text>
                                 <Text style={styles.link} onPress={() => { Linking.openURL(item.song.songUrl) }}>music spotify link</Text>
                             </View>
                         </View>
@@ -120,7 +122,6 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     userDataFontText: {
-        paddingTop: 5,
         fontSize: 16,
         color: 'white',
         fontWeight: "bold"
@@ -148,5 +149,6 @@ const styles = StyleSheet.create({
     link: {
         color: "#5F9F9F",
         textDecorationLine: 'underline',
+        fontSize: 13
     },
 })

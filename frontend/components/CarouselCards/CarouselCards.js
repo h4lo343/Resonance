@@ -166,5 +166,6 @@ const styles = StyleSheet.create({
     spinnerTextStyle: {
         color: '#FFF',
         paddingTop: 10,
+        fontSize: 16
     },
 })

@@ -9,7 +9,7 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
     return (
-      <Drawer.Navigator>
+      <Drawer.Navigator contentOptions={{labelStyle:{ fontWeight: 'normal', fontSize: 15 }}}>
         <Drawer.Screen name="Map" component={MapViewPage} options={{title: 'shake to discover nearby music'}}/>
         <Drawer.Screen name="Profile" component={UserProfile} />
         <Drawer.Screen name="Moment" component={Moment} />

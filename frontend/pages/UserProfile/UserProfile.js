@@ -87,28 +87,30 @@ export const UserProfile = ({ navigation }) => {
 
             <ImageOverlay
                 source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_1.png')).uri }}
-                height={180}
+                height={160}
                 overlayAlpha={0.05}
                 contentPosition="center">
-                <Avatar.Image style={{ marginBottom: 5}} source={{ uri: stateAvatarUri }} size={100} />
-                <Text style={styles.userDataFont}>Username: {stateUsername}</Text>
-                <Text style={styles.userDataFont}>Full Name: {stateFullName}</Text>
+                <View style={{alignItems: "center"}}>
+                    <Avatar.Image source={{ uri: stateAvatarUri }} size={100} />
+                    <Text style={styles.userDataFont}>Username: {stateUsername}</Text>
+                    <Text style={styles.userDataFont}>Full Name: {stateFullName}</Text>
+                </View>
             </ImageOverlay>
 
             <View style={styles.musicListHeader}>
-                <Text style={{ fontSize: 16, color: '#795C34' }}>Music Lists:</Text>
+                <Text style={{ fontSize: 14, color: '#795C34' }}>Music Lists:</Text>
             </View>
 
-            <View style={{ marginLeft: 50, marginTop: 5, height: 250, width: 310 }}>
+            <View style={{ marginLeft: 50, marginTop: 5, height: 290, width: 310 }}>
                 <FlatList
                     data={musicList}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <View style={styles.listStyle}>
                             <Image style={{ width: 70, height: 60}} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
-                            <View style={{ marginLeft: 15 }}>
-                                <Text style={{ fontWeight: 'bold' }}>Song: {item.song.name}</Text>
-                                <Text>Artist: {item.song.artist}</Text>
+                            <View style={{ marginLeft: 15, alignContent: "center" }}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 13 }}>Song: {item.song.name}</Text>
+                                <Text style={{ fontSize: 13}}>Artist: {item.song.artist}</Text>
                                 <Text style={styles.link} onPress={() => { Linking.openURL(item.song.songUrl) }}>music spotify link</Text>
                             </View>
                         </View>
@@ -146,7 +148,7 @@ const styles = StyleSheet.create({
     },
     userDataFont: {
         paddingTop: 5,
-        fontSize: 16,
+        fontSize: 13,
         color: '#795C34',
     },
     profileSpinnerStyle: {
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
     musicListHeader: {
         backgroundColor: "#cad5d8",
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 5,
         justifyContent: 'center',
         paddingBottom: 5,
     },
@@ -169,5 +171,6 @@ const styles = StyleSheet.create({
     link: {
         color: "#5F9F9F",
         textDecorationLine: 'underline',
+        fontSize: 13
     },
 });

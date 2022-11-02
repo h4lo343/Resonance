@@ -168,7 +168,7 @@ export const EditProfile = ({ navigation }) => {
         height={130}
         overlayAlpha={0.05}
         contentPosition="center">
-        <View>
+        <View style={{alignItems: "center"}}>
           <Avatar.Image source={{ uri: newAvatar.uri == ""? avatarUri : newAvatar.uri }} size={100} />
         </View>
       </ImageOverlay>

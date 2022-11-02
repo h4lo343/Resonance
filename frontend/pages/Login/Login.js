@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, Image, CheckBox, Alert, TouchableOpacity } from
 import { useNavigate } from 'react-router-native';
 import { Box, Input, Button, Checkbox } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
-import { authSlice, getAccessToken} from '../../redux/auth/slice';
+import { authSlice, getAccessToken } from '../../redux/auth/slice';
+import ImageOverlay from "react-native-image-overlay";
 
 
 /**
@@ -14,7 +15,7 @@ import { authSlice, getAccessToken} from '../../redux/auth/slice';
  * @returns jsx view of the page
  */
 
-export const Login = ({navigation}) => {
+export const Login = ({ navigation }) => {
   // define variables
   const Navigate = useNavigate();
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ export const Login = ({navigation}) => {
   useEffect(() => {
     // state change
     dispatch(authSlice.actions.initToken())
-  },[])
+  }, [])
 
   // get username and password
   const inputUserCode = (v) => {
@@ -35,10 +36,10 @@ export const Login = ({navigation}) => {
   const inputPassword = (v) => {
     setPassword(v)
   }
-  
+
   // handle show button and signin
-  useEffect(()=> {
-  },[])
+  useEffect(() => {
+  }, [])
   const handleClick = () => setShow(!show);
   const signIn = async () => {
     const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/auth/login/", {
@@ -53,13 +54,13 @@ export const Login = ({navigation}) => {
     })
     const code = response.status
     const result = await response.json()
-    if (code!=201) {
+    if (code != 201) {
       Alert.alert(
         "Login Failed",
-         result.msg,
+        result.msg,
       );
     }
-    else{
+    else {
       dispatch(authSlice.actions.setJwtToken(result.Authorization))
       dispatch(getAccessToken())
       navigation.navigate('DrawerNavigator')
@@ -70,52 +71,59 @@ export const Login = ({navigation}) => {
   // return a page view
   return (
     // setup a style container
-    <View style={styles.container}>
-      <Text style={styles.brand}>Resonance</Text>
-      <Text style={styles.banner}>Hi!</Text>
-      <Text style={styles.banner}>Welcome</Text>
-      <Text>Every Where Leave a Trace</Text>
+    <View>
+      <View style={styles.container}>
+        <Text style={styles.brand}>Resonance</Text>
+        <Text style={styles.banner}>Hi!</Text>
+        <Text style={styles.banner}>Welcome</Text>
+        <Text>Share Your Music Trace :D</Text>
 
-      <Box alignItems="center" style={styles.inputBox}>
-        <Input variant="underlined" placeholder="Email" fontSize={14} onChangeText={inputUserCode} />
-        <Input variant='underlined'
-          placeholder='password'
-          type={show ? "text" : "password"}
-          fontSize={14}
-          onChangeText={inputPassword}
-          InputRightElement={
-            <Button size="xs" rounded="none" w="1/6" h="full" onPress={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button >
-          }
-        />
-      </Box>
+        <Box alignItems="center" style={styles.inputBox}>
+          <Input variant="underlined" placeholder="Email" fontSize={14} onChangeText={inputUserCode} />
+          <Input variant='underlined'
+            placeholder='password'
+            type={show ? "text" : "password"}
+            fontSize={14}
+            onChangeText={inputPassword}
+            InputRightElement={
+              <Button size="xs" rounded="none" w="1/6" h="full" style={{backgroundColor: '#40B5AD'}}  onPress={handleClick}>
+                {show ? "Hide" : "Show"}
+              </Button >
+            }
+          />
+        </Box>
 
-      <View style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
-        <Checkbox value="two"><Text style={{ fontSize: 14 }}>Remember Me</Text></Checkbox>
-        <TouchableOpacity onPress={() => navigation.navigate('PasswordReset')}>
-          <Text>Forgot Password?</Text>
-        </TouchableOpacity>
+        <View style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
+          <Checkbox value="two"><Text style={{ fontSize: 14 }}>Remember Me</Text></Checkbox>
+          <TouchableOpacity onPress={() => navigation.navigate('PasswordReset')}>
+            {/* <Text>Forgot Password?</Text> */}
+          </TouchableOpacity>
+        </View>
+
+        <Box alignItems="center" style={{ marginTop: 30 }}>
+
+          <Button style={styles.loginSpotify} onPress={signIn}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ fontWeight: 'bold', color: "white", fontSize: 20 }}>Log In With</Text>
+              <Image style={{ width: 80, resizeMode: "contain", right: -10 }} source={require('../../assets/imgs/spotify.jpg')} />
+            </View>
+          </Button>
+        </Box>
+
+        <Box alignItems={"center"} style={{ bottom: -40, marginBottom: 50 }} flexDirection="row" justifyContent={"center"}>
+          <Text>Don't have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={{ color: "black" }}> Sign up</Text>
+          </TouchableOpacity>
+        </Box>
+
       </View>
-
-      <Box alignItems="center" style={{ marginTop: 40 }}>
-
-        <Button style={styles.loginSpotify} onPress={signIn}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ fontWeight: 'bold', color: "white", fontSize: 20 }}>Log In With</Text>
-            <Image style={{ width: 80, resizeMode: "contain", right: -10 }} source={require('../../assets/imgs/spotify.jpg')} />
-          </View>
-        </Button>
-      </Box>
-
-      <Box alignItems={"center"} style={{ bottom: -100 }} flexDirection="row" justifyContent={"center"}>
-        <Text>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={{ color: "black" }}>  Sign up</Text>
-        </TouchableOpacity>
-
-      </Box>
-
+      <ImageOverlay
+        source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/follower_page.jpg')).uri }}
+        height={210}
+        overlayAlpha={0}
+        contentPosition="bottom">
+      </ImageOverlay>
     </View>
   )
 }
@@ -130,7 +138,7 @@ const styles = StyleSheet.create({
     color: '#59371c'
   },
   inputBox: {
-    marginTop: 90
+    marginTop: 50
   },
   brand: {
     color: 'black',

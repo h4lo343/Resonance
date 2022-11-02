@@ -72,10 +72,10 @@ export const Register = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.brand}>Trace</Text>
+      <Text style={styles.brand}>Resonance</Text>
       <Text style={styles.banner}>Hi!</Text>
       <Text style={styles.banner}>Welcome</Text>
-      <Text>let's Create an Account</Text>
+      <Text>Let's create an account :D</Text>
 
       <Box alignItems="center" style={styles.inputBox}>
         <Input variant="underlined" placeholder="Email" fontSize={14} onChangeText={handleEmail}/>
@@ -87,7 +87,7 @@ export const Register = ({ navigation }) => {
           fontSize={14}
           onChangeText= {handlePassword1}
           InputRightElement={
-            <Button  size="xs" rounded="none" w="1/6" h="full" onPress={handleClick1}>
+            <Button  size="xs" rounded="none" w="1/6" h="full" style={{backgroundColor: '#40B5AD'}}  onPress={handleClick1}>
               {show1 ? "Hide" : "Show"}
             </Button>
           }
@@ -98,14 +98,14 @@ export const Register = ({ navigation }) => {
           fontSize={14}
           onChangeText= {handlePassword2}
           InputRightElement={
-            <Button size="xs" rounded="none" w="1/6" h="full" onPress={handleClick2}>
+            <Button size="xs" rounded="none" w="1/6" h="full" style={{backgroundColor: '#40B5AD'}} onPress={handleClick2}>
               {show2 ? "Hide" : "Show"}
             </Button>
           }
         />
       </Box>
 
-      <Button style={{marginTop:30}} onPress={register}><Text>Register</Text></Button>
+      <Button style={{marginTop:30, backgroundColor: '#40B5AD'}} onPress={register}><Text style={{fontWeight: "bold"}}>Register</Text></Button>
       {/* <Link to="/" underlayColor="#f0f4f7" ><Text>go back</Text></Link> */}
 
     </View>
