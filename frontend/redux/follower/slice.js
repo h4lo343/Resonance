@@ -36,5 +36,9 @@ export const followerSlice = createSlice({
             console.log("actions payload musics: " + actions.payload[0].userFollowed);
             state.musicLists = actions.payload;
         },
+        cleanUp: (state) => {
+          state.followedUsers =[]
+          state.musicLists=[]
+        }
       }
   })

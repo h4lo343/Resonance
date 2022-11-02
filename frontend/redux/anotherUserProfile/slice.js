@@ -146,5 +146,12 @@ export const anotherUserProfileSlice = createSlice({
         setMusicList: (state, actions) => {
             state.musicList = actions.payload
         },
+        cleanUp: (state) => {
+            state.userId = ""
+            state.username = ""
+            state.avatarType = ""
+            state.avatarUri = Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri
+            state.musicList = []
+          }
     }
 })
