@@ -56,13 +56,13 @@ export const Moment = ({ navigation }) => {
                 <Spinner
                     visible={momentSpinnerFlag}
                     textContent={'Retrieving music traces...'}
-                    textStyle={{ color: '#fff' }}
+                    textStyle={{ color: '#fff', fontSize: 16  }}
                 />
             </View>
 
             <ImageOverlay
                 source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/follower_page.jpg')).uri }}
-                height={180}
+                height={140}
                 overlayAlpha={0.05}
                 contentPosition="center">
                 <Text style={styles.userDataFontTitle}>Moment</Text>
@@ -70,16 +70,16 @@ export const Moment = ({ navigation }) => {
                 <Text style={styles.userDataFontText}>shared by your following</Text>
             </ImageOverlay>
 
-            <View style={{ marginLeft: 70, height: 380, width: 310 }}>
+            <View style={{ height: 300, width: 360, alignItems: "center", paddingLeft: 15 }}>
                 <FlatList
                     data={musicsFromFollowers}
                     keyExtractor={(item) => item.userId}
                     renderItem={({ item }) => (
                         <View style={styles.listStyle}>
-                            <Image style={{ marginTop: 10, width: 70, height: 70 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
+                            <Image style={{ marginTop: 10, width: 70, height: 60 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
                             <View style={{ marginLeft: 15 }}>
                                 <View style={styles.musicListHeader}>
-                                    <Text style={{ fontSize: 16, color: '#795C34' }}>{item.userFollowed}</Text>
+                                    <Text style={{ fontSize: 15, color: '#795C34' }}>{item.userFollowed}</Text>
                                 </View>
                                 <Text style={{ fontWeight: 'bold' }}>Song: {item.song.name}</Text>
                                 <Text>Artist: {item.song.artist}</Text>
@@ -93,9 +93,9 @@ export const Moment = ({ navigation }) => {
 
             <ImageOverlay
                 source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/follower_page.jpg')).uri }}
-                height={200}
+                height={260}
                 overlayAlpha={0.05}
-                contentPosition="center">
+                contentPosition="bottom">
             </ImageOverlay>
         </View>
 
@@ -115,14 +115,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     userDataFontTitle: {
-        paddingTop: 5,
-        fontSize: 30,
+        fontSize: 22,
         fontWeight: "bold",
         color: 'white',
     },
     userDataFontText: {
         paddingTop: 5,
-        fontSize: 18,
+        fontSize: 16,
         color: 'white',
         fontWeight: "bold"
     },
@@ -133,7 +132,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#cad5d8",
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        paddingBottom: 5,
+        alignItems: "center",
+        paddingBottom: 2,
         paddingHorizontal: 5,
         width: 200,
         marginTop: 10

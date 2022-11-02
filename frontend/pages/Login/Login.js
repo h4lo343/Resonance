@@ -69,7 +69,7 @@ export const Login = ({navigation}) => {
 
 
       <Box alignItems="center" style={styles.inputBox}>
-        <Input variant="underlined" placeholder="Username, Email or Phone Number" fontSize={14} onChangeText={inputUserCode} />
+        <Input variant="underlined" placeholder="Email" fontSize={14} onChangeText={inputUserCode} />
         <Input variant='underlined'
           placeholder='password'
           type={show ? "text" : "password"}

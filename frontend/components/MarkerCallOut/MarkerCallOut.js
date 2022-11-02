@@ -11,7 +11,7 @@ export const MarkerCallOut = ({markerId, songName, songUrl, songAuthor, songVisu
         <View>
             <View style = {styles.bubble}>
                 <View>
-                    <WebView style={{ height: 64 , width: 64, backgroundColor: 'transparent'}} source={{uri:songVisual}} />
+                    <WebView style={{ height: 60 , width: 60, backgroundColor: 'transparent'}} source={{uri:songVisual}} />
                 </View>
                 <View style={styles.songInformation}>
                     {/* <View> */}
@@ -37,9 +37,9 @@ const styles = StyleSheet.create({
                 borderRadius: 2,
                 borderColor: "#e4b1a5",
                 borderWidth: 0.5,
-                padding: 15,
-                marginLeft: 30,
-                width: 270
+                padding: 5,
+                marginLeft: 20,
+                width: 240
         },
         songInformation: {
             display: 'flex',
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
             marginLeft: 15,
         },
         songName: {
-            fontSize: 14,
+            fontSize: 13,
             marginBottom: 3
         },
         arrow: {

@@ -339,7 +339,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
             {!isRecording ?
                 (
                     <View>
-                        <Input ref={commentTextInput} variant="underlined" placeholder="Type New Comment" fontSize={14} onChangeText={setNewComment} />
+                        <Input ref={commentTextInput} variant="underlined" placeholder="Type New Comment" fontSize={13} onChangeText={setNewComment} />
                     </View>
                 ) :
                 (
@@ -349,7 +349,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                 )
             }
             <View>
-                <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 14, marginVertical: 3 }}>Comments</Text>
                 <View style={{ marginTop: 5, backgroundColor: "#f0f0f0" }}>
                     <FlatList
                         data={musicData.comments}
@@ -357,12 +357,12 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                         renderItem={({ item }) => (
                             item.type === "TEXT" ? (
                                 <View>
-                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
-                                    <Text style={{ marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
+                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 13.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
+                                    <Text style={{ marginLeft: 5, fontSize: 13 }}>{item.comment}</Text>
                                 </View>
                             ) : (
                                 <View>
-                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
+                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 13 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
                                     <View style={{ width: 200 }}>
                                         {item.comment === playPath ?
                                             (
@@ -435,18 +435,19 @@ const styles = StyleSheet.create(
             display: "flex",
             marginTop: 5,
             paddingTop: 5,
-            paddingLeft: 5,
             height: 30,
             justifyContent: "space-between",
-            width: "110%",
-            borderRadius: 2
+            alignContent: "center",
+            borderRadius: 2,
+            paddingHorizontal: 5
         },
         record_button: {
-            height: 40,
-            width: 40,
+            height: 30,
+            width: 30,
             marginLeft: 5,
             borderRadius: 30,
             borderWidth: 1,
+            marginTop: 5,
             backgroundColor: "#e4b1a5"
         },
         centeredView: {

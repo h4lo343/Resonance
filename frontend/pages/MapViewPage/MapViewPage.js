@@ -405,10 +405,10 @@ export const MapViewPage = ({ navigation }) => {
               {
                 backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
               },
-              { position: "absolute", top: '100%', width: "80%", height: 40, paddingLeft: 25, paddingTop: 5, borderRadius: 2 },
+              { position: "absolute", top: '100%', paddingHorizontal:5, height: 30,  borderRadius: 2, alignItems: "center", justifyContent: "center" },
             ]}
             onPress={leaveTrace} >
-            <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Pressable>
+            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Leave Trace</Text></Pressable>
         }
         {
           showSearchBar && <Pressable
@@ -416,10 +416,10 @@ export const MapViewPage = ({ navigation }) => {
               {
                 backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
               },
-              { position: "absolute", marginTop: 20, top: '100%', width: "70%", height: 40, paddingLeft: 38, paddingTop: 5, borderRadius: 2 },
+              { position: "absolute", marginTop: 20, top: '100%', paddingHorizontal:5, height: 30, alignItems: "center", justifyContent: "center", borderRadius: 2 },
             ]}
             onPress={cancelTrace} >
-            <Text style={{ fontWeight: 'bold', fontSize: 20}}>Cancel</Text></Pressable>
+            <Text style={{ fontWeight: 'bold', fontSize: 16}}>Cancel</Text></Pressable>
         }
         {
           showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude} finished={leftTrace} />
@@ -430,7 +430,7 @@ export const MapViewPage = ({ navigation }) => {
               {
                 backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
               },
-              { position:"absolute", bottom: 110, left:20, borderRadius: 2, paddingHorizontal: 6, paddingVertical: 6 },
+              { position:"absolute", bottom: 130, left:30, borderRadius: 2, paddingHorizontal: 6, paddingVertical: 6, justifyContent: "center" },
             ]}
             onPress={Logout} >
             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Logout</Text></Pressable>

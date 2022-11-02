@@ -30,15 +30,16 @@ export const AnotherUserProfile = ({ navigation }) => {
     }, [username])
 
     const checkUser = () => {
+        var notFollowed = true;
         followedUsersList.forEach(user => {
             console.log("current user id: " + currentUserId);
             console.log("followed user id: " + user);
-            if (currentUserId != user) {
-                setShowFollowButton(true);
-            } else {
-                setShowFollowButton(false);
+            if (currentUserId == user) {
+                notFollowed = false;
             }
         });
+
+        setShowFollowButton(notFollowed);
     }
 
     const followUser = async () => {
@@ -81,28 +82,30 @@ export const AnotherUserProfile = ({ navigation }) => {
                 <Spinner
                     visible={followSpinnerFlag}
                     textContent={'Processing following request...'}
-                    textStyle={{ color: '#fff' }}
+                    textStyle={{ color: '#fff', fontSize: 16 }}
                 />
             </View>
-            <Text style={{ padding: 10, backgroundColor: '#5F9F9F', color: "#fff", fontSize: 20, fontWeight: "bold" }}>Profile</Text>
+            <Text style={{ padding: 5, backgroundColor: '#5F9F9F', color: "#fff", fontSize: 18, fontWeight: "bold" }}>Profile</Text>
 
             <ImageOverlay
                 source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_2.jpg')).uri }}
-                height={220}
+                height={190}
                 overlayAlpha={0.1}
                 contentPosition="center">
-                <Avatar.Image style={{ marginBottom: 5 }} source={{ uri: avatarUri == undefined ? defaultUri : avatarUri }} size={105} />
-                <Text style={styles.userDataFont}>Username: {username}</Text>
-                {showFollowButton &&
-                    <Pressable
-                        style={({ pressed }) => [
-                            {
-                                backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
-                            },
-                            { top: '5%', width: "20%", height: 35, paddingLeft: 15, paddingTop: 7, borderRadius: 2 },
-                        ]}
-                        onPress={(e) => updateFollowUser(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Follow</Text></Pressable>
-                }
+                <View style={{alignItems: "center"}}>
+                    <Avatar.Image style={{ marginBottom: 2,}} source={{ uri: avatarUri == undefined ? defaultUri : avatarUri }} size={100} />
+                    <Text style={styles.userDataFont}>Username: {username}</Text>
+                    {showFollowButton &&
+                        <Pressable
+                            style={({ pressed }) => [
+                                {
+                                    backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
+                                },
+                                { top: '4%', height: 30, borderRadius: 2, justifyContent: "center", alignItems: "center", paddingHorizontal: 5 },
+                            ]}
+                            onPress={(e) => updateFollowUser(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Follow</Text></Pressable>
+                    }
+                </View>
 
             </ImageOverlay>
 
@@ -110,13 +113,13 @@ export const AnotherUserProfile = ({ navigation }) => {
                 <Text style={{ fontSize: 16, color: '#795C34' }}>Music Lists:</Text>
             </View>
 
-            <View style={{ marginLeft: 70, marginTop: 10, height: 300, width: 310 }}>
+            <View style={{ marginLeft: 70, marginTop: 10, height: 250, width: 310 }}>
                 <FlatList
                     data={musicList}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <View style={styles.listStyle}>
-                            <Image style={{ width: 70, height: 70, marginBottom: 5 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
+                            <Image style={{ width: 70, height: 60, marginBottom: 5 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
                             <View style={{ marginLeft: 15 }}>
                                 <Text style={{ fontWeight: 'bold' }}>Song: {item.song.name}</Text>
                                 <Text>Artist: {item.song.artist}</Text>
@@ -134,7 +137,7 @@ export const AnotherUserProfile = ({ navigation }) => {
                         {
                             backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
                         },
-                        { top: '20%', width: "35%", height: 40, paddingLeft: 25, paddingTop: 9, borderRadius: 2 },
+                        { top: '20%', height: 30, borderRadius: 2, justifyContent: "center", alignItems: "center", paddingHorizontal: 5 },
                     ]}
                     onPress={(e) => backToMap(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Back To Map</Text></Pressable>
             </Box>
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
     musicListHeader: {
         backgroundColor: "#cad5d8",
         flexDirection: 'row',
-        marginTop: 18,
+        marginTop: 10,
         justifyContent: 'center',
         paddingBottom: 5,
     },
@@ -169,7 +172,7 @@ const styles = StyleSheet.create({
         color: '#795C34',
         backgroundColor: 'white',
         paddingHorizontal: 5,
-        marginTop: 12
+        marginTop: 10
     },
     listStyle: {
         display: "flex",

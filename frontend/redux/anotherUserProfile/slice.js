@@ -6,7 +6,6 @@ const initialState = {
     username: "UserA",
     avatarType: "",
     avatarUri: Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri,
-    avatarBase64: "",
     musicList: [
         {
             "id": "635656b49de315afa9caf0e9",
@@ -125,7 +124,6 @@ export const getAnotherUserProfile = createAsyncThunk(
         thunkAPI.dispatch(anotherUserProfileSlice.actions.setAvatarUri(data.uri))
         thunkAPI.dispatch(anotherUserProfileSlice.actions.setUsername(data.username))
         thunkAPI.dispatch(anotherUserProfileSlice.actions.setAvatarType(data.type))
-        thunkAPI.dispatch(anotherUserProfileSlice.actions.setAvatarBase64(data.base64))
     }
 )
 
@@ -144,9 +142,6 @@ export const anotherUserProfileSlice = createSlice({
         },
         setAvatarUri: (state, actions) => {
             state.avatarUri = actions.payload
-        },
-        setAvatarBase64: (state, actions) => {
-            state.avatarBase64 = actions.payload
         },
         setMusicList: (state, actions) => {
             state.musicList = actions.payload
