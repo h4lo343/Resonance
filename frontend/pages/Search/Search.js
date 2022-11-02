@@ -107,7 +107,7 @@ const Search = ({ longitude, latitude, finished }) => {
           if (key.length == 0) {
             setSearchMusicHeight(0);
           } else {
-            setSearchMusicHeight(400);
+            setSearchMusicHeight(320);
           }
 
         }}
@@ -119,7 +119,7 @@ const Search = ({ longitude, latitude, finished }) => {
         <FlatList
           data={key.length > 0 ? result : ""}
           keyExtractor={item => item.tracks.id}
-          style={{ backgroundColor: "#E0EEE0", zIndex: 10, width: "115%" }}
+          style={{ backgroundColor: "white", zIndex: 10, width: "115%" }}
           contentContainerStyle={{
             flexGrow: 1,
           }}

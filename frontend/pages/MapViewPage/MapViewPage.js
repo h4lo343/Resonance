@@ -34,15 +34,15 @@ export const MapViewPage = ({ navigation }) => {
   });
   const [initialRegion, setInitialRegion] = useState({
     latitude: -37.7986627,
-    longitude: 144.9613446,
+    longitude: 144.9613408,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,//initial region
   });
   const [mapTheme, setMapTheme] = useState([])
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const [nearbyLocation, setNearbyLocation] = useState({
-    latitude: 37.3882733,
-    longitude: -122.0867283 // default values
+    latitude: -37.7986627,
+    longitude: 144.9613408 // default values
   });
 
   const [showUserLocationDot, setUserLocationDot] = useState(true);
@@ -73,32 +73,15 @@ export const MapViewPage = ({ navigation }) => {
 
 }
 
+const loadNewLocation = () => {
+  _checkPermission().then(()=>{})
+}
+
   useEffect(() => {
     // this is to ensure that this page would refresh to get new user data from backend
     const focusHandler = navigation.addListener('focus', async () => {
       console.log("check permission")
-      await _checkPermission();
-      Geolocation.getCurrentPosition(
-        (position) => {
-          console.log("get map initial location")
-          setCurrentLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          })
-          setInitialRegion({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          })
-          console.log("initial Location lat: " + position.coords.latitude + " long:" + position.coords.longitude);
-        },
-        (error) => {
-          console.log("falls in error ");
-          console.log(error.code, error.message);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-      );
+      loadNewLocation();
       loadHistoryMarkers();
       fetchFollowedUser().then().catch((e) => { console.log("error: " + e) });
     });
@@ -114,7 +97,7 @@ export const MapViewPage = ({ navigation }) => {
 
     // this return is to unsubscribe handler from the event
     return focusHandler;
-  }, [navigation, initialRegion]);
+  }, [navigation]);
 
 
   useEffect(()=>{
@@ -387,7 +370,13 @@ export const MapViewPage = ({ navigation }) => {
       if (result == true) {
 
         await getCurrentLocation();
-        console.log(currentLocation)
+        setInitialRegion({
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+        })
+        console.log("new initial map location: " + currentLocation);
       }
       else if (result == false) {
         const status = await PermissionsAndroid.request(
@@ -401,6 +390,12 @@ export const MapViewPage = ({ navigation }) => {
         if (status === PermissionsAndroid.RESULTS.GRANTED) {
           console.log('permission granted')
           await getCurrentLocation();
+          setInitialRegion({
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+        })
         }
       }
 
