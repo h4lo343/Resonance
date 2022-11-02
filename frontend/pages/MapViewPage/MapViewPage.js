@@ -4,18 +4,20 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { Marker } from 'react-native-maps';
-import { Button } from 'native-base'
 import Search from '../Search/Search';
 import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
 import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
-import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
+import { nearbyMusicSlice, getNearbyMusic } from '../../redux/nearbyMusic/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import RNShake from 'react-native-shake';
 import { nightMapStyle } from '../../assets/mapStyle';
 import { Appearance } from 'react-native';
-import { updateFollowedUsers } from '../../redux/follower/slice';
+import { followerSlice, updateFollowedUsers } from '../../redux/follower/slice';
+import { authSlice} from '../../redux/auth/slice';
+import { anotherUserProfileSlice } from '../../redux/anotherUserProfile/slice'
+import { userProfileSlice } from '../../redux/userProfile/slice'
 
 
 export const MapViewPage = ({ navigation }) => {
@@ -31,8 +33,8 @@ export const MapViewPage = ({ navigation }) => {
     longitude: -122.0867283 // default values
   });
   const [initialRegion, setInitialRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
+    latitude: -37.7986627,
+    longitude: 144.9613446,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,//initial region
   });
@@ -76,12 +78,27 @@ export const MapViewPage = ({ navigation }) => {
     const focusHandler = navigation.addListener('focus', async () => {
       console.log("check permission")
       await _checkPermission();
-      setInitialRegion({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      })
+      Geolocation.getCurrentPosition(
+        (position) => {
+          console.log("get map initial location")
+          setCurrentLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          })
+          setInitialRegion({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          })
+          console.log("initial Location lat: " + position.coords.latitude + " long:" + position.coords.longitude);
+        },
+        (error) => {
+          console.log("falls in error ");
+          console.log(error.code, error.message);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      );
       loadHistoryMarkers();
       fetchFollowedUser().then().catch((e) => { console.log("error: " + e) });
     });
@@ -97,7 +114,7 @@ export const MapViewPage = ({ navigation }) => {
 
     // this return is to unsubscribe handler from the event
     return focusHandler;
-  }, [navigation]);
+  }, [navigation, initialRegion]);
 
 
   useEffect(()=>{
@@ -307,7 +324,14 @@ export const MapViewPage = ({ navigation }) => {
         [
           {
             text: "yes",
-            onPress: () => { navigation.navigate("Login")}
+            onPress: () => { 
+              dispatch(authSlice.actions.initToken())
+              dispatch(userProfileSlice.actions.cleanUp())
+              dispatch(anotherUserProfileSlice.actions.cleanUp())
+              dispatch(followerSlice.actions.cleanUp())
+              dispatch(nearbyMusicSlice.actions.cleanUp())
+              navigation.navigate("Login")
+            }
           },
           {
             text: "no"

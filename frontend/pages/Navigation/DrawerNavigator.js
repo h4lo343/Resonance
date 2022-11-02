@@ -3,7 +3,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { MapViewPage } from '../MapViewPage/MapViewPage';
 import { Moment } from '../Moment/Moment';
 import { UserProfile } from '../UserProfile';
-import { Login } from '../Login';
 
 const Drawer = createDrawerNavigator();
 
