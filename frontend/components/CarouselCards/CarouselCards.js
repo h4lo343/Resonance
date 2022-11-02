@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image, ScrollView, Linking } from 'react-native
 import { useSelector, useDispatch } from 'react-redux';
 import { getAnotherUserProfile } from '../../redux/anotherUserProfile/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
-import RNFetchBlob from "rn-fetch-blob";
 import { CommentSession } from "../CommentSession/CommentSession";
 
 export const CarouselCards = (propsData) => {
@@ -72,45 +71,31 @@ export const CarouselCards = (propsData) => {
 
         const result = await response.json();
 
-        const dirs = RNFetchBlob.fs.dirs;
+        var data = {};
 
-        const imageType = result.avatar.avatarType;
+        console.log("sharer result: " + Object.values(result.avatar));
 
-        var path = dirs.DCIMDir + "/user-avatar." + imageType;
+        console.log("result image: " + result.avatar.base64image);
 
-        if (!(result.avatar == {} || imageType == undefined)) {
-            RNFetchBlob.fs.writeFile(path, result.avatar.base64image, 'base64')
-                .then((res) => {
-                    var uri = "file://" + path;
-                    console.log("get uri from base64: " + uri);
-                    const data = {
-                        username: result.username,
-                        musicList: result.traces,
-                        type: imageType,
-                        uri: uri,
-                        base64: result.avatar.base64image
-                    }
-                    dispatch(getAnotherUserProfile({ data }))
-
-                    SetAnotherUserSpinnerFlag(false);
-
-                }).catch((e) => {
-                    console.log("error " + e);
-                    const data = {
-                        username: result.username,
-                        musicList: result.traces,
-                    }
-                    dispatch(getAnotherUserProfile({ data }))
-                    SetAnotherUserSpinnerFlag(false);
-                });
-        } else {
-            const data = {
+        if (!(result.avatar == {} || result.avatar.base64image == "" || result.avatar.base64image == undefined)) {
+            data = {
+                userId: musicData.songSharerId,
                 username: result.username,
                 musicList: result.traces,
+                uri: result.avatar.base64image,
             }
-            dispatch(getAnotherUserProfile({ data }))
-            SetAnotherUserSpinnerFlag(false);
+        } else {
+            data = {
+                userId: musicData.songSharerId,
+                username: result.username,
+                musicList: result.traces,
+                uri: Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri,
+            }
         }
+
+        dispatch(getAnotherUserProfile({ data }))
+
+        SetAnotherUserSpinnerFlag(false);
     })
 
     return (
@@ -122,7 +107,7 @@ export const CarouselCards = (propsData) => {
                     textStyle={styles.spinnerTextStyle}
                 />
             </View>
-            <View style={{height: 350, width: 330}}>
+            <View style={{height: 330, width: 330}}>
                 <ScrollView nestedScrollEnabled={true} contentContainerStyle={{ flexGrow: 1, paddingRight: 12 }}>
                     <View >
                         <View style={styles.wrapperStyle}>
@@ -130,7 +115,7 @@ export const CarouselCards = (propsData) => {
                             <View>
                                 <Text style={styles.sharerLink} onPress={() => goToAnotherUserProfile()}>Sharer: {musicData.songSharerUsername}</Text>
                                 <Text style={styles.textInList}>{(new Date(musicData.timestamp).toDateString())}</Text>
-                                <Text style={styles.textInList}>Song:{musicData.songName}</Text>
+                                <Text style={styles.textInList}>Song: {musicData.songName}</Text>
                                 <Text style={styles.textInList}>Artist: {musicData.songArtist}</Text>
                                 <Text style={styles.link} onPress={() => { Linking.openURL(musicData.songUrl) }}>music spotify link</Text>
                             </View>
@@ -166,20 +151,21 @@ const styles = StyleSheet.create({
     },
     sharerLink: {
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 13,
         color: "#5F9F9F",
         textDecorationLine: 'underline',
     },
     link: {
         color: "#5F9F9F",
-        fontSize: 14.5,
+        fontSize: 13,
         textDecorationLine: 'underline',
     },
     textInList: {
-        fontSize: 14.5
+        fontSize: 13
     },
     spinnerTextStyle: {
         color: '#FFF',
         paddingTop: 10,
+        fontSize: 16
     },
 })

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Pressable, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -9,18 +9,21 @@ import { getHistoryTrace } from '../../service/MapperService';
 import { MarkerCallOut } from '../../components/MarkerCallOut';
 import { NearbyMusicDisplay } from '../../components/NearbyMusicDisplay';
 import { useSelector, useDispatch } from "react-redux";
-import { getNearbyMusic } from '../../redux/nearbyMusic/slice';
+import { nearbyMusicSlice, getNearbyMusic } from '../../redux/nearbyMusic/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import RNShake from 'react-native-shake';
 import { nightMapStyle } from '../../assets/mapStyle';
 import { Appearance } from 'react-native';
-import { Snackbar } from 'react-native-paper';
+import { followerSlice, updateFollowedUsers } from '../../redux/follower/slice';
+import { authSlice} from '../../redux/auth/slice';
+import { anotherUserProfileSlice } from '../../redux/anotherUserProfile/slice'
+import { userProfileSlice } from '../../redux/userProfile/slice'
 
 
 export const MapViewPage = ({ navigation }) => {
-  let resetNumber = false // for generating map marker id 
-  let mid = 0; // for generating map marker id 
-  const AccessToken = useSelector((state) => state.auth.jwtToken) 
+  let resetNumber = false // for generating map marker id
+  let mid = 0; // for generating map marker id
+  const AccessToken = useSelector((state) => state.auth.jwtToken)
   const [renderNearbyMusicSpinnerFlag, setNearbyMusicSpinnerFlag] = useState(false);
   const dispatch = useDispatch();
   const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
@@ -28,36 +31,65 @@ export const MapViewPage = ({ navigation }) => {
   const [visible, setVisible] = useState(true); // for snack bar 
   const onDismissSnackBar = () => setVisible(false);
   const [currentLocation, setCurrentLocation] = useState({
-    latitude: 37.3882733,
-    longitude: -122.0867283 // default values
+    latitude: -37.8986627,
+    longitude: 144.8613408 // default values
   });
   const [initialRegion, setInitialRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
+    latitude: -37.8986627,
+    longitude: 144.8613408,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,//initial region
   });
   const [mapTheme, setMapTheme] = useState([])
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const [nearbyLocation, setNearbyLocation] = useState({
-    latitude: 37.3882733,
-    longitude: -122.0867283 // default values
+    latitude: -37.8986627,
+    longitude: 144.8613408 // default values
   });
 
   const [showUserLocationDot, setUserLocationDot] = useState(true);
   const [showSearchBar, setshowSearchBar] = React.useState(false);
   const [spinnerMusicText, setSpinnerMusicText] = useState("Retrieving musics...")
-  const [currentCategory, setCurrentCategory] = React.useState('Initial'); 
+  const [currentCategory, setCurrentCategory] = React.useState('Initial');
+
+  const fetchFollowedUser = async () => {
+    const url = `https://comp90018-mobile-computing.herokuapp.com/user/getFollowed`;
+
+    try {
+        const response = await fetch(url,
+            {
+                headers: { Authorization: "Bearer " + jwtToken },
+                method: 'GET'
+            }
+        )
+        const result = await response.json();
+
+        console.log("result: " + Object.values(result));
+
+        var data = result.followedUser;
+        dispatch(updateFollowedUsers({ data }));
+
+    } catch (e) {
+        console.log(e);
+    }
+
+}
+
+const loadNewLocation = () => {
+  _checkPermission().then(()=>{})
+}
 
   useEffect(() => {
     // this is to ensure that this page would refresh to get new user data from backend
     const focusHandler = navigation.addListener('focus', async () => {
       console.log("check permission")
       await _checkPermission();
+      loadNewLocation();
       loadHistoryMarkers();
+      fetchFollowedUser().then().catch((e) => { console.log("error: " + e) });
     });
 
-    // If the device is configured to dark mode, change the map style 
+    // If the device is configured to dark mode, change the map style
     Appearance.addChangeListener((event) => {
       if (Appearance.getColorScheme() === 'dark') {
         setMapTheme(nightMapStyle);
@@ -74,7 +106,8 @@ export const MapViewPage = ({ navigation }) => {
   useEffect(()=>{
     // add lisnter event to display nearBy music when the user shake their devices
     const subscription = RNShake.addListener(()=>{
-      console.log("shake shake")
+      console.log("shake shake");
+      fetchFollowedUser().then().catch((e) => { console.log("error: " + e) });
       requireNearbyMusic(currentLocation.latitude,currentLocation.longitude)
     })
     return () => {
@@ -82,8 +115,8 @@ export const MapViewPage = ({ navigation }) => {
     }
   })
 
-   /** 
-   * update mapView when the user left a trace on the map 
+   /**
+   * update mapView when the user left a trace on the map
   */
   const leftTrace = () => {
     resetNumber = true
@@ -92,9 +125,9 @@ export const MapViewPage = ({ navigation }) => {
     setCurrentCategory('Initial')
   }
 
-  /** 
+  /**
    * This function helps to disply multiple markers inside the mapView
-   * as repetative elements require unique IDs.  
+   * as repetative elements require unique IDs.
   */
   const generateMarkerId = () => {
     if (resetNumber) {
@@ -215,8 +248,8 @@ export const MapViewPage = ({ navigation }) => {
     }
   }
 
-   /** 
-   * obtain user's current location 
+   /**
+   * obtain user's current location
   */
   const getCurrentLocation = async () => {
 
@@ -260,8 +293,8 @@ export const MapViewPage = ({ navigation }) => {
 
   const getMarkers = () => {
     switch (currentCategory) {
-      case 'Initial': return [...attachHistoryMarker]; // mapView1: displays all history traces 
-      case 'highLightUserLocation': return [leaveTraceMarker]; //mapView2: when user leave a trace, hide all the histrory traces 
+      case 'Initial': return [...attachHistoryMarker]; // mapView1: displays all history traces
+      case 'highLightUserLocation': return [leaveTraceMarker]; //mapView2: when user leave a trace, hide all the histrory traces
     }
     return leaveTraceMarker
   }
@@ -276,7 +309,30 @@ export const MapViewPage = ({ navigation }) => {
     setCurrentCategory('Initial');
   }
 
-   /** 
+  const Logout = () => {
+    Alert.alert(
+        "Confirm",
+        `Are you sure to Logout?`,
+        [
+          {
+            text: "yes",
+            onPress: () => { 
+              dispatch(authSlice.actions.initToken())
+              dispatch(userProfileSlice.actions.cleanUp())
+              dispatch(anotherUserProfileSlice.actions.cleanUp())
+              dispatch(followerSlice.actions.cleanUp())
+              dispatch(nearbyMusicSlice.actions.cleanUp())
+              navigation.navigate("Login")
+            }
+          },
+          {
+            text: "no"
+          }
+        ]
+    )
+  }
+
+   /**
    * generate a leave trace marker (indicate users' current location)
   */
   const leaveTraceMarker = <Marker
@@ -289,8 +345,8 @@ export const MapViewPage = ({ navigation }) => {
     <Image source={require('../../assets/imgs/mapMarkerCurrent.png')} style={{ height: 50, width: 50 }} />
   </Marker>
 
- /** 
-   * generate history traces  
+ /**
+   * generate history traces
   */
   const attachHistoryMarker = historyMarkers.map((history, i) => (
     <Marker
@@ -313,7 +369,7 @@ export const MapViewPage = ({ navigation }) => {
 
 
   /**
-   * grant location access from the user 
+   * grant location access from the user
    * **/
   const _checkPermission = async () => {
 
@@ -323,7 +379,13 @@ export const MapViewPage = ({ navigation }) => {
       if (result == true) {
 
         await getCurrentLocation();
-        console.log(currentLocation)
+        setInitialRegion({
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+        })
+        console.log("new initial map location: " + currentLocation);
       }
       else if (result == false) {
         const status = await PermissionsAndroid.request(
@@ -337,6 +399,12 @@ export const MapViewPage = ({ navigation }) => {
         if (status === PermissionsAndroid.RESULTS.GRANTED) {
           console.log('permission granted')
           await getCurrentLocation();
+          setInitialRegion({
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+        })
         }
       }
 
@@ -365,10 +433,10 @@ export const MapViewPage = ({ navigation }) => {
               {
                 backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
               },
-              { position: "absolute", top: '100%', width: "80%", height: 40, paddingLeft: 25, paddingTop: 5, borderRadius: 2 },
+              { position: "absolute", top: '100%', paddingHorizontal:5, height: 30,  borderRadius: 2, alignItems: "center", justifyContent: "center" },
             ]}
             onPress={leaveTrace} >
-            <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Leave Trace</Text></Pressable>
+            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Leave Trace</Text></Pressable>
         }
         {
           showSearchBar && <Pressable
@@ -376,15 +444,24 @@ export const MapViewPage = ({ navigation }) => {
               {
                 backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
               },
-              { position: "absolute", marginTop: 20, top: '100%', width: "70%", height: 40, paddingLeft: 38, paddingTop: 5, borderRadius: 2 },
+              { position: "absolute", marginTop: 20, top: '100%', paddingHorizontal:5, height: 30, alignItems: "center", justifyContent: "center", borderRadius: 2 },
             ]}
             onPress={cancelTrace} >
-            <Text style={{ fontWeight: 'bold', fontSize: 20}}>Cancel</Text></Pressable>
+            <Text style={{ fontWeight: 'bold', fontSize: 16}}>Cancel</Text></Pressable>
         }
         {
           showSearchBar && <Search longitude={currentLocation.latitude} latitude={currentLocation.longitude} finished={leftTrace} />
         }
       </TouchableOpacity>
+      <Pressable
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
+              },
+              { position:"absolute", bottom: 130, left:30, borderRadius: 2, paddingHorizontal: 6, paddingVertical: 6, justifyContent: "center" },
+            ]}
+            onPress={Logout} >
+            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Logout</Text></Pressable>
       <Spinner
         visible={renderNearbyMusicSpinnerFlag}
         textContent={spinnerMusicText}
@@ -399,7 +476,7 @@ export const MapViewPage = ({ navigation }) => {
 }
 
   /**
-   * CSS Style 
+   * CSS Style
    * **/
 const styles = StyleSheet.create({
   container: {
@@ -422,14 +499,6 @@ const styles = StyleSheet.create({
     width: "50%",
     alignItems: 'center'
   },
-  overlay2: {
-    position: 'absolute',
-    display: 'flex',
-    top: "100",
-    width: "90%",
-    alignItems: 'center',
-    zIndex: 10
-  },
   searchContainer: {
     position: 'absolute',
     bottom: 10,
@@ -440,5 +509,6 @@ const styles = StyleSheet.create({
   spinnerTextStyle: {
     color: '#fff',
     paddingTop: 10,
+    fontSize: 16
   },
 });

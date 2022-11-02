@@ -24,16 +24,15 @@ export const NearbyMusicDisplay = ({nearbyMusicProps}) => {
         transparent={true}
         visible={true}
         onRequestClose={() => {
-          console.log("onRequestClose")
           nearbyMusicProps.setVisibilityCallBack(false)
         }}>
         <View style={styles.cardStyle}>
           <View style={styles.headDisplayStyle}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{nearbyMusicProps.isNearbyMusic? "Nearby Musics": "Music Trace"}</Text>
+            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{nearbyMusicProps.isNearbyMusic? "Nearby Musics": "Music Trace"}</Text>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => { nearbyMusicProps.setVisibilityCallBack(false)}}>
-              <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Close</Text>
+              <Text style={{ fontWeight: 'bold', fontSize: 14 }}>Close</Text>
             </TouchableOpacity>
           </View>
           <View>

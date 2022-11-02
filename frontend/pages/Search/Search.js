@@ -107,7 +107,7 @@ const Search = ({ longitude, latitude, finished }) => {
           if (key.length == 0) {
             setSearchMusicHeight(0);
           } else {
-            setSearchMusicHeight(400);
+            setSearchMusicHeight(320);
           }
 
         }}
@@ -119,7 +119,7 @@ const Search = ({ longitude, latitude, finished }) => {
         <FlatList
           data={key.length > 0 ? result : ""}
           keyExtractor={item => item.tracks.id}
-          style={{ backgroundColor: "#E0EEE0", zIndex: 10, width: "115%" }}
+          style={{ backgroundColor: 'rgba(255,255,255, 0.8)', zIndex: 10, width: "115%" }}
           contentContainerStyle={{
             flexGrow: 1,
           }}
@@ -127,7 +127,7 @@ const Search = ({ longitude, latitude, finished }) => {
             <TouchableOpacity onPress={() => chooseSong(item)} >
               <View style={{ display: "flex", justifyContent: "flex-start", flexWrap: "nowrap", flexDirection: "row", alignItems: "center", paddingTop: 2 }}>
                 <Image style={{ width: 70, height: 70 }} resizeMode="contain" source={{ uri: item.tracks.album.images[0].url }} alt={item.tracks.name} />
-                <View>
+                <View style={{marginLeft: 10}}>
                   <Text style={{ fontWeight: 'bold' }}>{item.tracks.name}</Text>
                   {item.artists ? <Text>{item.artists.name}</Text> : <></>}
                 </View>

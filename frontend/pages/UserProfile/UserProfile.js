@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
+import {StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Linking} from 'react-native';
 import { Box, Button, FlatList } from 'native-base';
 import { Avatar } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserProfile } from '../../redux/userProfile/slice';
-import RNFetchBlob from "rn-fetch-blob";
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageOverlay from "react-native-image-overlay";
 
@@ -13,14 +12,13 @@ export const UserProfile = ({ navigation }) => {
     const stateUsername = useSelector((state) => state.userProfile.username);
     const stateFullName = useSelector((state) => state.userProfile.fullName);
     const stateAvatarUri = useSelector((state) => state.userProfile.avatarUri);
-    const musicList = useSelector((state) => state.anotherUserProfile.musicList);
+    const musicList = useSelector((state) => state.userProfile.musicList);
     const [profileSpinnerFlag, setProfileSpinnerFlag] = useState(true);
     const jwtToken = useSelector((state) => state.auth.jwtToken);
 
     useEffect(() => {
         // this is to ensure that this page would refresh to get new user data from backend
         const focusHandler = navigation.addListener('focus', () => {
-            console.log('user profile use effact called')
             getUserInfo().then().catch((e) => {
                 console.log("error: " + e);
                 backToMapProfile();
@@ -43,59 +41,30 @@ export const UserProfile = ({ navigation }) => {
         )
         const result = await response.json();
 
-        const dirs = RNFetchBlob.fs.dirs;
+        var data = {};
 
-        const imageType = result.avatar.avatarType;
-
-        var path = dirs.DCIMDir + "/user-avatar." + imageType;
-
-        if (!(imageType == undefined || result.avatar == {})) {
-            RNFetchBlob.fs.writeFile(path, result.avatar.base64image, 'base64')
-                .then((res) => {
-                    var uri = "file://" + path;
-                    console.log("get uri from base64: " + uri);
-                    const data = {
-                        username: result.username,
-                        fullName: result.fullName,
-                        type: imageType,
-                        uri: uri,
-                        base64: result.avatar.base64image,
-                        musicList: result.traces
-                    }
-
-                    dispatch(getUserProfile({ data }))
-
-                    setProfileSpinnerFlag(false);
-
-                }).catch((e) => {
-                    console.log("error " + e);
-                    const data = {
-                        username: result.username,
-                        fullName: result.fullName,
-                        uri: Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri,
-                        type: "png",
-                        musicList: result.traces
-                    }
-                    console.log("username: " + data.username);
-
-                    dispatch(getUserProfile({ data }))
-
-                    setProfileSpinnerFlag(false);
-                });
+        if (!(result.avatar == {} || result.avatar.base64image == "" || result.avatar.base64image == undefined)) {
+            data = {
+                username: result.username,
+                fullName: result.fullName,
+                uri: result.avatar.base64image,
+                musicList: result.traces
+            }
         } else {
-            const data = {
+            data = {
                 username: result.username,
                 fullName: result.fullName,
                 uri: Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri,
-                type: "png",
                 musicList: result.traces
             }
-
-            console.log("image invalid: username: " + data.username);
-            dispatch(getUserProfile({ data }))
-
-            setProfileSpinnerFlag(false);
         }
+
+        console.log("backend uri: " + result.avatar.base64image);
+
+        dispatch(getUserProfile({ data }))
+    
+        setProfileSpinnerFlag(false);
+
     })
 
     const editProfile = () => {
@@ -112,34 +81,36 @@ export const UserProfile = ({ navigation }) => {
                 <Spinner
                     visible={profileSpinnerFlag}
                     textContent={'Updating user profile...'}
-                    textStyle={{ color: '#fff' }}
+                    textStyle={{ color: '#fff', fontSize: 16  }}
                 />
             </View>
 
             <ImageOverlay
                 source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_1.png')).uri }}
-                height={200}
+                height={160}
                 overlayAlpha={0.05}
                 contentPosition="center">
-                <Avatar.Image style={{ marginBottom: 5, marginTop: 8 }} source={{ uri: stateAvatarUri }} size={105} />
-                <Text style={styles.userDataFont}>Username: {stateUsername}</Text>
-                <Text style={styles.userDataFont}>Full Name: {stateFullName}</Text>
+                <View style={{alignItems: "center"}}>
+                    <Avatar.Image source={{ uri: stateAvatarUri }} size={100} />
+                    <Text style={styles.userDataFont}>Username: {stateUsername}</Text>
+                    <Text style={styles.userDataFont}>Full Name: {stateFullName}</Text>
+                </View>
             </ImageOverlay>
 
             <View style={styles.musicListHeader}>
-                <Text style={{ fontSize: 16, color: '#795C34' }}>Music Lists:</Text>
+                <Text style={{ fontSize: 14, color: '#795C34' }}>Music Lists:</Text>
             </View>
 
-            <View style={{ marginLeft: 70, marginTop: 10, height: 300, width: 310 }}>
+            <View style={{ marginLeft: 50, marginTop: 5, height: 290, width: 310 }}>
                 <FlatList
                     data={musicList}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <View style={styles.listStyle}>
-                            <Image style={{ width: 70, height: 70, marginBottom: 5 }} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
-                            <View style={{ marginLeft: 15 }}>
-                                <Text style={{ fontWeight: 'bold' }}>Song: {item.song.name}</Text>
-                                <Text>Artist: {item.song.artist}</Text>
+                            <Image style={{ width: 70, height: 60}} resizeMode="contain" source={{ uri: item.song.songImageUrl }} alt={item.song.name} />
+                            <View style={{ marginLeft: 15, alignContent: "center" }}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 13 }}>Song: {item.song.name}</Text>
+                                <Text style={{ fontSize: 13}}>Artist: {item.song.artist}</Text>
                                 <Text style={styles.link} onPress={() => { Linking.openURL(item.song.songUrl) }}>music spotify link</Text>
                             </View>
                         </View>
@@ -154,7 +125,7 @@ export const UserProfile = ({ navigation }) => {
                         {
                             backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
                         },
-                        { top: '20%', width: "35%", height: 40, paddingLeft: 30, paddingTop: 9, borderRadius: 2 },
+                        {height: 30, borderRadius: 2, justifyContent: "center", alignItems: "center", paddingHorizontal: 5, paddingTop: 1 },
                     ]}
                     onPress={(e) => editProfile(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Edit Profile</Text></Pressable>
             </Box>
@@ -177,7 +148,7 @@ const styles = StyleSheet.create({
     },
     userDataFont: {
         paddingTop: 5,
-        fontSize: 16,
+        fontSize: 13,
         color: '#795C34',
     },
     profileSpinnerStyle: {
@@ -186,7 +157,7 @@ const styles = StyleSheet.create({
     musicListHeader: {
         backgroundColor: "#cad5d8",
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 5,
         justifyContent: 'center',
         paddingBottom: 5,
     },
@@ -200,5 +171,6 @@ const styles = StyleSheet.create({
     link: {
         color: "#5F9F9F",
         textDecorationLine: 'underline',
+        fontSize: 13
     },
 });

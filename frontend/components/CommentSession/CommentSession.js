@@ -41,6 +41,36 @@ export const CommentSession = ({ musicData, setMusicData }) => {
     const [isPlaying, setIsPlaying] = React.useState(false);
     const jwtToken = useSelector((state) => state.auth.jwtToken);
 
+    useEffect(()=>{
+        const playAudio = async () =>{
+            if(playPath){
+                console.log("playPath",playPath);
+                await onStartPlay().then(()=>{
+                    setPausedPlay(false);
+                });
+
+            }else{
+                console.log("playPath undefined",playPath);
+            }
+        }
+        playAudio().catch(console.error);
+    },[playPath]);
+
+    useEffect(()=>{
+
+        const playPauseAudio = async () =>{
+            if(!pausedPlay){
+                await onStartPlay();
+                console.log("playing paused")
+            }else{
+                console.log("just pausing")
+            }
+        }
+        playPauseAudio().catch(console.error);
+    }, [pausedPlay])
+
+
+
     /**
      * request permission for recording audio
      * **/
@@ -92,21 +122,22 @@ export const CommentSession = ({ musicData, setMusicData }) => {
         let fileId = uuid.v4();
         let filePath = path + fileId + ".mp4"
         try {
-            await requestAudioRecordingPermission();
-            // start recording and set file path/name
-            const result = await audioRecorderPlayer.startRecorder(filePath);
-            setPath(result);
-            setPlayPath(result);
-            setIsRecording(true);
-            // set recording duration for display
-            audioRecorderPlayer.addRecordBackListener((e) => {
-                // setRecordingTime(e.currentPosition)
-                setRecordingTime(audioRecorderPlayer.mmssss(
-                    Math.floor(e.currentPosition),
-                ))
-                // set total recording duration
-                setDuration(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
-            });
+            onStopPlay().then(async ()=>{
+                await requestAudioRecordingPermission();
+                // start recording and set file path/name
+                const result = await audioRecorderPlayer.startRecorder(filePath);
+                setPath(result);
+                setIsRecording(true);
+                // set recording duration for display
+                audioRecorderPlayer.addRecordBackListener((e) => {
+                    // setRecordingTime(e.currentPosition)
+                    setRecordingTime(audioRecorderPlayer.mmssss(
+                        Math.floor(e.currentPosition),
+                    ))
+                    // set total recording duration
+                    setDuration(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
+                });
+            })
         } catch (e) {
             console.log(e);
             console.log("unable to record");
@@ -137,20 +168,42 @@ export const CommentSession = ({ musicData, setMusicData }) => {
      * */
     const onStartPlay = async () => {
         console.log('onStartPlay');
-        setPausedPlay(!pausedPlay);
-        // start player with play path
-        const msg = await audioRecorderPlayer.startPlayer(playPath);
-        audioRecorderPlayer.addPlayBackListener(e => {
-            setCurrentPositionSec(e.currentPosition);
-            setCurrentDurationSec(e.duration);
-            setPlayTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
-            setDuration(audioRecorderPlayer.mmssss(Math.floor(e.duration)));
-            if (e.currentPosition === e.duration) {
-                onStopPlay();
+        if(isPlaying) {
+            let toBePlay = playPath;
+            console.log(toBePlay);
+            await onStopPlay().then(async () => {
+                setPlayPath(toBePlay)
+            })
+        }else{
+            if(pausedPlay){
+                setPausedPlay(false);
+            }else{
+                console.log("should be false" ,isPlaying)
+                setIsPlaying(true);
+                // start player with play path
+                const msg = await audioRecorderPlayer.startPlayer(playPath);
+                audioRecorderPlayer.addPlayBackListener(e => {
+                    setCurrentPositionSec(e.currentPosition);
+                    setCurrentDurationSec(e.duration);
+                    setPlayTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
+                    setDuration(audioRecorderPlayer.mmssss(Math.floor(e.duration)));
+                    if (e.currentPosition === e.duration) {
+                        onStopPlay();
+                    }
+                });
             }
-        });
+        }
+
         // audioRecorderPlayer.addPlayBackListener();
-        console.log(msg);
+    };
+
+    /**
+     * Pause Player
+     * **/
+    const onPausePlay = async () => {
+        await audioRecorderPlayer.pausePlayer();
+        setIsPlaying(false);
+        setPausedPlay(true);
     };
 
     /**
@@ -160,7 +213,9 @@ export const CommentSession = ({ musicData, setMusicData }) => {
         console.log('onStopPlay');
         await audioRecorderPlayer.stopPlayer(playPath);
         setPausedPlay(true);
+        setIsPlaying(false);
         setCurrentPositionSec(0);
+        setPlayPath(null);
         setPlayTime(0)
         audioRecorderPlayer.removePlayBackListener();
     };
@@ -192,23 +247,17 @@ export const CommentSession = ({ musicData, setMusicData }) => {
             let updateMusicData = {...musicData};
             updateMusicData.comments = res.trace.comments
             setMusicData(updateMusicData);
+            commentTextInput.current.clear();
             console.log(updateMusicData);
 
         } catch {
+            commentTextInput.current.clear();
             console.log("error can't save to backend")
         }
-
-        commentTextInput.current.clear();
     }
 
 
-    /**
-     * Pause Player
-     * **/
-    const onPausePlay = async () => {
-        await audioRecorderPlayer.pausePlayer();
-        setPausedPlay(true);
-    };
+
 
     /**
      * play comment audio
@@ -216,8 +265,19 @@ export const CommentSession = ({ musicData, setMusicData }) => {
     const onPlayComment = async (trackUrl) => {
         console.log("play comment")
         // set play path to play
-        await setPlayPath(trackUrl);
-        await onStartPlay();
+        setPlayPath(trackUrl);
+        if(pausedPlay){
+            setPausedPlay(false);
+        }
+        // await onStartPlay();
+    }
+
+    const playRecording = async () =>{
+        console.log("playRecording");
+        await setPlayPath(pathToRecord);
+        if(pausedPlay){
+            setPausedPlay(false);
+        }
     }
 
     /**
@@ -259,6 +319,13 @@ export const CommentSession = ({ musicData, setMusicData }) => {
 
         commentTextInput.current.clear();
     }
+
+    const cancelVoiceComment = async () => {
+        setConfirmationWindow(!confirmationWindow)
+        await onStopPlay();
+        console.log("canceling voice comment stop play");
+    }
+
     return (
         <View >
             <Modal
@@ -280,7 +347,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                                     </TouchableOpacity>
                                     // <Button title={'Pause'} onPress={onPausePlay} >Pause</Button>
                                 ) : (
-                                    <TouchableOpacity onPress={onStartPlay}>
+                                    <TouchableOpacity onPress={playRecording}>
                                         <Image source={require('../../assets/imgs/play.png')}></Image>
                                     </TouchableOpacity>
                                     // <Button title={'Start'} onPress={onStartPlay} >Start</Button>
@@ -310,7 +377,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                             </Pressable>
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
-                                onPress={() => setConfirmationWindow(!confirmationWindow)}
+                                onPress={cancelVoiceComment}
                             >
                                 <Text style={styles.textStyle}>Cancel</Text>
                             </Pressable>
@@ -339,7 +406,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
             {!isRecording ?
                 (
                     <View>
-                        <Input ref={commentTextInput} variant="underlined" placeholder="Type New Comment" fontSize={14} onChangeText={setNewComment} />
+                        <Input ref={commentTextInput} variant="underlined" placeholder="Type New Comment" fontSize={13} onChangeText={setNewComment} />
                     </View>
                 ) :
                 (
@@ -349,7 +416,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                 )
             }
             <View>
-                <Text style={{ fontWeight: 'bold', fontSize: 15, marginVertical: 3 }}>Comments</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 14, marginVertical: 3 }}>Comments</Text>
                 <View style={{ marginTop: 5, backgroundColor: "#f0f0f0" }}>
                     <FlatList
                         data={musicData.comments}
@@ -357,17 +424,17 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                         renderItem={({ item }) => (
                             item.type === "TEXT" ? (
                                 <View>
-                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
-                                    <Text style={{ marginLeft: 5, fontSize: 14.5 }}>{item.comment}</Text>
+                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 13.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
+                                    <Text style={{ marginLeft: 5, fontSize: 13 }}>{item.comment}</Text>
                                 </View>
                             ) : (
                                 <View>
-                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 14.5 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
+                                    <Text style={{ fontWeight: 'bold', marginLeft: 5, fontSize: 13 }}>{item.user.name} - {(new Date(item.timestamp)).toDateString()}</Text>
                                     <View style={{ width: 200 }}>
                                         {item.comment === playPath ?
                                             (
                                                 <View style={styles.audioPlayerContainer}>
-                                                    {!pausedPlay ? (
+                                                    {isPlaying ? (
                                                         <TouchableOpacity onPress={onPausePlay}>
                                                             <Image source={require('../../assets/imgs/video-pause-button.png')}></Image>
                                                         </TouchableOpacity>
@@ -435,18 +502,19 @@ const styles = StyleSheet.create(
             display: "flex",
             marginTop: 5,
             paddingTop: 5,
-            paddingLeft: 5,
             height: 30,
             justifyContent: "space-between",
-            width: "110%",
-            borderRadius: 2
+            alignContent: "center",
+            borderRadius: 2,
+            paddingHorizontal: 5
         },
         record_button: {
-            height: 40,
-            width: 40,
+            height: 30,
+            width: 30,
             marginLeft: 5,
             borderRadius: 30,
             borderWidth: 1,
+            marginTop: 5,
             backgroundColor: "#e4b1a5"
         },
         centeredView: {

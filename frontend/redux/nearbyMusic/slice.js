@@ -143,5 +143,8 @@ export const nearbyMusicSlice = createSlice({
         setMusics: (state, actions) => {
               state.musics = actions.payload;
           },
+          cleanUp: (state) => {
+            state.musics = []
+          }
       }
   })

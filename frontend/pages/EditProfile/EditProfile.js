@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { StyleSheet, Text, View, Image, PermissionsAndroid, FormControl, ScrollView, Pressable } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { Box, Input, Button } from 'native-base';
 import { useSelector } from 'react-redux';
 import { Avatar } from 'react-native-paper';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { UserProfile } from '../UserProfile';
-import RNFetchBlob from "rn-fetch-blob";
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageOverlay from "react-native-image-overlay";
 import DrawerNavigator from '../Navigation/DrawerNavigator';
+import storage from '@react-native-firebase/storage';
+import auth from '@react-native-firebase/auth';
+
 
 export const EditProfile = ({ navigation }) => {
   const Drawer = createDrawerNavigator();
@@ -19,10 +20,19 @@ export const EditProfile = ({ navigation }) => {
   const avatarType = useSelector((state) => state.userProfile.avatarType);
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const currentFullName = useSelector((state) => state.userProfile.fullName);
-  const [newAvatar, setNewAvatar] = useState({ type: '', uri: '' });
+  const [newAvatar, setNewAvatar] = useState({ type: '', uri: Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri });
   const [newUsername, setNewUsername] = useState('');
   const [newFullname, setNewFullname] = useState('');
   const [profileSpinnerFlag, setProfileSpinnerFlag] = useState(false);
+  const [photoSpinnerFlag, setPhotoSpinnerFlag] = useState(false);
+
+  useEffect(() => {
+    // this is to ensure that this page would refresh to get new user data from backend
+    const focusHandler = navigation.addListener('focus', () => {
+          auth().signInAnonymously().then(() => { console.log("firebase signed in") });
+    });
+    return focusHandler;
+}, [navigation]);
 
   const requestCameraPermission = async () => {
     try {
@@ -68,12 +78,8 @@ export const EditProfile = ({ navigation }) => {
       }
 
       if (newAvatar.type != '') {
-        await RNFetchBlob.fs.readFile(newAvatar.uri, 'base64').then(async (data) => {
-          // data is the avatar content in base64 format
-          requestBody["updates"]["avatar"]["base64image"] = data;
+          requestBody["updates"]["avatar"]["base64image"] = newAvatar.uri;
           requestBody["updates"]["avatar"]["avatarType"] = newAvatar.type;
-
-        }).catch((e) => { console.log("error: " + e) })
       }
 
       const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/user/updateUserInfo",
@@ -89,7 +95,11 @@ export const EditProfile = ({ navigation }) => {
     }
   }
 
-  uploadPhoto = () => {
+  const clickedPhotoUpload = () => {
+    uploadPhoto().then(() => {});
+  }
+
+  const uploadPhoto = async () => {
     requestCameraPermission();
 
     let options = {
@@ -99,7 +109,7 @@ export const EditProfile = ({ navigation }) => {
       },
     };
 
-    launchCamera(options, (response) => {
+     launchCamera(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -107,11 +117,18 @@ export const EditProfile = ({ navigation }) => {
       } else if (response.customButton) {
         alert(response.customButton);
       } else {
+        setPhotoSpinnerFlag(true);
 
         const imageUri = response.assets[0].uri;
+
         const imageType = imageUri.split(".").pop();
 
-        setNewAvatar({ type: imageType, uri: imageUri })
+        const reference = storage().ref(imageUri);
+        await reference.putFile(imageUri);
+        let savedUrl = await reference.getDownloadURL();
+        console.log("saved url: " + savedUrl);
+        setNewAvatar({ type: imageType, uri: savedUrl });
+        setPhotoSpinnerFlag(false);
       }
     });
   }
@@ -135,17 +152,24 @@ export const EditProfile = ({ navigation }) => {
         <Spinner
           visible={profileSpinnerFlag}
           textContent={'Saving user profile updates...'}
-          textStyle={{ color: '#fff' }}
+          textStyle={{ color: '#fff', fontSize: 16 }}
+        />
+      </View>
+      <View style={styles.profileSpinnerStyle}>
+        <Spinner
+          visible={photoSpinnerFlag}
+          textContent={'Uploading photo...'}
+          textStyle={{ color: '#fff', fontSize: 16  }}
         />
       </View>
 
       <ImageOverlay
         source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_headset.jpg')).uri }}
-        height={160}
+        height={130}
         overlayAlpha={0.05}
         contentPosition="center">
-        <View>
-          <Avatar.Image source={{ uri: newAvatar.uri === '' ? avatarUri : newAvatar.uri }} size={110} />
+        <View style={{alignItems: "center"}}>
+          <Avatar.Image source={{ uri: newAvatar.uri == ""? avatarUri : newAvatar.uri }} size={100} />
         </View>
       </ImageOverlay>
 
@@ -156,26 +180,26 @@ export const EditProfile = ({ navigation }) => {
             {
               backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
             },
-            { top: '25%', width: "35%", height: 40, paddingLeft: 30, paddingTop: 9, borderRadius: 2 },
+            { height: 30, borderRadius: 2, alignContent: "center", alignItems: "center", paddingTop: 4, paddingHorizontal: 5 },
           ]}
-          onPress={(e) => uploadPhoto(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Take Photo</Text></Pressable>
+          onPress={(e) => clickedPhotoUpload(e)}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Take Photo</Text></Pressable>
       </Box>
 
       <ScrollView>
         <View style={styles.userrow}>
-          <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}>Current Username: {currentUsername}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 13 }}>Current Username: {currentUsername}</Text>
         </View>
 
-        <Box alignItems="center" style={{ marginTop: 15, justifyContent: "space-between", flexDirection: "row" }}>
-          <Input variant="outline" placeholder="New Username" fontSize={16} onChangeText={setNewUsername} />
+        <Box alignItems="center" style={{ marginTop: 5, justifyContent: "space-between", flexDirection: "row" }}>
+          <Input variant="outline" placeholder="New Username" fontSize={13} onChangeText={setNewUsername} />
         </Box>
 
-        <View style={styles.userrow}>
-          <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Current Full Name: {currentFullName}</Text>
+        <View style={styles.userrowsecond}>
+          <Text style={{ fontWeight: 'bold', fontSize: 13 }}>Current Full Name: {currentFullName}</Text>
         </View>
 
-        <Box alignItems="center" style={{ marginTop: 15, justifyContent: "space-between", flexDirection: "row" }}>
-          <Input variant="outline" placeholder="New Full Name" fontSize={16} onChangeText={setNewFullname} />
+        <Box alignItems="center" style={{ marginTop: 5, justifyContent: "space-between", flexDirection: "row" }}>
+          <Input variant="outline" placeholder="New Full Name" fontSize={13} onChangeText={setNewFullname} />
         </Box>
 
         <Box alignItems="center" style={styles.saveProfile}>
@@ -184,9 +208,9 @@ export const EditProfile = ({ navigation }) => {
               {
                 backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
               },
-              { top: '15%', width: "35%", height: 40, paddingLeft: 50, paddingTop: 9, borderRadius: 2 },
+              { top: '15%', height: 30, borderRadius: 2, alignContent: "center", alignItems: "center", paddingHorizontal: 5, paddingTop: 4 },
             ]}
-            onPress={(e) => save(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Save</Text></Pressable>
+            onPress={(e) => save(e)}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Save</Text></Pressable>
         </Box>
 
       </ScrollView>
@@ -194,7 +218,7 @@ export const EditProfile = ({ navigation }) => {
 
       <ImageOverlay
         source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/music_headset.jpg')).uri }}
-        height={160}
+        height={310}
         overlayAlpha={0.05}
         contentPosition="bottom">
       </ImageOverlay>
@@ -212,15 +236,20 @@ const styles = StyleSheet.create({
   },
   userrow: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 10,
+    justifyContent: 'center'
+  },
+  userrowsecond: {
+    flexDirection: 'row',
+    marginTop: 10,
     justifyContent: 'center'
   },
   userDataFont: {
     color: '#795C34',
   },
   saveProfile: {
-    marginTop: 20,
-    marginBottom: 60
+    marginTop: 10,
+    marginBottom: 20
   },
   profileSpinnerStyle: {
     backgroundColor: '#cad5d8',

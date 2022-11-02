@@ -1,36 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View, Image, CheckBox, Alert, TouchableOpacity } from 'react-native';
-import { Link, Navigate, useNavigate } from 'react-router-native';
-import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
-import { ScaledImage } from '../../components';
+import { useNavigate } from 'react-router-native';
+import { Box, Input, Button, Checkbox } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
-import { authSlice, getAccessToken} from '../../redux/auth/slice';
-import { BACNKEND_LINK } from '@'
+import { authSlice, getAccessToken } from '../../redux/auth/slice';
+import { anotherUserProfileSlice } from '../../redux/anotherUserProfile/slice'
+import { followerSlice} from '../../redux/follower/slice'
+import { nearbyMusicSlice } from '../../redux/nearbyMusic/slice'
+import { userProfileSlice } from '../../redux/userProfile/slice'
+import ImageOverlay from "react-native-image-overlay";
 
 
+/**
+ * This function receives an navigation input, allows user to go to other pages
+ * and come back to the previous page
+ * It also handles the useState of user to authorise user login
+ * @param {navigation} param0
+ * @returns jsx view of the page
+ */
 
-
-export const Login = ({navigation}) => {
+export const Login = ({ navigation }) => {
+  // define variables
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const jwtToken = useSelector((state) => state.auth.jwtToken)
   const [userCode, setUserCode] = useState('');
   const [password, setPassword] = useState('');
+  const codeInput = useRef();
+  const passwordInput = useRef();
 
   useEffect(() => {
+    // state change
     dispatch(authSlice.actions.initToken())
-  },[])
+    dispatch(userProfileSlice.actions.cleanUp())
+    dispatch(anotherUserProfileSlice.actions.cleanUp())
+    dispatch(followerSlice.actions.cleanUp())
+    dispatch(nearbyMusicSlice.actions.cleanUp())
+    passwordInput.current.clear()
+    codeInput.current.clear()
+  }, [])
 
+  // get username and password
   const inputUserCode = (v) => {
     setUserCode(v)
   }
   const inputPassword = (v) => {
     setPassword(v)
   }
-  useEffect(()=> {
-    // console.log(env.BACNKEND_LINK)
-  },[])
+
+  // handle show button and signin
+  useEffect(() => {
+  }, [])
   const handleClick = () => setShow(!show);
   const signIn = async () => {
     const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/auth/login/", {
@@ -45,73 +66,81 @@ export const Login = ({navigation}) => {
     })
     const code = response.status
     const result = await response.json()
-    if (code!=201) {
+    if (code != 201) {
       Alert.alert(
         "Login Failed",
-         result.msg,
+        result.msg,
       );
     }
-    else{
+    else {
       dispatch(authSlice.actions.setJwtToken(result.Authorization))
       dispatch(getAccessToken())
       navigation.navigate('DrawerNavigator')
+      passwordInput.current.clear()
+      codeInput.current.clear()
+      setUserCode("")
+      setPassword("")
     }
   }
 
 
-
+  // return a page view
   return (
-    <View style={styles.container}>
-      <Text style={styles.brand}>Trace</Text>
-      <Text style={styles.banner}>Hi!</Text>
-      <Text style={styles.banner}>Welcome</Text>
-      <Text>Every Where Leave a Trace</Text>
+    // setup a style container
+    <View>
+      <View style={styles.container}>
+        <Text style={styles.brand}>Resonance</Text>
+        <Text style={styles.banner}>Hi!</Text>
+        <Text style={styles.banner}>Welcome</Text>
+        <Text>Share Your Music Trace :D</Text>
 
+        <Box alignItems="center" style={styles.inputBox}>
+          <Input variant="underlined" placeholder="Email" ref = { codeInput } fontSize={14} onChangeText={inputUserCode} />
+          <Input variant='underlined'
+            placeholder='password'
+            type={show ? "text" : "password"}
+            fontSize={14}
+            ref = { passwordInput }
+            onChangeText={inputPassword}
+            InputRightElement={
+              <Button size="xs" rounded="none" w="1/6" h="full" style={{backgroundColor: '#40B5AD'}}  onPress={handleClick}>
+                {show ? "Hide" : "Show"}
+              </Button >
+            }
+          />
+        </Box>
 
-      <Box alignItems="center" style={styles.inputBox}>
-        <Input variant="underlined" placeholder="Username, Email or Phone Number" fontSize={14} onChangeText={inputUserCode} />
-        <Input variant='underlined'
-          placeholder='password'
-          type={show ? "text" : "password"}
-          fontSize={14}
-          onChangeText={inputPassword}
-          InputRightElement={
-            <Button size="xs" rounded="none" w="1/6" h="full" onPress={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button >
-          }
-        />
-      </Box>
+        <View style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
+          <Checkbox value="two"><Text style={{ fontSize: 14 }}>Remember Me</Text></Checkbox>
+          <TouchableOpacity onPress={() => navigation.navigate('PasswordReset')}>
+            {/* <Text>Forgot Password?</Text> */}
+          </TouchableOpacity>
+        </View>
 
-      <View style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
-        <Checkbox value="two"><Text style={{ fontSize: 14 }}>Remember Me</Text></Checkbox>
-        {/* <Link to='/reset' underlayColor="#f0f4f7" ><Text>Forgot Password?</Text></Link> */}
-        <TouchableOpacity onPress={() => navigation.navigate('PasswordReset')}>
-          <Text>Forgot Password?</Text>
-        </TouchableOpacity>
+        <Box alignItems="center" style={{ marginTop: 30 }}>
+
+          <Button style={styles.loginSpotify} onPress={signIn}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ fontWeight: 'bold', color: "white", fontSize: 20 }}>Log In With</Text>
+              <Image style={{ width: 80, resizeMode: "contain", right: -10 }} source={require('../../assets/imgs/spotify.jpg')} />
+            </View>
+          </Button>
+        </Box>
+
+        <Box alignItems={"center"} style={{ bottom: -40, marginBottom: 50 }} flexDirection="row" justifyContent={"center"}>
+          <Text>Don't have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={{ color: "black" }}> Sign up</Text>
+          </TouchableOpacity>
+        </Box>
+
       </View>
-
-      <Box alignItems="center" style={{ marginTop: 40 }}>
-
-        <Button style={styles.loginSpotify} onPress={signIn}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ fontWeight: 'bold', color: "white", fontSize: 20 }}>Log In With</Text>
-            <Image style={{ width: 80, resizeMode: "contain", right: -10 }} source={require('../../assets/imgs/spotify.jpg')} />
-          </View>
-        </Button>
-      </Box>
-
-      <Box alignItems={"center"} style={{ bottom: -100 }} flexDirection="row" justifyContent={"center"}>
-        <Text>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={{ color: "black" }}>  Sign up</Text>
-        </TouchableOpacity>
-
-        {/* <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link> */}
-
-        {/* <Link to="/MapViewPage" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Map View</Text></Link> */}
-      </Box>
-
+      <ImageOverlay
+        source={{ uri: Image.resolveAssetSource(require('../../assets/imgs/follower_page.jpg')).uri }}
+        height={210}
+        overlayAlpha={0}
+        contentPosition="bottom">
+      </ImageOverlay>
     </View>
   )
 }
@@ -126,7 +155,7 @@ const styles = StyleSheet.create({
     color: '#59371c'
   },
   inputBox: {
-    marginTop: 90
+    marginTop: 50
   },
   brand: {
     color: 'black',
