@@ -13,7 +13,6 @@ const DrawerNavigator = () => {
         <Drawer.Screen name="Map" component={MapViewPage} options={{title: 'shake to discover nearby music'}}/>
         <Drawer.Screen name="Profile" component={UserProfile} />
         <Drawer.Screen name="Moment" component={Moment} />
-        <Drawer.Screen name="Log Out" component={Login} options={{ headerShown: false }}/>
       </Drawer.Navigator>
     );
   };
