@@ -37,6 +37,9 @@ The backend for **Resonance** is deployed in Heroku. Detailed documentation of A
  -  If it does not work, use  `npm install -—force`
     
     
+
+
+
 ### Fail to connect to the emulator in MacOS 
 
 Please follow the step-by-step solution [here](https://github.com/facebook/react-native/issues/28712#issuecomment-617384353).
@@ -44,13 +47,31 @@ Please follow the step-by-step solution [here](https://github.com/facebook/react
 ### Fail to build the app 
 
 1. (In the **/frontend** directory) `cd android` 
-2.  `./gradlew clean`
-3.  Go back to the **/frontend** directory and re-run `npx react-native run-android` 
-  
-    
-    
-    
-    
-    
-    
-    
+
+2. `./gradlew clean`
+
+3. Go back to the **/frontend** directory and re-run `npx react-native run-android` 
+
+   
+
+## Feature
+
+
+
+### Login/Logout/Register 
+
+Our application provides the normal login/out and registration with corresponding notification functions:
+
+**Login**
+
+![image-20221102192635187](../../source/imgs/README/image-20221102192635187.png)
+
+**Login Failed Notification**
+
+![image-20221102192807902](../../source/imgs/README/image-20221102192807902.png)
+
+
+
+**Registration**
+
+![image-20221102192739657](../../source/imgs/README/image-20221102192739657.png)
