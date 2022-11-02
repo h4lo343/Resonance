@@ -14,6 +14,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import RNShake from 'react-native-shake';
 import { nightMapStyle } from '../../assets/mapStyle';
 import { Appearance } from 'react-native';
+import { Snackbar } from 'react-native-paper';
 
 
 export const MapViewPage = ({ navigation }) => {
@@ -24,6 +25,8 @@ export const MapViewPage = ({ navigation }) => {
   const dispatch = useDispatch();
   const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
   const [nearbyMusicProps, setNearbyMusicProps] = useState({})
+  const [visible, setVisible] = useState(true); // for snack bar 
+  const onDismissSnackBar = () => setVisible(false);
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 37.3882733,
     longitude: -122.0867283 // default values
@@ -51,13 +54,7 @@ export const MapViewPage = ({ navigation }) => {
     const focusHandler = navigation.addListener('focus', async () => {
       console.log("check permission")
       await _checkPermission();
-      setInitialRegion({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      })
-      loadHistoryMarkers()
+      loadHistoryMarkers();
     });
 
     // If the device is configured to dark mode, change the map style 
@@ -229,6 +226,12 @@ export const MapViewPage = ({ navigation }) => {
         setCurrentLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
+        })
+        setInitialRegion({
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
         })
         console.log("current Location lat: " + position.coords.latitude + " long:" + position.coords.longitude);
       },
@@ -418,6 +421,14 @@ const styles = StyleSheet.create({
     top: 30,
     width: "50%",
     alignItems: 'center'
+  },
+  overlay2: {
+    position: 'absolute',
+    display: 'flex',
+    top: "100",
+    width: "90%",
+    alignItems: 'center',
+    zIndex: 10
   },
   searchContainer: {
     position: 'absolute',
