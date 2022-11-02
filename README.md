@@ -63,14 +63,20 @@ Please follow the step-by-step solution [here](https://github.com/facebook/react
 Our application provides the normal login/out and registration with corresponding notification functions:
 
 **Login**
-![图片](https://user-images.githubusercontent.com/92515186/199439247-d6b926e3-2ab7-49d3-8b92-602ea353fa0a.png)
+
+![图片](https://user-images.githubusercontent.com/92515186/199439379-682ad4d2-a639-44f3-a5b8-a1125cc9e978.png)
+
 
 **Login Failed Notification**
 
-![image-20221102192807902](../../source/imgs/README/image-20221102192807902.png)
-
-
+![图片](https://user-images.githubusercontent.com/92515186/199439451-8df7fe63-4341-4cfc-a9ff-40f34f3dbc27.png)
 
 **Registration**
 
-![image-20221102192739657](../../source/imgs/README/image-20221102192739657.png)
+![图片](https://user-images.githubusercontent.com/92515186/199439496-dfbdca95-7121-46f4-9c37-4a9615f35f5e.png)
+
+**Registration Failed Notification**
+
+![图片](https://user-images.githubusercontent.com/92515186/199439667-2c2fdedb-294a-4370-afe9-6ecbde842216.png)
+
+
