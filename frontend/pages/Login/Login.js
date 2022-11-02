@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View, Image, CheckBox, Alert, TouchableOpacity } from 'react-native';
 import { useNavigate } from 'react-router-native';
 import { Box, Input, Button, Checkbox } from 'native-base';
@@ -27,6 +27,8 @@ export const Login = ({ navigation }) => {
   const jwtToken = useSelector((state) => state.auth.jwtToken)
   const [userCode, setUserCode] = useState('');
   const [password, setPassword] = useState('');
+  const codeInput = useRef();
+  const passwordInput = useRef();
 
   useEffect(() => {
     // state change
@@ -35,9 +37,8 @@ export const Login = ({ navigation }) => {
     dispatch(anotherUserProfileSlice.actions.cleanUp())
     dispatch(followerSlice.actions.cleanUp())
     dispatch(nearbyMusicSlice.actions.cleanUp())
-    setUserCode("")
-    setPassword("")
-
+    passwordInput.current.clear()
+    codeInput.current.clear()
   }, [])
 
   // get username and password
@@ -75,6 +76,7 @@ export const Login = ({ navigation }) => {
       dispatch(authSlice.actions.setJwtToken(result.Authorization))
       dispatch(getAccessToken())
       navigation.navigate('DrawerNavigator')
+
     }
   }
 
@@ -90,11 +92,12 @@ export const Login = ({ navigation }) => {
         <Text>Share Your Music Trace :D</Text>
 
         <Box alignItems="center" style={styles.inputBox}>
-          <Input variant="underlined" placeholder="Email" fontSize={14} onChangeText={inputUserCode} />
+          <Input variant="underlined" placeholder="Email" ref = { codeInput } fontSize={14} onChangeText={inputUserCode} />
           <Input variant='underlined'
             placeholder='password'
             type={show ? "text" : "password"}
             fontSize={14}
+            ref = { passwordInput }
             onChangeText={inputPassword}
             InputRightElement={
               <Button size="xs" rounded="none" w="1/6" h="full" style={{backgroundColor: '#40B5AD'}}  onPress={handleClick}>
