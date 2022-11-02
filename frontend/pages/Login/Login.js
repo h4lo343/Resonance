@@ -78,6 +78,8 @@ export const Login = ({ navigation }) => {
       navigation.navigate('DrawerNavigator')
       passwordInput.current.clear()
       codeInput.current.clear()
+      setUserCode("")
+      setPassword("")
     }
   }
 
