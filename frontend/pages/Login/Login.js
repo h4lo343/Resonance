@@ -76,7 +76,8 @@ export const Login = ({ navigation }) => {
       dispatch(authSlice.actions.setJwtToken(result.Authorization))
       dispatch(getAccessToken())
       navigation.navigate('DrawerNavigator')
-
+      passwordInput.current.clear()
+      codeInput.current.clear()
     }
   }
 

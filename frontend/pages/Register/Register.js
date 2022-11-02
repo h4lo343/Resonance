@@ -37,9 +37,37 @@ export const Register = ({ navigation }) => {
       Alert.alert(
         "Password ",
          "Passwords do not match",
-      );
-      return;
+      );return;
     }
+
+    if (password1 == "") {
+      Alert.alert(
+          "Password ",
+          "You have to input your pass word",
+      );return;
+    }
+
+    if (username == "") {
+      Alert.alert(
+          "Username",
+          "You have to input your username",
+      );return;
+    }
+
+    if (email == "") {
+      Alert.alert(
+          "Email",
+          "You have to input your Email",
+      );return;
+    }
+
+    if (fullName == "") {
+      Alert.alert(
+          "Full Name",
+          "You have to input your full name",
+      );return;
+    }
+
     const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/auth/register/", {
       method: 'POST',
       headers: {
@@ -67,7 +95,7 @@ export const Register = ({ navigation }) => {
     setShow1(!show1)
   }
   const handleClick2 = () => {
-    setShow1(!show2)
+    setShow2(!show2)
   }
 
   return (
