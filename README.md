@@ -63,8 +63,7 @@ Please follow the step-by-step solution [here](https://github.com/facebook/react
 Our application provides the normal login/out and registration with corresponding notification functions:
 
 **Login**
-
-![image-20221102192635187](../../source/imgs/README/image-20221102192635187.png)
+![图片](https://user-images.githubusercontent.com/92515186/199439247-d6b926e3-2ab7-49d3-8b92-602ea353fa0a.png)
 
 **Login Failed Notification**
 
