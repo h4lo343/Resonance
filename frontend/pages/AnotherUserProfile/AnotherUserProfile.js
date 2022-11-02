@@ -110,10 +110,10 @@ export const AnotherUserProfile = ({ navigation }) => {
             </ImageOverlay>
 
             <View style={styles.musicListHeader}>
-                <Text style={{ fontSize: 16, color: '#795C34' }}>Music Lists:</Text>
+                <Text style={{ fontSize: 14, color: '#795C34' }}>Music Lists:</Text>
             </View>
 
-            <View style={{ marginLeft: 70, marginTop: 10, height: 250, width: 310 }}>
+            <View style={{ marginLeft: 50, marginTop: 10, height: 250, width: 310 }}>
                 <FlatList
                     data={musicList}
                     keyExtractor={(item) => item.id}
@@ -163,12 +163,12 @@ const styles = StyleSheet.create({
     musicListHeader: {
         backgroundColor: "#cad5d8",
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 5,
         justifyContent: 'center',
         paddingBottom: 5,
     },
     userDataFont: {
-        fontSize: 16,
+        fontSize: 13,
         color: '#795C34',
         backgroundColor: 'white',
         paddingHorizontal: 5,

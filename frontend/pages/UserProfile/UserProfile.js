@@ -125,7 +125,7 @@ export const UserProfile = ({ navigation }) => {
                         {
                             backgroundColor: pressed ? '#f0f0f0' : '#e4b1a5',
                         },
-                        {height: 30, borderRadius: 2, justifyContent: "center", alignItems: "center", paddingHorizontal: 5 },
+                        {height: 30, borderRadius: 2, justifyContent: "center", alignItems: "center", paddingHorizontal: 5, paddingTop: 1 },
                     ]}
                     onPress={(e) => editProfile(e)}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>Edit Profile</Text></Pressable>
             </Box>
