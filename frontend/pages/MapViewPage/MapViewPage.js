@@ -29,20 +29,20 @@ export const MapViewPage = ({ navigation }) => {
   const [showNearbyMusicModal, setShowNearbyMusicModal] = useState(false)
   const [nearbyMusicProps, setNearbyMusicProps] = useState({})
   const [currentLocation, setCurrentLocation] = useState({
-    latitude: 37.3882733,
-    longitude: -122.0867283 // default values
+    latitude: -37.8986627,
+    longitude: 144.8613408 // default values
   });
   const [initialRegion, setInitialRegion] = useState({
-    latitude: -37.7986627,
-    longitude: 144.9613408,
+    latitude: -37.8986627,
+    longitude: 144.8613408,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,//initial region
   });
   const [mapTheme, setMapTheme] = useState([])
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const [nearbyLocation, setNearbyLocation] = useState({
-    latitude: -37.7986627,
-    longitude: 144.9613408 // default values
+    latitude: -37.8986627,
+    longitude: 144.8613408 // default values
   });
 
   const [showUserLocationDot, setUserLocationDot] = useState(true);

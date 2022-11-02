@@ -241,6 +241,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                     body: JSON.stringify(requestBody)
                 })
             setNewComment("");
+            commentTextInput.current.clear();
             console.log(musicData)
             // convert res to json
             let res = await  response.json()
@@ -251,10 +252,9 @@ export const CommentSession = ({ musicData, setMusicData }) => {
             console.log(updateMusicData);
 
         } catch {
+            commentTextInput.current.clear();
             console.log("error can't save to backend")
         }
-
-        commentTextInput.current.clear();
     }
 
 
