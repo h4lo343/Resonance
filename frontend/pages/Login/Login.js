@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, CheckBox, Alert, TouchableOpacity } from 'react-native';
-import { Link, Navigate, useNavigate } from 'react-router-native';
-import { Box, FormControl, Input, WarningOutlineIcon, Stack, MaterialIcons, Pressable, Icon, Button, Checkbox } from 'native-base';
-import { ScaledImage } from '../../components';
+import { useNavigate } from 'react-router-native';
+import { Box, Input, Button, Checkbox } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import { authSlice, getAccessToken} from '../../redux/auth/slice';
-import { BACNKEND_LINK } from '@'
 
 
-
+/**
+ * This function receives an navigation input, allows user to go to other pages
+ * and come back to the previous page
+ * It also handles the useState of user to authorise user login
+ * @param {navigation} param0 
+ * @returns jsx view of the page
+ */
 
 export const Login = ({navigation}) => {
+  // define variables
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
@@ -19,17 +24,20 @@ export const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
+    // state change
     dispatch(authSlice.actions.initToken())
   },[])
 
+  // get username and password
   const inputUserCode = (v) => {
     setUserCode(v)
   }
   const inputPassword = (v) => {
     setPassword(v)
   }
+  
+  // handle show button and signin
   useEffect(()=> {
-    // console.log(env.BACNKEND_LINK)
   },[])
   const handleClick = () => setShow(!show);
   const signIn = async () => {
@@ -59,14 +67,14 @@ export const Login = ({navigation}) => {
   }
 
 
-
+  // return a page view
   return (
+    // setup a style container
     <View style={styles.container}>
-      <Text style={styles.brand}>Trace</Text>
+      <Text style={styles.brand}>Resonance</Text>
       <Text style={styles.banner}>Hi!</Text>
       <Text style={styles.banner}>Welcome</Text>
       <Text>Every Where Leave a Trace</Text>
-
 
       <Box alignItems="center" style={styles.inputBox}>
         <Input variant="underlined" placeholder="Email" fontSize={14} onChangeText={inputUserCode} />
@@ -85,7 +93,6 @@ export const Login = ({navigation}) => {
 
       <View style={{ marginTop: 30, justifyContent: "space-between", flexDirection: "row" }}>
         <Checkbox value="two"><Text style={{ fontSize: 14 }}>Remember Me</Text></Checkbox>
-        {/* <Link to='/reset' underlayColor="#f0f4f7" ><Text>Forgot Password?</Text></Link> */}
         <TouchableOpacity onPress={() => navigation.navigate('PasswordReset')}>
           <Text>Forgot Password?</Text>
         </TouchableOpacity>
@@ -107,9 +114,6 @@ export const Login = ({navigation}) => {
           <Text style={{ color: "black" }}>  Sign up</Text>
         </TouchableOpacity>
 
-        {/* <Link to="/register" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Sign in</Text></Link> */}
-
-        {/* <Link to="/MapViewPage" underlayColor="#f0f4f7" ><Text style={{ color: "black" }}>  Map View</Text></Link> */}
       </Box>
 
     </View>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
+import {StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Linking} from 'react-native';
 import { Box, Button, FlatList } from 'native-base';
 import { Avatar } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux';
