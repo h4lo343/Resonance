@@ -107,7 +107,7 @@ export const CarouselCards = (propsData) => {
                     textStyle={styles.spinnerTextStyle}
                 />
             </View>
-            <View style={{height: 350, width: 330}}>
+            <View style={{height: 330, width: 330}}>
                 <ScrollView nestedScrollEnabled={true} contentContainerStyle={{ flexGrow: 1, paddingRight: 12 }}>
                     <View >
                         <View style={styles.wrapperStyle}>

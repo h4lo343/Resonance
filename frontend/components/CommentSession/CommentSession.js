@@ -42,7 +42,6 @@ export const CommentSession = ({ musicData, setMusicData }) => {
     const jwtToken = useSelector((state) => state.auth.jwtToken);
 
     useEffect(()=>{
-
         const playAudio = async () =>{
             if(playPath){
                 console.log("playPath",playPath);
@@ -248,13 +247,13 @@ export const CommentSession = ({ musicData, setMusicData }) => {
             let updateMusicData = {...musicData};
             updateMusicData.comments = res.trace.comments
             setMusicData(updateMusicData);
+            commentTextInput.current.clear();
             console.log(updateMusicData);
 
         } catch {
+            commentTextInput.current.clear();
             console.log("error can't save to backend")
         }
-
-        commentTextInput.current.clear();
     }
 
 
