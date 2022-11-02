@@ -260,12 +260,6 @@ const loadNewLocation = () => {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         })
-        setInitialRegion({
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        })
         console.log("current Location lat: " + position.coords.latitude + " long:" + position.coords.longitude);
       },
       (error) => {
@@ -377,14 +371,7 @@ const loadNewLocation = () => {
     try {
       const result = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
       if (result == true) {
-
         await getCurrentLocation();
-        setInitialRegion({
-            latitude: currentLocation.latitude,
-            longitude: currentLocation.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-        })
         console.log("new initial map location: " + currentLocation);
       }
       else if (result == false) {
