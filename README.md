@@ -63,19 +63,19 @@ Please follow the step-by-step solution [here](https://github.com/facebook/react
 Our application provides the normal login/out and registration with corresponding notification functions↓↓↓
 **Login**
 
-![图片](https://user-images.githubusercontent.com/92515186/199439379-682ad4d2-a639-44f3-a5b8-a1125cc9e978.png)
+![图片](https://user-images.githubusercontent.com/92515186/199445466-ab4d526e-4ac8-4fae-abb8-7b1ccf8da5d5.png)
 
 **Login Failed Notification**
 
-![图片](https://user-images.githubusercontent.com/92515186/199439451-8df7fe63-4341-4cfc-a9ff-40f34f3dbc27.png)
+![图片](https://user-images.githubusercontent.com/92515186/199445573-abbe2fe5-9d91-4ea1-a046-6639aae9baee.png)
 
 **Registration**
 
-![图片](https://user-images.githubusercontent.com/92515186/199439496-dfbdca95-7121-46f4-9c37-4a9615f35f5e.png)
+![图片](https://user-images.githubusercontent.com/92515186/199445661-7e967ab0-3a07-4310-a449-501388ddec5f.png)
 
 **Registration Failed Notification**
 
-![图片](https://user-images.githubusercontent.com/92515186/199439667-2c2fdedb-294a-4370-afe9-6ecbde842216.png)
+![图片](https://user-images.githubusercontent.com/92515186/199445734-7d33366d-bc0b-48ae-9a06-8cb3c157f4b5.png)
 
 ### Share Music in Your Current Location
 
@@ -88,7 +88,7 @@ You can leave you music trace on your current location↓↓↓
 
 You can find other's music traces just by shaking your phone↓
 
-![图片](https://user-images.githubusercontent.com/92515186/199441090-cefcadf7-8e4b-48e8-97f4-d625bf2aab48.png)
+![图片](https://user-images.githubusercontent.com/92515186/199446438-4696d9a5-7178-47a8-83e5-79f114dfb3e6.png)
 
 ### Follow Other Users and Check Their Trace
 
@@ -97,17 +97,18 @@ Follow other users and check their traces↓↓↓
 
 **Check Their Profile and Fllow**
 
-![图片](https://user-images.githubusercontent.com/92515186/199441534-524571d1-2bc8-4692-88f3-283eded7c90a.png)
+![图片](https://user-images.githubusercontent.com/92515186/199446664-9d2923f2-7b63-4c71-b2f9-2523161e8e1d.png)
 
 **See Their Traces in Moment**
 
-![图片](https://user-images.githubusercontent.com/92515186/199441745-855f34e4-d98a-483a-8053-4bf2dee0ff6a.png)
+![图片](https://user-images.githubusercontent.com/92515186/199446815-a8893100-9834-4582-a1b0-7088038ec68e.png)
 
 ### Edit and Upload Your Profile
 
 Our function provide profile editing function, you can find it in side drawer `Profile` section
 
-![图片](https://user-images.githubusercontent.com/92515186/199441891-58f704c8-9496-4a16-b9c7-5f8ce510d683.png)
+![图片](https://user-images.githubusercontent.com/92515186/199446893-2791c0a5-9154-404e-a246-1ff130c1d69b.png)
+
 
 
 
