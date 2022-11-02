@@ -28,9 +28,9 @@ export const Login = ({ navigation }) => {
     // state change
     dispatch(authSlice.actions.initToken())
     dispatch(userProfileSlice.actions.cleanUp())
-    dispatch(anotherUserProfileSlice.action.cleanUp())
+    dispatch(anotherUserProfileSlice.actions.cleanUp())
     dispatch(updateFollowedUsers.actions.cleanUp())
-    dispatch(nearbyMusicSlice.action.cleanUp())
+    dispatch(nearbyMusicSlice.actions.cleanUp())
     setUserCode("")
     setPassword("")
 
