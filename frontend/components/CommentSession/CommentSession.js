@@ -42,7 +42,6 @@ export const CommentSession = ({ musicData, setMusicData }) => {
     const jwtToken = useSelector((state) => state.auth.jwtToken);
 
     useEffect(()=>{
-
         const playAudio = async () =>{
             if(playPath){
                 console.log("playPath",playPath);
@@ -241,7 +240,6 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                     body: JSON.stringify(requestBody)
                 })
             setNewComment("");
-            commentTextInput.current.clear();
             console.log(musicData)
             // convert res to json
             let res = await  response.json()
@@ -249,6 +247,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
             let updateMusicData = {...musicData};
             updateMusicData.comments = res.trace.comments
             setMusicData(updateMusicData);
+            commentTextInput.current.clear();
             console.log(updateMusicData);
 
         } catch {
