@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, CheckBox, Alert, TouchableOpacity } from
 import { useNavigate } from 'react-router-native';
 import { Box, Input, Button, Checkbox } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
-import { authSlice, getAccessToken } from '../../redux/auth/slice';
+import { authSlice, getAccessToken, anotherUserProfileSlice, updateFollowedUsers, nearbyMusicSlice, userProfileSlice } from '../../redux/auth/slice';
 import ImageOverlay from "react-native-image-overlay";
 
 
@@ -11,7 +11,7 @@ import ImageOverlay from "react-native-image-overlay";
  * This function receives an navigation input, allows user to go to other pages
  * and come back to the previous page
  * It also handles the useState of user to authorise user login
- * @param {navigation} param0 
+ * @param {navigation} param0
  * @returns jsx view of the page
  */
 
@@ -27,6 +27,13 @@ export const Login = ({ navigation }) => {
   useEffect(() => {
     // state change
     dispatch(authSlice.actions.initToken())
+    dispatch(userProfileSlice.actions.cleanUp())
+    dispatch(anotherUserProfileSlice.action.cleanUp())
+    dispatch(updateFollowedUsers.actions.cleanUp())
+    dispatch(nearbyMusicSlice.action.cleanUp())
+    setUserCode("")
+    setPassword("")
+
   }, [])
 
   // get username and password
