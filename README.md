@@ -79,4 +79,29 @@ Our application provides the normal login/out and registration with correspondin
 
 ![图片](https://user-images.githubusercontent.com/92515186/199439667-2c2fdedb-294a-4370-afe9-6ecbde842216.png)
 
+### Share Music in Your Current Location
+
+`Click Leave Trace -> Search Your Music -> Click the Chosen Music and Click Yes`
+
+![图片](https://user-images.githubusercontent.com/92515186/199440210-0a4945a3-3420-43a9-8649-42e74b9c0ff0.png)
+
+### Shake to Find Other's Traces and Comment Them
+
+![图片](https://user-images.githubusercontent.com/92515186/199441090-cefcadf7-8e4b-48e8-97f4-d625bf2aab48.png)
+
+### Fllow Other Users and Check Their Trace
+
+**Check Their Profile and Fllow**
+
+![图片](https://user-images.githubusercontent.com/92515186/199441534-524571d1-2bc8-4692-88f3-283eded7c90a.png)
+
+**See Their Traces in Moment**
+
+![图片](https://user-images.githubusercontent.com/92515186/199441745-855f34e4-d98a-483a-8053-4bf2dee0ff6a.png)
+
+### Edit and Upload Your Profile
+
+![图片](https://user-images.githubusercontent.com/92515186/199441891-58f704c8-9496-4a16-b9c7-5f8ce510d683.png)
+
+
 
