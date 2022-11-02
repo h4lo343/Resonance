@@ -54,18 +54,16 @@ Please follow the step-by-step solution [here](https://github.com/facebook/react
 
    
 
-## Feature
+## Features
 
 
 
 ### Login/Logout/Register 
 
-Our application provides the normal login/out and registration with corresponding notification functions:
-
+Our application provides the normal login/out and registration with corresponding notification functions↓↓↓
 **Login**
 
 ![图片](https://user-images.githubusercontent.com/92515186/199439379-682ad4d2-a639-44f3-a5b8-a1125cc9e978.png)
-
 
 **Login Failed Notification**
 
@@ -81,16 +79,20 @@ Our application provides the normal login/out and registration with correspondin
 
 ### Share Music in Your Current Location
 
+You can leave you music trace on your current location↓↓↓
 `Click Leave Trace -> Search Your Music -> Click the Chosen Music and Click Yes`
 
 ![图片](https://user-images.githubusercontent.com/92515186/199440210-0a4945a3-3420-43a9-8649-42e74b9c0ff0.png)
 
 ### Shake to Find Other's Traces and Comment Them
 
+You can find other's music traces just by shaking your phone↓
+
 ![图片](https://user-images.githubusercontent.com/92515186/199441090-cefcadf7-8e4b-48e8-97f4-d625bf2aab48.png)
 
-### Fllow Other Users and Check Their Trace
+### Follow Other Users and Check Their Trace
 
+Follow other users and check their traces↓↓↓
 `Shake to Find Other Music Trace -> Click Sharers' to Access Their Profiles -> Click Follow -> Access **Moment** via side drawer`
 
 **Check Their Profile and Fllow**
@@ -102,6 +104,8 @@ Our application provides the normal login/out and registration with correspondin
 ![图片](https://user-images.githubusercontent.com/92515186/199441745-855f34e4-d98a-483a-8053-4bf2dee0ff6a.png)
 
 ### Edit and Upload Your Profile
+
+Our function provide profile editing function, you can find it in side drawer `Profile` section
 
 ![图片](https://user-images.githubusercontent.com/92515186/199441891-58f704c8-9496-4a16-b9c7-5f8ce510d683.png)
 
