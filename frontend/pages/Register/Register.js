@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Alert, TouchableOpacity } from 'react-native';
-import { Link } from 'react-router-native';
 import { Box, Input, Button } from 'native-base'
+
+/**
+ * This page shows registering information
+ */
 export const Register = ({ navigation }) => {
 
   const [show1, setShow1] = React.useState(false);

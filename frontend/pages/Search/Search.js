@@ -3,6 +3,9 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, Text, Image, Alert, TextInput, TouchableWithoutFeedback, ScrollView, SafeAreaView } from "react-native";
 import { useSelector } from "react-redux";
 
+/**
+ * This is the search bar displayed when user clicks Leave Trace
+ */
 const Search = ({ longitude, latitude, finished }) => {
   const AccessToken = useSelector((state) => state.auth.accessToken)
   const jwtToken = useSelector((s) => s.auth.jwtToken)
@@ -34,6 +37,9 @@ const Search = ({ longitude, latitude, finished }) => {
 
   }
 
+  /**
+   * Send user selected music trace to backend
+   */
   const sendTrace = async (e) => {
     setKey("")
     const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/trace/addTrace", {

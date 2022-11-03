@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Linking, Pressable  } from 'react-native';
+import { StyleSheet, Text, View, Image, Linking} from 'react-native';
 import { updateFollowedUsers } from '../../redux/follower/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageOverlay from "react-native-image-overlay";
 import { Box, Button, FlatList } from 'native-base';
 
-
+/**
+ * This page displays followings' latest music traces
+ */
 export const Moment = ({ navigation }) => {
     const dispatch = useDispatch();
     const jwtToken = useSelector((state) => state.auth.jwtToken);
     const musicsFromFollowers = useSelector((state) => state.follower.musicLists);
     const [momentSpinnerFlag, setMomentSpinnerFlag] = useState(true);
 
+    /**
+     * Retrieve followings' latest music traces from backend
+     */
     const fetchFollowedUser = async () => {
         const url = `https://comp90018-mobile-computing.herokuapp.com/user/getFollowed`;
 
@@ -24,8 +29,6 @@ export const Moment = ({ navigation }) => {
                 }
             )
             const result = await response.json();
-
-            console.log("result: " + Object.values(result));
 
             var data = result.followedUser;
             dispatch(updateFollowedUsers({ data }));
@@ -41,7 +44,6 @@ export const Moment = ({ navigation }) => {
     useEffect(() => {
         // this is to ensure that this page would refresh to get new user data from backend
         const focusHandler = navigation.addListener('focus', () => {
-            console.log('moment use effact called');
             setMomentSpinnerFlag(true);
             fetchFollowedUser().then().catch((e) => { console.log("error: " + e) });
         });

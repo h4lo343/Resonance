@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, PermissionsAndroid, FormControl, ScrollView, Pressable } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { Box, Input, Button } from 'native-base';
@@ -11,7 +11,9 @@ import DrawerNavigator from '../Navigation/DrawerNavigator';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 
-
+/**
+ * This component allows user to upload avatar picture using camera, update username and full name
+ */
 export const EditProfile = ({ navigation }) => {
   const Drawer = createDrawerNavigator();
   const currentUsername = useSelector((state) => state.userProfile.username);
@@ -27,13 +29,17 @@ export const EditProfile = ({ navigation }) => {
   const [photoSpinnerFlag, setPhotoSpinnerFlag] = useState(false);
 
   useEffect(() => {
-    // this is to ensure that this page would refresh to get new user data from backend
+    // this authentication step is to allow avatar photos to be stored in firebase
     const focusHandler = navigation.addListener('focus', () => {
-          auth().signInAnonymously().then(() => { console.log("firebase signed in") });
+      auth().signInAnonymously().then(() => { console.log("firebase signed in") });
     });
     return focusHandler;
-}, [navigation]);
+  }, [navigation]);
 
+
+  /**
+   * Request for camera permission from user to take photos
+   */
   const requestCameraPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -41,9 +47,9 @@ export const EditProfile = ({ navigation }) => {
         {
           title: "Camera Permission",
           message: "Would you like to give This App Camera Access?",
-          buttonNegative: "No",
-          buttonPositive: "Yes",
-          buttonNeutral: "Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+          buttonNeutral: "Ask Me Later",
         }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -56,6 +62,9 @@ export const EditProfile = ({ navigation }) => {
     }
   }
 
+  /**
+   * Upon submitting the change, this information will be posted to backend
+   */
   const postToBackend = async () => {
     try {
       var requestBody =
@@ -78,10 +87,11 @@ export const EditProfile = ({ navigation }) => {
       }
 
       if (newAvatar.type != '') {
-          requestBody["updates"]["avatar"]["base64image"] = newAvatar.uri;
-          requestBody["updates"]["avatar"]["avatarType"] = newAvatar.type;
+        requestBody["updates"]["avatar"]["base64image"] = newAvatar.uri;
+        requestBody["updates"]["avatar"]["avatarType"] = newAvatar.type;
       }
 
+      // post updated avatar photo, username and fullname info to backend url
       const response = await fetch("https://comp90018-mobile-computing.herokuapp.com/user/updateUserInfo",
         {
           headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + jwtToken },
@@ -96,9 +106,12 @@ export const EditProfile = ({ navigation }) => {
   }
 
   const clickedPhotoUpload = () => {
-    uploadPhoto().then(() => {});
+    uploadPhoto().then(() => { });
   }
 
+  /**
+   * Upon taking photos, photo will be uploaded to Firebase
+   */
   const uploadPhoto = async () => {
     requestCameraPermission();
 
@@ -109,7 +122,7 @@ export const EditProfile = ({ navigation }) => {
       },
     };
 
-     launchCamera(options, async (response) => {
+    launchCamera(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -123,6 +136,7 @@ export const EditProfile = ({ navigation }) => {
 
         const imageType = imageUri.split(".").pop();
 
+        // save avatar photo to Firebase
         const reference = storage().ref(imageUri);
         await reference.putFile(imageUri);
         let savedUrl = await reference.getDownloadURL();
@@ -159,7 +173,7 @@ export const EditProfile = ({ navigation }) => {
         <Spinner
           visible={photoSpinnerFlag}
           textContent={'Uploading photo...'}
-          textStyle={{ color: '#fff', fontSize: 16  }}
+          textStyle={{ color: '#fff', fontSize: 16 }}
         />
       </View>
 
@@ -168,8 +182,8 @@ export const EditProfile = ({ navigation }) => {
         height={130}
         overlayAlpha={0.05}
         contentPosition="center">
-        <View style={{alignItems: "center"}}>
-          <Avatar.Image source={{ uri: newAvatar.uri == ""? avatarUri : newAvatar.uri }} size={100} />
+        <View style={{ alignItems: "center" }}>
+          <Avatar.Image source={{ uri: newAvatar.uri == "" ? avatarUri : newAvatar.uri }} size={100} />
         </View>
       </ImageOverlay>
 

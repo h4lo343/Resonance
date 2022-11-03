@@ -7,6 +7,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import ImageOverlay from "react-native-image-overlay";
 import Spinner from 'react-native-loading-spinner-overlay';
 
+/**
+ * Another user profile is displayed when user clicks on the "sharer"
+ * This component will display another user's profile info - username and music lists
+ */
 export const AnotherUserProfile = ({ navigation }) => {
     const dispatch = useDispatch();
     const defaultUri = Image.resolveAssetSource(require('../../assets/imgs/robot_avatar.png')).uri;
@@ -25,23 +29,27 @@ export const AnotherUserProfile = ({ navigation }) => {
     }
 
     useEffect(() => {
-        console.log("another user profile useEffect called")
         checkUser();
     }, [username])
 
+    /**
+     * To check whether user has already followed another user
+     */
     const checkUser = () => {
         var notFollowed = true;
         followedUsersList.forEach(user => {
-            console.log("current user id: " + currentUserId);
-            console.log("followed user id: " + user);
             if (currentUserId == user) {
                 notFollowed = false;
             }
         });
 
+        // Follow button will only be shown on another user's profile if the user hasn't followed another user
         setShowFollowButton(notFollowed);
     }
 
+    /**
+     * Upon clicking the Follow button, it post a request to backend to follow the user.
+     */
     const followUser = async () => {
         var requestBody = {
             userId: currentUserId
@@ -57,6 +65,9 @@ export const AnotherUserProfile = ({ navigation }) => {
         dispatch(updateFollowedUsers({ data }));
     }
 
+    /**
+     * This method handles async calls to wait for request sent to backend and generate according response to user
+     */
     const updateFollowUser = () => {
         setFollowSpinnerFlag(true);
         followUser().then(

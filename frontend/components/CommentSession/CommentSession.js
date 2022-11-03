@@ -41,7 +41,6 @@ export const CommentSession = ({ musicData, setMusicData }) => {
     const [isPlaying, setIsPlaying] = React.useState(false);
     const jwtToken = useSelector((state) => state.auth.jwtToken);
     const [commentSpinnerFlag, setCommentSpinnerFlag] = useState(false);
-    const [tempComment, setTempComment] = useState("");
 
     useEffect(()=>{
         const playAudio = async () =>{

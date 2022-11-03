@@ -5,6 +5,14 @@ import { getAnotherUserProfile } from '../../redux/anotherUserProfile/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { CommentSession } from "../CommentSession/CommentSession";
 
+/**
+ * Cards are displaying when "music trace" or "nearby music" are requested
+ * Information like music, sharer or comments are displayed in card
+ * User can post text or audio comments
+ * User can also clicks on "sharer" link to see another user's profile
+ * If there are multiple cards, user can swipe screen from left-to-right or right-to-left
+ * User can also scroll the page to see all comments
+ */
 export const CarouselCards = (propsData) => {
     const dispatch = useDispatch();
     const [anotherUserSpinnerFlag, SetAnotherUserSpinnerFlag] = useState(false);
@@ -45,8 +53,10 @@ export const CarouselCards = (propsData) => {
         })
     }
 
+    /**
+     * When user clicks on the "sharer" link, user will be guided to sharer's profile page
+     */
     const goToAnotherUserProfile = () => {
-        console.log("navigation callback");
         SetAnotherUserSpinnerFlag(true);
         getAnotherUserInfo().then(() => {
             propsData.data.setVisibilityCallBack();
@@ -56,8 +66,10 @@ export const CarouselCards = (propsData) => {
         })
     }
 
+    /**
+     * Fetch another user's info from backend
+     */
     const getAnotherUserInfo = (async () => {
-        console.log("received sharer id: " + musicData.songSharerId);
         var requestBody = {
             id: musicData.songSharerId
         }
@@ -73,10 +85,7 @@ export const CarouselCards = (propsData) => {
 
         var data = {};
 
-        console.log("sharer result: " + Object.values(result.avatar));
-
-        console.log("result image: " + result.avatar.base64image);
-
+        // if that user does not have avatar photo, default avatar will be displayed
         if (!(result.avatar == {} || result.avatar.base64image == "" || result.avatar.base64image == undefined)) {
             data = {
                 userId: musicData.songSharerId,

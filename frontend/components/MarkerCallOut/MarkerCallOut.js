@@ -4,7 +4,9 @@ import {StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Linking} fr
 import { Callout } from 'react-native-maps';
 import { WebView } from 'react-native-webview';
 
-
+/**
+ * Upon clicking the marker, a tooltip is displayed on the marker to show music information
+ */
 export const MarkerCallOut = ({markerId, songName, songUrl, songAuthor, songVisual}) => {
 
     return <Callout tooltip>

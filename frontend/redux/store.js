@@ -5,6 +5,9 @@ import { nearbyMusicSlice } from "./nearbyMusic/slice";
 import { anotherUserProfileSlice } from"./anotherUserProfile/slice";
 import { followerSlice } from"./follower/slice";
 
+/**
+ * Redux is used to save and share data between different components
+ */
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
   userProfile: userProfileSlice.reducer,

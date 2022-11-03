@@ -7,6 +7,9 @@ import { getUserProfile } from '../../redux/userProfile/slice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImageOverlay from "react-native-image-overlay";
 
+/**
+ * This page displays user profile
+ */
 export const UserProfile = ({ navigation }) => {
     const dispatch = useDispatch();
     const stateUsername = useSelector((state) => state.userProfile.username);
@@ -30,6 +33,9 @@ export const UserProfile = ({ navigation }) => {
         return focusHandler;
     }, [navigation]);
 
+    /**
+     * Fetch user information from backend
+     */
     const getUserInfo = (async () => {
         setProfileSpinnerFlag(true);
 
@@ -43,6 +49,7 @@ export const UserProfile = ({ navigation }) => {
 
         var data = {};
 
+        // if user did not have any avatar image, default avatar image will be used.
         if (!(result.avatar == {} || result.avatar.base64image == "" || result.avatar.base64image == undefined)) {
             data = {
                 username: result.username,
@@ -58,8 +65,6 @@ export const UserProfile = ({ navigation }) => {
                 musicList: result.traces
             }
         }
-
-        console.log("backend uri: " + result.avatar.base64image);
 
         dispatch(getUserProfile({ data }))
     

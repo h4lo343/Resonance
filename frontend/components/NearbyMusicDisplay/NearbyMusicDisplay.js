@@ -4,10 +4,21 @@ import { useSelector } from 'react-redux';
 import Carousel from 'react-native-snap-carousel'
 import { CarouselCards } from '../../components/CarouselCards';
 
+/**
+ * This component is rendered for both "music trace" and "nearby music"
+ * Props are passed into this component to:
+ * - allow this modal to be open/closed
+ * - handles navigation requests
+ * - distinguish whether this is a "music trace" or "nearby music"
+ */
 export const NearbyMusicDisplay = ({nearbyMusicProps}) => {
   const nearbyMusics = useSelector((state) => state.nearbyMusic.musics);
   const deviceWidth = Dimensions.get("window").width;
 
+  /**
+   * As there are multiple music traces or nearby musics, each of them is displayed in a carousel card
+   * User can swipte screen left and right to visualize different cards
+   */
   const renderCarouselCards = ({ item, index }) => {
     var propsData = {
       index: index,

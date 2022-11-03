@@ -6,18 +6,17 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
 export const ScaledImage = (props) => {
   const [source, setSource] = useState({uri: props.uri})
-  const styles = props.style ? props.style : {} // 定义其他样式
-  // 为了区分宽度/高度必要性，width 和 height prop 我们单独传，若有其他样式要求可传给styleProp
+  const styles = props.style ? props.style : {}
 
   useEffect(() => {
     Image.getSize(props.uri,(width, height) => {
-      if (props.width && !props.height) { // 图片宽度固定，高度自适应
+      if (props.width && !props.height) { // fix width and auto adjust height
         setSource({uri: props.uri, width: props.width, height: height * (props.width / width)});
-      } else if (!props.width && props.height) { // 图片高度固定，宽度自适应
+      } else if (!props.width && props.height) { // fix height and auto adjust width
         setSource({uri: props.uri, width: width * (props.height / height), height: props.height});
-      } else if(!props.width && !props.height){ // 图片宽高都没有传，那就是宽度占满容器，高度自适应
+      } else if(!props.width && !props.height){ // auto adjust both height and width
         setSource({uri: props.uri, width: '100%', height: Math.floor(screenWidth/width*height)});
-      } else { // 图片宽高都传了
+      } else { // fix both height and width
         setSource({uri: props.uri, width: props.width, height: props.height});
       }
     });

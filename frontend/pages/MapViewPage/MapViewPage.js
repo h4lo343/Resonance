@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Pressable, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { PermissionsAndroid } from 'react-native';
@@ -19,7 +19,10 @@ import { authSlice} from '../../redux/auth/slice';
 import { anotherUserProfileSlice } from '../../redux/anotherUserProfile/slice'
 import { userProfileSlice } from '../../redux/userProfile/slice'
 
-
+/**
+ * This component is the main page to handle all activities shown on the map,
+ * which includes displaying Map, music traces, search, etc.
+ */
 export const MapViewPage = ({ navigation }) => {
   let resetNumber = false // for generating map marker id
   let mid = 0; // for generating map marker id
