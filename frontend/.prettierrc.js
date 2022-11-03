@@ -1,3 +1,6 @@
+/**
+ * Reference: https://github.com/mhmmdvg/your-music-rn
+*/
 module.exports = {
   arrowParens: 'avoid',
   bracketSameLine: true,
