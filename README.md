@@ -211,3 +211,6 @@ When we tried to import the above environment settings from Muhammad Vikri's pro
 - https://www.pexels.com/photo/blue-headphone-1037992/
 - https://www.pexels.com/photo/black-headphones-with-mobile-smartphone-6320/
 - https://www.pexels.com/photo/blue-vinyl-record-playing-on-turntable-1389429/
+
+### Video Maker Reference For Animation:
+- https://videomaker.simpleshow.com/
