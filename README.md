@@ -78,14 +78,13 @@ The backend for **Resonance** is deployed in Heroku. Detailed documentation of A
 Please follow the step-by-step solution [here](https://github.com/facebook/react-native/issues/28712#issuecomment-617384353).
 
 ### Fail to build the app 
+1.  (In the **/frontend** directory)`chmod 755 android/gradlew`
 
-1. (In the **/frontend** directory) `cd android` 
+2.  `cd android` 
 
-2. `./gradlew clean`
+3. `./gradlew clean`
 
-3. `chmod 755 android/gradlew`
-
-3. Go back to the **/frontend** directory and re-run `npx react-native run-android` 
+4. Go back to the **/frontend** directory and re-run `npx react-native run-android` 
 
 
 ---
@@ -187,7 +186,7 @@ Our application provides profile editing function, you can find it in side drawe
 ### References in Script:
 
 ### Map Marker:
-
+- https://www.freeiconspng.com/images/music-note
 ### Background Image/Avatar Photo Used in App:
 - <a href="https://www.flaticon.com/free-icons/bot" title="bot icons">Bot icons created by Freepik - Flaticon</a>
 - https://www.pexels.com/photo/two-yellow-emoji-on-yellow-case-207983/
