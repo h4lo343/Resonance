@@ -78,9 +78,9 @@ The backend for **Resonance** is deployed in Heroku. Detailed documentation of A
 Please follow the step-by-step solution [here](https://github.com/facebook/react-native/issues/28712#issuecomment-617384353).
 
 ### Fail to build the app 
-1.  `chmod 755 android/gradlew`
+1.  (In the **/frontend** directory)`chmod 755 android/gradlew`
 
-2. (In the **/frontend** directory) `cd android` 
+2.  `cd android` 
 
 3. `./gradlew clean`
 
