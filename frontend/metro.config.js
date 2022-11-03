@@ -1,4 +1,5 @@
 /**
+ * Reference: https://github.com/mhmmdvg/your-music-rn
  * Metro configuration for React Native
  * https://github.com/facebook/react-native
  *

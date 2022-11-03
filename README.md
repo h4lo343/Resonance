@@ -182,8 +182,24 @@ Our application provides profile editing function, you can find it in side drawe
 
 ---
 ## References
+
+### Environment Settings
 - For our environment settings, we refered from Muhammad Vikri's project:
-https://github.com/mhmmdvg
+https://github.com/mhmmdvg/your-music-rn
+  - We used the following files/folders from Muhammad Vikri's project:
+    - android: contain gradlew build files and settings
+    - prettierrc.js
+    - tsconfig.json
+    - babel.config.js
+    - metro.config.js
+    - react-native.config.js
+    - .watchmanconfig
+    - .gitignore
+    - .vscode
+
+When we tried to import the above environment settings from Muhammad Vikri's project, we have mistakenly messed up some git settings. So our git commit history starts from Jun 4. The commit history from Jun 4 to Jun 14 is actually the commit history from Muhammad Vikri's project. Our team's initial commmit is on Sep 1.
+
+Apart from the above environment setting files, we wrote all scripts by ourselves. 
 
 ### Map Marker:
 - https://www.freeiconspng.com/images/music-note
