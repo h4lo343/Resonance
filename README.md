@@ -47,7 +47,7 @@ The backend for **Resonance** is deployed in Heroku. Detailed documentation of A
 ### How to Run on a Real Phone
 1. Follow step 1 & 2 in How to Run in an Emulator 
 
-2. Connect Android Phone with USB
+2. Connect to an Android Phone using USB
 
 3. Run `adb devices` and record the \<device-number>
 
@@ -102,10 +102,10 @@ Two login steps:
 - and log in with your Spotify account
 
 Please log into Spotify with the following account:
-- email: testerNew@gmail.com
-- password: 123456
+- email: ProjectTest@gmail.com
+- password: test123123
 
-To enable users to login with Spotify account, users need provide us their Spotify account info, which is for us to add into our "allowlist" in Spotify Dashboard. Otherwise, user will not be able to use their own Spotify account to login. To remove this limit, the team needs to submit an "extension" request to Spotify to allow all users to log in without providing their account info to us. However, Spotify claims that they do not grant this request for Uni or hobby projects. As a workaround, the team decided to create a demo Spotify account for user who wants to use our App features to login. The purpose is to show that user can log into our App and use all features with a real Spotify account. If user does not log in with Spotify account, user can still access pages like User Profile, Edit Profile, Moment, etc.. However, user will not be able search any musics in the map.
+To enable users to login with Spotify account, users need provide us their Spotify account info, which is for us to add into our "allowlist" in Spotify Dashboard. Otherwise, user will not be able to use their own Spotify account to login. To remove this limit, the team needs to submit an "extension" request to Spotify to allow all users to log in without providing their account info to us. However, Spotify does not grant this request for Uni or hobby projects. As a workaround, the team decided to create a demo Spotify account for user who wants to use our App features to login. The purpose is to show that user can log into our App and use all features with a real Spotify account. If user does not log in with Spotify account, user can still access pages like User Profile, Edit Profile, Moment, etc.. However, user will not be able search any musics in the map.
 
 Details can be referred to: [spotify-link](https://developer.spotify.com/documentation/web-api/guides/development-extended-quota-modes/)
 

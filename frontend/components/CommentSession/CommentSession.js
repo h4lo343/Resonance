@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import storage from '@react-native-firebase/storage';
 import uuid from 'react-native-uuid';
 import auth from '@react-native-firebase/auth';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 /**
@@ -24,7 +25,6 @@ import auth from '@react-native-firebase/auth';
  * setMusicData when update data
  * **/
 export const CommentSession = ({ musicData, setMusicData }) => {
-    const commentTextInput = React.createRef();
     const [isRecording, setIsRecording] = React.useState(false);
     const [recordings, setRecordings] = React.useState();
     const [confirmationWindow, setConfirmationWindow] = React.useState(false);
@@ -40,6 +40,8 @@ export const CommentSession = ({ musicData, setMusicData }) => {
     const [pathToRecord, setPath] = React.useState();
     const [isPlaying, setIsPlaying] = React.useState(false);
     const jwtToken = useSelector((state) => state.auth.jwtToken);
+    const [commentSpinnerFlag, setCommentSpinnerFlag] = useState(false);
+    const [tempComment, setTempComment] = useState("");
 
     useEffect(()=>{
         const playAudio = async () =>{
@@ -228,6 +230,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
      * **/
     const saveMessage = async () => {
         try{
+            setCommentSpinnerFlag(true);
             var requestBody = {
                 "type": "TEXT",
                 "traceId": musicData.traceId,
@@ -240,19 +243,18 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                     body: JSON.stringify(requestBody)
                 })
             setNewComment("");
-            console.log(musicData)
+            setCommentSpinnerFlag(false);
+
             // convert res to json
             let res = await  response.json()
             // update musicData state
             let updateMusicData = {...musicData};
             updateMusicData.comments = res.trace.comments
             setMusicData(updateMusicData);
-            commentTextInput.current.clear();
-            console.log(updateMusicData);
-
         } catch {
-            commentTextInput.current.clear();
+            setNewComment("");
             console.log("error can't save to backend")
+            setCommentSpinnerFlag(false);
         }
     }
 
@@ -316,8 +318,6 @@ export const CommentSession = ({ musicData, setMusicData }) => {
         } catch {
             console.log("error can't save to backend")
         }
-
-        commentTextInput.current.clear();
     }
 
     const cancelVoiceComment = async () => {
@@ -328,6 +328,11 @@ export const CommentSession = ({ musicData, setMusicData }) => {
 
     return (
         <View >
+            <Spinner
+                visible={commentSpinnerFlag}
+                textContent={'Submitting comments...'}
+                textStyle={styles.spinnerTextStyle}
+            />
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -345,12 +350,10 @@ export const CommentSession = ({ musicData, setMusicData }) => {
                                     <TouchableOpacity onPress={onPausePlay}>
                                         <Image source={require('../../assets/imgs/video-pause-button.png')}></Image>
                                     </TouchableOpacity>
-                                    // <Button title={'Pause'} onPress={onPausePlay} >Pause</Button>
                                 ) : (
                                     <TouchableOpacity onPress={playRecording}>
                                         <Image source={require('../../assets/imgs/play.png')}></Image>
                                     </TouchableOpacity>
-                                    // <Button title={'Start'} onPress={onStartPlay} >Start</Button>
                                 )}
                                 <View style={styles.progressIndicatorContainer}>
                                     <View
@@ -406,7 +409,7 @@ export const CommentSession = ({ musicData, setMusicData }) => {
             {!isRecording ?
                 (
                     <View>
-                        <Input ref={commentTextInput} variant="underlined" placeholder="Type New Comment" fontSize={13} onChangeText={setNewComment} />
+                        <Input value={newComment} variant="underlined" placeholder="Type New Comment" fontSize={13} onChangeText={(text) => setNewComment(text)} />
                     </View>
                 ) :
                 (
@@ -580,7 +583,12 @@ const styles = StyleSheet.create(
         modalButtons: {
             flexDirection: "row",
             marginTop: 10,
-        }
+        },
+        spinnerTextStyle: {
+            color: '#FFF',
+            paddingTop: 10,
+            fontSize: 16
+        },
 
     }
 
