@@ -196,10 +196,12 @@ https://github.com/mhmmdvg/your-music-rn
     - .watchmanconfig
     - .gitignore
     - .vscode
-
-When we tried to import the above environment settings from Muhammad Vikri's project, we have mistakenly messed up some git settings. So our git commit history starts from Jun 4. The commit history from Jun 4 to Jun 14 is actually the commit history from Muhammad Vikri's project. Our team's initial commmit is on Sep 1.
+    - index.js in root directory
+    - App.js
 
 Apart from the above environment setting files, we wrote all scripts by ourselves. 
+
+When we tried to import the above environment settings from Muhammad Vikri's project, we have mistakenly messed up some git settings. So our git commit history starts from Jun 4. The commit history from Jun 4 to Jun 14 is actually the commit history from Muhammad Vikri's project. Our team's initial commmit is on Sep 1.
 
 ### Map Marker:
 - https://www.freeiconspng.com/images/music-note

@@ -1,4 +1,5 @@
 /**
+ * References: https://github.com/mhmmdvg/your-music-rn
  * @format
  */
 import 'react-native-gesture-handler';
