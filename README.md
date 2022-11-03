@@ -184,7 +184,6 @@ Our application provides profile editing function, you can find it in side drawe
 ## References
 - For our environment settings, we refered from Muhammad Vikri's project:
 https://github.com/mhmmdvg
-### References in Script:
 
 ### Map Marker:
 - https://www.freeiconspng.com/images/music-note
