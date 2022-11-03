@@ -17,7 +17,15 @@ In **Resonance**, you can connect your account with Spotify. Any moment, anywher
 
 Frontend: Node.js and React-Native
 
-Backend: Node.js, Heroku, all photos are saved to Firebase
+Backend: Node.js, Express.js, MongoDB
+
+**Please note that we use free Heroku resources to deploy and serve our backend, which is due on Nov 28. If you need to access after this date, please contact the team and we will upgrade to a paid plan to continue the service.**
+
+Build and Deployment:
+- Backend is built and deployed to Heroku
+- All avatar photos and audio comments are saved to Firebase
+- Frontend needs to be built manually following the instructions below
+- To run the App, only need to build frontend because backend has already been deployed in Heroku
 
 ---
 ## For Developers 
