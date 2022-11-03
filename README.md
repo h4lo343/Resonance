@@ -131,8 +131,8 @@ Details can be referred to: [spotify-link](https://developer.spotify.com/documen
 Click on the icon at the top right of the map to locate your current location and observe the music traces you left in history
 
 <p align="left">
-  <img src="Image/map.png" width="300" height="600">
-  <img src="Image/music_trace.png" width="300" height="510">
+  <img src="image/map.png" width="300" height="600">
+  <img src="image/music_trace.png" width="300" height="510">
 </p>
 
 
@@ -153,8 +153,8 @@ You can find other's music traces just by shaking your phone
 Both audio comment and text comment are supported
 
 <p align="left">
-  <img src="Image/text_audio.png" width="300" height="280">
-  <img src="Image/audio_comment.png" width="250" height="520">
+  <img src="image/text_audio.png" width="300" height="280">
+  <img src="image/audio_comment.png" width="250" height="520">
 </p>
 
 ### 5. Follow Other Users and Check Their Trace
